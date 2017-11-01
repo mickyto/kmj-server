@@ -24,6 +24,14 @@ export default new GraphQLObjectType({
         password: {
             type: GraphQLString,
             resolve: ({ password }) => password
+        },
+        token: {
+            type: GraphQLString,
+            resolve: ({ token }) => token
+        },
+        error: {
+            type: GraphQLString,
+            resolve: ({ error }) => error
         }
     }
 });

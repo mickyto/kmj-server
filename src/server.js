@@ -1,14 +1,15 @@
 import express from 'express';
 import graphqlHTTP from 'express-graphql';
-import schema from './schema';
 import cors from 'cors';
+import schema from './schema';
+import config from '../config';
 
 const app  = express();
 
-app.use('*', cors(), graphqlHTTP({
+app.use('/graphql', cors(), graphqlHTTP((req) => ({
     schema,
     graphiql: true,
-    pretty:true
-}));
-app.listen(process.env.PORT);
-console.log(`Running a GraphQL API server at localhost:${process.env.PORT}/graphql`);
+    pretty: true
+})));
+app.listen(config.port);
+console.log(`Running a GraphQL API server at localhost:${config.port}/graphql`);
