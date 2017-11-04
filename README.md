@@ -8,6 +8,10 @@ GraphQL server for KMJ UI. This server was created to response to [KMJ project](
 ## Set up MongoDB
 ```bash
     docker run -d --name mongo -i -t mongo
+
+    # Provision database [ if needed ]
+    docker cp mongodb.users.json mongo:/
+    docker exec -i -t mongo mongoimport --db kmj --collection users mongodb.users.json --jsonArray
 ```
 
 ## Build and run locally

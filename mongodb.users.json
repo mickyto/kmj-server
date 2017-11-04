@@ -1,10 +1,4 @@
 [
-  {
-    "_id": 1,
-    "name": "Igor"
-  },
-  {
-    "_id": 2,
-    "name": "Maxim"
-  }
+  { "_id" : 1, "login" : "Igor", "email" : "egayi@yandex.ru", "password" : "12121212", "role" : "super_admin" }
+  { "_id" : 2, "login" : "Maxim", "email" : "kazakovmj@yandex.ru", "password" : "11235813", "role" : "super_admin" }
 ]
