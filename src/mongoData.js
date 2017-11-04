@@ -21,7 +21,7 @@ export const getUser = ({email, password}) => {
             if(res.password == password) {
 
                 const payload = {
-                    email: res.email,
+                    login: res.login || res.email,
                 };
 
                 if(res.role) {
