@@ -21,10 +21,6 @@ export default new GraphQLObjectType({
             type: GraphQLString,
             resolve: ({ login }) => login
         },
-        password: {
-            type: GraphQLString,
-            resolve: ({ password }) => password
-        },
         token: {
             type: GraphQLString,
             resolve: ({ token }) => token
