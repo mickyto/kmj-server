@@ -16,6 +16,6 @@ GraphQL server for KMJ UI. This server was created to response to [KMJ project](
 
 ## Build and run locally
 ```bash
-    docker run -d -v $PWD:/usr/src/app/ -w /usr/src/app/ --link mongo --name kmj node:8.7.0 npm start
+    docker run -d -v $PWD:/usr/src/app/ -w /usr/src/app/ --link mongo -p 8080:8080 --name kmj node:8.7.0 npm start
 ```
 

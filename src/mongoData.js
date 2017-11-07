@@ -17,8 +17,14 @@ export const Users = db.model('Users', {
 export const getUser = ({email, password}) => {
     return new Promise((resolve, reject) => {
         Users.findOne({ email: email }).exec((err, res) => {
-            if(err) reject(err);
-            if(res.password == password) {
+            if (err) reject(err);
+
+            if (res === null) {
+                resolve({error: 'Пользователь не найден'});
+                return;
+            }
+
+            if (res.password == password) {
 
                 const payload = {
                     login: res.login || res.email,
