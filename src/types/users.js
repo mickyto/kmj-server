@@ -1,11 +1,17 @@
 import {
     GraphQLObjectType,
     GraphQLString,
-    GraphQLInt
+    GraphQLInt,
+    GraphQLList,
+    GraphQLNonNull
 } from 'graphql';
 import { globalIdField } from 'graphql-relay';
 
-export default new GraphQLObjectType({
+import { getUser, gerUsers } from '../data/users';
+
+
+const UsersType = {
+    type: new GraphQLObjectType,
     name: 'Users',
     fields: {
         id: globalIdField('Users'),
@@ -30,4 +36,25 @@ export default new GraphQLObjectType({
             resolve: ({ error }) => error
         }
     }
-});
+};
+
+const MutationLogin = {
+    type: UsersType,
+    description: 'Login',
+    args: {
+        email: {
+            type: new GraphQLNonNull(GraphQLString)
+        },
+        password: {
+            type: new GraphQLNonNull(GraphQLString)
+        }
+    },
+    resolve: (root, args) => getUser(args)
+};
+
+const QueryUsers = {
+    type: new GraphQLList(UsersType),
+    resolve: () => gerUsers()
+};
+
+export { MutationLogin, QueryUsers }

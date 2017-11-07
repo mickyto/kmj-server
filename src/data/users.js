@@ -1,20 +1,17 @@
-import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
-import config from "../config"
-mongoose.Promise = global.Promise;
-const db = mongoose.createConnection(`mongodb://${config.mongoHost}/${config.mongoName}`);
+import { Users } from './models';
 
-//productSchema.set('toJSON', {getters: true});
 
-export const Users = db.model('Users', {
-    login: String,
-    email: String,
-    password: String,
-    role: String,
-    _id: Number
-});
+const gerUsers = () => {
+    return new Promise((resolve, reject) => {
+        Users.find((err, users) => {
+            if (err) reject(err);
+            else resolve(users)
+        })
+    })
+};
 
-export const getUser = ({email, password}) => {
+const getUser = ({email, password}) => {
     return new Promise((resolve, reject) => {
         Users.findOne({ email: email }).exec((err, res) => {
             if (err) reject(err);
@@ -46,3 +43,4 @@ export const getUser = ({email, password}) => {
     });
 };
 
+export { getUser, gerUsers };
