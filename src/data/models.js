@@ -1,11 +1,11 @@
 import mongoose from 'mongoose';
-import config from "../../config"
+import config from "../../config";
 mongoose.Promise = global.Promise;
 const db = mongoose.createConnection(`mongodb://${config.mongoHost}/${config.mongoName}`);
 
 //productSchema.set('toJSON', {getters: true});
 
-const Users = db.model('Users', {
+const Clients = db.model('Clients', {
     fio: String,
     email: String,
     phone: String,
@@ -13,7 +13,7 @@ const Users = db.model('Users', {
     _id: Number
 });
 
-const Clients = db.model('Clients', {
+const Users = db.model('Users', {
     login: String,
     email: String,
     password: String,
@@ -21,5 +21,5 @@ const Clients = db.model('Clients', {
     _id: Number
 });
 
-export { Users }
+export { Users, Clients }
 

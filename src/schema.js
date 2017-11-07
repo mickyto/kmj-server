@@ -4,13 +4,15 @@ import {
 } from 'graphql';
 import { nodeField } from './utils/node';
 import { QueryUsers, MutationLogin } from './types/users';
+import { QueryClients } from './types/clients';
 
 
 const queryType = new GraphQLObjectType({
     name: 'Query',
     fields: {
         node: nodeField,
-        users: QueryUsers
+        users: QueryUsers,
+        clients: QueryClients
     }
 });
 

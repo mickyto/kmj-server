@@ -5,38 +5,30 @@ import {
     GraphQLList,
     GraphQLNonNull
 } from 'graphql';
-import { globalIdField } from 'graphql-relay';
 
 import { getUser, gerUsers } from '../data/users';
 
 
-const UsersType = {
-    type: new GraphQLObjectType,
+const UsersType = new GraphQLObjectType({
     name: 'Users',
     fields: {
-        id: globalIdField('Users'),
         userId: {
-            type: GraphQLInt,
-            resolve: ({ _id }) => _id
+            type: GraphQLInt
         },
         email: {
-            type: GraphQLString,
-            resolve: ({ email }) => email
+            type: GraphQLString
         },
         login: {
-            type: GraphQLString,
-            resolve: ({ login }) => login
+            type: GraphQLString
         },
         token: {
-            type: GraphQLString,
-            resolve: ({ token }) => token
+            type: GraphQLString
         },
         error: {
-            type: GraphQLString,
-            resolve: ({ error }) => error
+            type: GraphQLString
         }
     }
-};
+});
 
 const MutationLogin = {
     type: UsersType,

@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { Users } from './models';
+import config from "../../config";
 
 
 const gerUsers = () => {
