@@ -12,7 +12,8 @@ const ClientsType = new GraphQLObjectType({
     name: 'Clients',
     fields: {
         clientId: {
-            type: GraphQLInt
+            type: GraphQLInt,
+            resolve: ({ _id }) => _id
         },
         email: {
             type: GraphQLString
