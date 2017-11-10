@@ -1,8 +1,21 @@
 import { Clients } from './models';
 
-const getClients = () => {
+const getClients = (args) => {
     return new Promise((resolve, reject) => {
-        Clients.find((err, client) => {
+        
+        let query;
+
+        if (args && args === 'trashed') {
+            query = { status : "trashed" }
+        }
+        else if (args === 'active') {
+            query = { status : { $exists : false } }
+        }
+        else {
+            query = {}
+        }
+
+        Clients.find(query, (err, client) => {
             if (err) reject(err);
             else resolve(client);
         })
@@ -26,7 +39,7 @@ const addClient = (args) => {
     });
 };
 
-const moveClient = ({ ids }) => {
+const moveClients = ({ ids }) => {
     return new Promise((resolve, reject) => {
 
         Clients.updateMany({ _id: { $in: ids }}, { $set: { status: 'trashed' }}, { new: true }, (err, res) => {
@@ -42,4 +55,4 @@ const moveClient = ({ ids }) => {
     });
 };
 
-export { getClients, addClient, moveClient };
+export { getClients, addClient, moveClients };

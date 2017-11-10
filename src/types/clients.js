@@ -8,7 +8,7 @@ import {
     GraphQLInputObjectType
 } from 'graphql';
 
-import { getClients, addClient, moveClient } from '../data/clients';
+import { getClients, addClient, moveClients } from '../data/clients';
 
 
 const IdsType = new GraphQLInputObjectType({
@@ -81,7 +81,7 @@ const MutationClients = {
     resolve: (root, args) => addClient(args)
 };
 
-const MutationMoveClient = {
+const MutationMoveClients = {
     type: OperationType,
     description: 'Move client to trash',
     args: {
@@ -90,13 +90,20 @@ const MutationMoveClient = {
         }
     },
     resolve: (root, { ids }) => {
-        return moveClient(ids)
+        return moveClients(ids)
     }
 };
 
 const QueryClients = {
     type: new GraphQLList(ClientsType),
-    resolve: () => getClients()
+    args: {
+        show: {
+            type: GraphQLString
+        }
+    },
+    resolve: (root, { show }) => {
+        return getClients(show)
+    }
 };
 
-export { QueryClients, MutationClients, MutationMoveClient }
+export { QueryClients, MutationClients, MutationMoveClients }
