@@ -8,7 +8,7 @@ import {
     GraphQLInputObjectType
 } from 'graphql';
 
-import { getClients, addClient, alterClients } from '../data/clients';
+import { getClients, addClient, alterClients, getClient } from '../data/clients';
 
 
 const IdsType = new GraphQLInputObjectType({
@@ -109,4 +109,16 @@ const QueryClients = {
     }
 };
 
-export { QueryClients, MutationClients, MutationAlterClients }
+const QueryClient = {
+    type: ClientsType,
+    args: {
+        id: {
+            type: GraphQLInt
+        }
+    },
+    resolve: (root, { id }) => {
+        return getClient(id)
+    }
+};
+
+export { QueryClients, MutationClients, MutationAlterClients, QueryClient }

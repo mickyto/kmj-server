@@ -15,13 +15,22 @@ const getClients = (args) => {
             query = {}
         }
 
-        Clients.find(query, (err, client) => {
+        Clients.find(query, (err, clients) => {
+            if (err) reject(err);
+            else resolve(clients);
+        })
+    })
+};
+
+const getClient = (id) => {
+    return new Promise((resolve, reject) => {
+
+        Clients.findById(id, (err, client) => {
             if (err) reject(err);
             else resolve(client);
         })
     })
 };
-
 
 const addClient = (args) => {
     return new Promise((resolve, reject) => {
@@ -66,4 +75,4 @@ const alterClients = ({ ids: { ids }, operation }) => {
     });
 };
 
-export { getClients, addClient, alterClients };
+export { getClients, addClient, alterClients, getClient };
