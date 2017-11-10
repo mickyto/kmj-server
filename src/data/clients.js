@@ -2,7 +2,7 @@ import { Clients } from './models';
 
 const getClients = (args) => {
     return new Promise((resolve, reject) => {
-        
+
         let query;
 
         if (args && args === 'trashed') {
@@ -39,20 +39,31 @@ const addClient = (args) => {
     });
 };
 
-const moveClients = ({ ids }) => {
+const alterClients = ({ ids: { ids }, operation }) => {
     return new Promise((resolve, reject) => {
 
-        Clients.updateMany({ _id: { $in: ids }}, { $set: { status: 'trashed' }}, { new: true }, (err, res) => {
+        const callback = (err, res) => {
             if (err) reject(err);
-
             if (!res) {
-                resolve({error: 'Не удалось переместить клиента'});
+                resolve({error: 'Операция не удалась'});
                 return;
             }
+            resolve(res.result || res);
+        };
 
-            resolve(res);
-        });
+        if (operation === 'move') {
+            Clients.updateMany({ _id: { $in: ids }}, { $set: { status: 'trashed' }}, callback);
+        }
+        else if (operation === 'remove') {
+            Clients.remove({ _id: { $in: ids }}, callback);
+        }
+        else if (operation === 'recovery') {
+            Clients.updateMany({ _id: { $in: ids }}, { $unset: { status: 1 }}, callback);
+        }
+        else {
+            resolve({error: 'Ошибка операции'});
+        }
     });
 };
 
-export { getClients, addClient, moveClients };
+export { getClients, addClient, alterClients };
