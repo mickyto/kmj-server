@@ -16,7 +16,7 @@ const queryType = new GraphQLObjectType({
     }
 });
 
-var MutationType = new GraphQLObjectType({
+const MutationType = new GraphQLObjectType({
     name: 'Mutation',
     fields: {
         login: MutationLogin,

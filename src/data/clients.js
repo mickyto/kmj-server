@@ -26,17 +26,18 @@ const addClient = (args) => {
     });
 };
 
-const moveClient = ({ id }) => {
+const moveClient = ({ ids }) => {
     return new Promise((resolve, reject) => {
 
-        Clients.findByIdAndUpdate(id, { $set: { status: 'trashed' }}, { new: true }, (err, client) => {
+        Clients.updateMany({ _id: { $in: ids }}, { $set: { status: 'trashed' }}, { new: true }, (err, res) => {
             if (err) reject(err);
 
-            if (!client) {
+            if (!res) {
                 resolve({error: 'Не удалось переместить клиента'});
                 return;
             }
-            resolve(client);
+
+            resolve(res);
         });
     });
 };

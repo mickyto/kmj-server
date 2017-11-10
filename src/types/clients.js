@@ -3,11 +3,35 @@ import {
     GraphQLString,
     GraphQLInt,
     GraphQLList,
-    GraphQLNonNull
+    GraphQLNonNull,
+    GraphQLBoolean,
+    GraphQLInputObjectType
 } from 'graphql';
 
 import { getClients, addClient, moveClient } from '../data/clients';
 
+
+const IdsType = new GraphQLInputObjectType({
+    name: 'IDs',
+    fields: {
+        ids: {
+            type: new GraphQLList(GraphQLInt),
+        }
+    }
+});
+
+const OperationType = new GraphQLObjectType({
+    name: 'Operation',
+    fields: {
+        isSuccess: {
+            type: GraphQLBoolean,
+            resolve: ({ ok }) => ok === 1
+        },
+        error: {
+            type: GraphQLString,
+        }
+    }
+});
 
 const ClientsType = new GraphQLObjectType({
     name: 'Clients',
@@ -54,21 +78,19 @@ const MutationClients = {
             type: new GraphQLNonNull(GraphQLString)
         }
     },
-    resolve: (root, args) => {
-        return addClient(args)
-    }
+    resolve: (root, args) => addClient(args)
 };
 
 const MutationMoveClient = {
-    type: ClientsType,
+    type: OperationType,
     description: 'Move client to trash',
     args: {
-        id: {
-            type: new GraphQLNonNull(GraphQLInt)
+        ids: {
+            type: IdsType
         }
     },
-    resolve: (root, id) => {
-        return moveClient(id)
+    resolve: (root, { ids }) => {
+        return moveClient(ids)
     }
 };
 
