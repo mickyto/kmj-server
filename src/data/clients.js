@@ -35,16 +35,21 @@ const getClient = (id) => {
 const addClient = (args) => {
     return new Promise((resolve, reject) => {
 
-        Clients.create(args, (err, res) => {
+        const callback = (err, res) => {
             if (err) reject(err);
-
             if (!res) {
-                resolve({error: 'Не удалось добавить нового клиента'});
+                resolve({error: 'Не удалось добавить или изменить данные клиента'});
                 return;
             }
-
             resolve(res);
-        });
+        };
+
+        if (args.id) {
+            Clients.findOneAndUpdate({ _id: args.id }, args, callback)
+        }
+        else {
+            Clients.create(args, callback);
+        }
     });
 };
 

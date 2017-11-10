@@ -65,6 +65,9 @@ const MutationClients = {
     type: ClientsType,
     description: 'Add new client',
     args: {
+        id: {
+            type: GraphQLInt
+        },
         fio: {
             type: new GraphQLNonNull(GraphQLString)
         },
