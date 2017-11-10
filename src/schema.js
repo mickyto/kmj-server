@@ -4,7 +4,7 @@ import {
 } from 'graphql';
 import { nodeField } from './utils/node';
 import { QueryUsers, MutationLogin } from './types/users';
-import { QueryClients, MutationClients } from './types/clients';
+import { QueryClients, MutationClients, MutationMoveClient } from './types/clients';
 
 
 const queryType = new GraphQLObjectType({
@@ -20,7 +20,9 @@ var MutationType = new GraphQLObjectType({
     name: 'Mutation',
     fields: {
         login: MutationLogin,
-        clients: MutationClients
+        addClient: MutationClients,
+        moveClient: MutationMoveClient
+
     }
 });
 

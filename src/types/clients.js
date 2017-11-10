@@ -6,7 +6,7 @@ import {
     GraphQLNonNull
 } from 'graphql';
 
-import { getClients, addClient } from '../data/clients';
+import { getClients, addClient, moveClient } from '../data/clients';
 
 
 const ClientsType = new GraphQLObjectType({
@@ -28,6 +28,9 @@ const ClientsType = new GraphQLObjectType({
         where_from: {
             type: GraphQLString,
         },
+        status: {
+            type: GraphQLString,
+        },
         error: {
             type: GraphQLString,
         }
@@ -36,7 +39,7 @@ const ClientsType = new GraphQLObjectType({
 
 const MutationClients = {
     type: ClientsType,
-    description: 'Clients',
+    description: 'Add new client',
     args: {
         fio: {
             type: new GraphQLNonNull(GraphQLString)
@@ -56,9 +59,22 @@ const MutationClients = {
     }
 };
 
+const MutationMoveClient = {
+    type: ClientsType,
+    description: 'Move client to trash',
+    args: {
+        id: {
+            type: new GraphQLNonNull(GraphQLInt)
+        }
+    },
+    resolve: (root, id) => {
+        return moveClient(id)
+    }
+};
+
 const QueryClients = {
     type: new GraphQLList(ClientsType),
     resolve: () => getClients()
 };
 
-export { QueryClients, MutationClients }
+export { QueryClients, MutationClients, MutationMoveClient }

@@ -16,7 +16,7 @@ const addClient = (args) => {
         Clients.create(args, (err, res) => {
             if (err) reject(err);
 
-            if (res === null) {
+            if (!res) {
                 resolve({error: 'Не удалось добавить нового клиента'});
                 return;
             }
@@ -26,4 +26,19 @@ const addClient = (args) => {
     });
 };
 
-export { getClients, addClient };
+const moveClient = ({ id }) => {
+    return new Promise((resolve, reject) => {
+
+        Clients.findByIdAndUpdate(id, { $set: { status: 'trashed' }}, { new: true }, (err, client) => {
+            if (err) reject(err);
+
+            if (!client) {
+                resolve({error: 'Не удалось переместить клиента'});
+                return;
+            }
+            resolve(client);
+        });
+    });
+};
+
+export { getClients, addClient, moveClient };

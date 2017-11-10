@@ -8,22 +8,29 @@ const db = mongoose.createConnection(`mongodb://${config.mongoHost}/${config.mon
 autoIncrement.initialize(db);
 
 const clientSchema = new Schema({
+    _id: { type: Number, ref: 'id' },
     fio: String,
     email: String,
     phone: String,
     where_from: String,
-    _id: { type: Number, ref: 'id' }
+    status: String,
 });
-clientSchema.plugin(autoIncrement.plugin, 'Clients');
+clientSchema.plugin(autoIncrement.plugin, {
+    model: 'Clients',
+    startAt: 1
+});
 
 const userSchema = new Schema({
+    _id: { type: Number, ref: 'id' },
     login: String,
     email: String,
     password: String,
     role: String,
-    _id: { type: Number, ref: 'id' }
 });
-userSchema.plugin(autoIncrement.plugin, 'Users');
+userSchema.plugin(autoIncrement.plugin, {
+    model: 'Users',
+    startAt: 3
+});
 
 
 const Clients = db.model('Clients', clientSchema);
