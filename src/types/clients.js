@@ -2,10 +2,11 @@ import {
     GraphQLObjectType,
     GraphQLString,
     GraphQLInt,
-    GraphQLList
+    GraphQLList,
+    GraphQLNonNull
 } from 'graphql';
 
-import { gerClients } from '../data/clients';
+import { getClients, addClient } from '../data/clients';
 
 
 const ClientsType = new GraphQLObjectType({
@@ -16,23 +17,48 @@ const ClientsType = new GraphQLObjectType({
             resolve: ({ _id }) => _id
         },
         email: {
-            type: GraphQLString
+            type: GraphQLString,
         },
         fio: {
-            type: GraphQLString
+            type: GraphQLString,
         },
         phone: {
-            type: GraphQLString
+            type: GraphQLString,
         },
         where_from: {
-            type: GraphQLString
+            type: GraphQLString,
+        },
+        error: {
+            type: GraphQLString,
         }
     }
 });
 
-const QueryClients = {
-    type: new GraphQLList(ClientsType),
-    resolve: () => gerClients()
+const MutationClients = {
+    type: ClientsType,
+    description: 'Clients',
+    args: {
+        fio: {
+            type: new GraphQLNonNull(GraphQLString)
+        },
+        phone: {
+            type: new GraphQLNonNull(GraphQLString)
+        },
+        email: {
+            type: new GraphQLNonNull(GraphQLString)
+        },
+        where_from: {
+            type: new GraphQLNonNull(GraphQLString)
+        }
+    },
+    resolve: (root, args) => {
+        return addClient(args)
+    }
 };
 
-export { QueryClients }
+const QueryClients = {
+    type: new GraphQLList(ClientsType),
+    resolve: () => getClients()
+};
+
+export { QueryClients, MutationClients }
