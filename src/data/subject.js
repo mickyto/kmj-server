@@ -1,8 +1,10 @@
 import { Subjects } from './models';
 
-const getSubjects = () => {
+const getSubjects = (ids) => {
+
+    const query = ids ? { _id: { $in: ids }} : {};
     return new Promise((resolve, reject) => {
-        Subjects.find({}, (err, subjects) => {
+        Subjects.find(query, (err, subjects) => {
             if (err) reject(err);
             else resolve(subjects);
         })

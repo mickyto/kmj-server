@@ -44,4 +44,4 @@ const MutationSubjects = {
     resolve: (root, args) => subjectCrud(args)
 };
 
-export { QuerySubjects, MutationSubjects };
+export { QuerySubjects, MutationSubjects, SubjectsType };

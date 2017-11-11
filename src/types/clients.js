@@ -4,38 +4,17 @@ import {
     GraphQLInt,
     GraphQLList,
     GraphQLNonNull,
-    GraphQLBoolean,
-    GraphQLInputObjectType
 } from 'graphql';
 
 import { getClients, addClient, alterClients, getClient } from '../data/clients';
+import { getPupilByClientId } from '../data/pupils';
+import { IdsType, OperationType } from './common';
+import { PupilsType } from './pupils';
 
-
-const IdsType = new GraphQLInputObjectType({
-    name: 'IDs',
-    fields: {
-        ids: {
-            type: new GraphQLList(GraphQLInt),
-        }
-    }
-});
-
-const OperationType = new GraphQLObjectType({
-    name: 'Operation',
-    fields: {
-        isSuccess: {
-            type: GraphQLBoolean,
-            resolve: ({ ok }) => ok === 1
-        },
-        error: {
-            type: GraphQLString,
-        }
-    }
-});
 
 const ClientsType = new GraphQLObjectType({
     name: 'Clients',
-    fields: {
+    fields: () => ({
         clientId: {
             type: GraphQLInt,
             resolve: ({ _id }) => _id
@@ -52,13 +31,17 @@ const ClientsType = new GraphQLObjectType({
         where_from: {
             type: GraphQLString,
         },
+        pupil: {
+            type: PupilsType,
+            resolve: ({ _id }) => getPupilByClientId(_id)
+        },
         status: {
             type: GraphQLString,
         },
         error: {
             type: GraphQLString,
         }
-    }
+    })
 });
 
 const MutationClients = {
@@ -69,16 +52,16 @@ const MutationClients = {
             type: GraphQLInt
         },
         fio: {
-            type: new GraphQLNonNull(GraphQLString)
+            type: GraphQLString
         },
         phone: {
-            type: new GraphQLNonNull(GraphQLString)
+            type: GraphQLString
         },
         email: {
-            type: new GraphQLNonNull(GraphQLString)
+            type: GraphQLString
         },
         where_from: {
-            type: new GraphQLNonNull(GraphQLString)
+            type: GraphQLString
         }
     },
     resolve: (root, args) => addClient(args)
@@ -124,4 +107,4 @@ const QueryClient = {
     }
 };
 
-export { QueryClients, MutationClients, MutationAlterClients, QueryClient }
+export { QueryClients, MutationClients, MutationAlterClients, QueryClient, ClientsType }
