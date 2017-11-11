@@ -32,9 +32,19 @@ userSchema.plugin(autoIncrement.plugin, {
     startAt: 3
 });
 
+const subjectSchema = new Schema({
+    _id: { type: Number, ref: 'id' },
+    name: String,
+});
+subjectSchema.plugin(autoIncrement.plugin, {
+    model: 'Subjects',
+    startAt: 1
+});
+
 
 const Clients = db.model('Clients', clientSchema);
 const Users = db.model('Users', userSchema);
+const Subjects = db.model('Subjects', subjectSchema);
 
-export { Users, Clients }
+export { Users, Clients, Subjects }
 
