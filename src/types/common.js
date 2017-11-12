@@ -19,6 +19,10 @@ const IdsType = new GraphQLInputObjectType({
 const OperationType = new GraphQLObjectType({
     name: 'Operation',
     fields: {
+        id: {
+            type: GraphQLInt,
+            resolve: ({ _id }) => _id
+        },
         isSuccess: {
             type: GraphQLBoolean,
             resolve: ({ ok }) => ok === 1
