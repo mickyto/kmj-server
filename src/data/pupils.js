@@ -1,4 +1,4 @@
-import { Pupils } from './models';
+import { Pupils, Clients } from './models';
 
 const getPupils = (args) => {
     return new Promise((resolve, reject) => {
@@ -72,20 +72,41 @@ const alterPupils = ({ ids: { ids }, operation }) => {
                 resolve({error: 'Операция не удалась'});
                 return;
             }
-            resolve(res.result || res);
+
+            if (operation === 'move') {
+                Pupils.update({ _id: res._id }, { $set: { status: 'trashed' }}, (err) => {
+                    if (err) reject(err);
+                    Clients.update({ _id: res.clientId }, { $set: { status: 'trashed' }}, (err) => {
+                        if (err) reject(err);
+                        resolve({ ok: 1 });
+                    });
+                });
+            }
+            else if (operation === 'recovery') {
+                Pupils.update({ _id: res._id }, { $unset: { status: 1 }}, (err) => {
+                    if (err) reject(err);
+                    Clients.update({ _id: res.clientId }, { $unset: { status: 1 }}, (err) => {
+                        if (err) reject(err);
+                        resolve({ ok: 1 });
+                    });
+                });
+            }
+            else if (operation === 'remove') {
+                Pupils.remove({ _id: res._id }, (err) => {
+                    if (err) reject(err);
+                    Clients.remove({ _id: res.clientId }, (err) => {
+                        if (err) reject(err);
+                        resolve({ ok: 1 });
+                    });
+                });
+            }
+            else {
+                resolve({error: 'Ошибка операции'});
+            }
         };
 
-        if (operation === 'move') {
-            Pupils.updateMany({ _id: { $in: ids }}, { $set: { status: 'trashed' }}, callback);
-        }
-        else if (operation === 'remove') {
-            Pupils.remove({ _id: { $in: ids }}, callback);
-        }
-        else if (operation === 'recovery') {
-            Pupils.updateMany({ _id: { $in: ids }}, { $unset: { status: 1 }}, callback);
-        }
-        else {
-            resolve({error: 'Ошибка операции'});
+        for (let i = 0; i < ids.length; i++) {
+            Pupils.findById(ids[i], callback)
         }
     });
 };
