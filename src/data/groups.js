@@ -11,7 +11,6 @@ const getGroups = (ids) => {
     })
 };
 
-
 const removeGroup = (id) => {
     return new Promise((resolve, reject) => {
         Groups.findOneAndRemove({ _id: id }, (err, res) => {

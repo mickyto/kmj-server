@@ -11,6 +11,19 @@ const getSubjects = (ids) => {
     })
 };
 
+const removeSubject = (id) => {
+    return new Promise((resolve, reject) => {
+        Subjects.findOneAndRemove({ _id: id }, (err, res) => {
+            if (err) reject(err);
+            if (!res) {
+                resolve({error: 'Не удалось добавить или удалить предмет'});
+                return;
+            }
+            resolve(res);
+        })
+    })
+};
+
 const subjectCrud = (args) => {
     return new Promise((resolve, reject) => {
 
@@ -32,4 +45,4 @@ const subjectCrud = (args) => {
     });
 };
 
-export { subjectCrud, getSubjects };
+export { subjectCrud, getSubjects, removeSubject };

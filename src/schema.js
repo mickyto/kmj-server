@@ -3,7 +3,7 @@ import {
     GraphQLObjectType,
 } from 'graphql';
 import { nodeField } from './utils/node';
-import { QuerySubjects, MutationSubjects } from './types/subjects';
+import { QuerySubjects, MutationSubjects, MutationRemoveSubject } from './types/subjects';
 import { QueryGroups, MutationGroups, MutationRemoveGroup } from './types/groups';
 import { QueryUsers, MutationLogin } from './types/users';
 import { QueryClients, MutationClients, MutationAlterClients, QueryClient } from './types/clients';
@@ -40,7 +40,8 @@ const MutationType = new GraphQLObjectType({
         alterPupils: MutationAlterPupils,
         addTeacher: MutationTeachers,
         addGroup: MutationGroups,
-        removeGroup: MutationRemoveGroup
+        removeGroup: MutationRemoveGroup,
+        removeSubject: MutationRemoveSubject
     }
 });
 

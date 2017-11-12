@@ -2,9 +2,11 @@ import {
     GraphQLObjectType,
     GraphQLString,
     GraphQLInt,
-    GraphQLList
+    GraphQLList,
+    GraphQLNonNull
 } from 'graphql';
-import { subjectCrud, getSubjects } from '../data/subject';
+import { subjectCrud, getSubjects, removeSubject } from '../data/subject';
+import { OperationType } from './common';
 
 
 const SubjectsType = new GraphQLObjectType({
@@ -22,6 +24,16 @@ const SubjectsType = new GraphQLObjectType({
         }
     }
 });
+
+const MutationRemoveSubject = {
+    type: OperationType,
+    args: {
+        id: {
+            type: new GraphQLNonNull(GraphQLInt)
+        }
+    },
+    resolve: (root, { id }) => removeSubject(id)
+};
 
 const QuerySubjects = {
     type: new GraphQLList(SubjectsType),
@@ -44,4 +56,4 @@ const MutationSubjects = {
     resolve: (root, args) => subjectCrud(args)
 };
 
-export { QuerySubjects, MutationSubjects, SubjectsType };
+export { QuerySubjects, MutationSubjects, SubjectsType, MutationRemoveSubject };
