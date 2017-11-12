@@ -33,7 +33,7 @@ const getUser = ({email, password}) => {
                 }
 
                 res.token = jwt.sign(payload, config.secret, {
-                    expiresIn: 1440 // expires in 24 hours
+                    expiresIn: '2h'
                 });
                 resolve(res);
             }

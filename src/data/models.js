@@ -57,11 +57,24 @@ subjectSchema.plugin(autoIncrement.plugin, {
     startAt: 1
 });
 
+const teacherSchema = new Schema({
+    _id: { type: Number, ref: 'id' },
+    fio: String,
+    email: String,
+    phone: String,
+    subjects: Object
+});
+teacherSchema.plugin(autoIncrement.plugin, {
+    model: 'Teachers',
+    startAt: 1
+});
+
 
 const Clients = db.model('Clients', clientSchema);
 const Pupils = db.model('Pupils', pupilSchema);
 const Users = db.model('Users', userSchema);
 const Subjects = db.model('Subjects', subjectSchema);
+const Teachers = db.model('Teachers', teacherSchema);
 
 
-export { Users, Clients, Pupils, Subjects }
+export { Users, Clients, Pupils, Subjects, Teachers }

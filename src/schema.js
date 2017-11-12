@@ -7,6 +7,8 @@ import { QuerySubjects, MutationSubjects } from './types/subjects';
 import { QueryUsers, MutationLogin } from './types/users';
 import { QueryClients, MutationClients, MutationAlterClients, QueryClient } from './types/clients';
 import { QueryPupils, MutationPupils, MutationAlterPupils, QueryPupil } from './types/pupils';
+import { QueryTeachers, MutationTeachers, QueryTeacher } from './types/teachers';
+
 
 
 const queryType = new GraphQLObjectType({
@@ -18,7 +20,9 @@ const queryType = new GraphQLObjectType({
         clients: QueryClients,
         client: QueryClient,
         pupils: QueryPupils,
-        pupil: QueryPupil
+        pupil: QueryPupil,
+        teachers: QueryTeachers,
+        teacher: QueryTeacher
     }
 });
 
@@ -31,6 +35,7 @@ const MutationType = new GraphQLObjectType({
         addSubject: MutationSubjects,
         addPupil: MutationPupils,
         alterPupils: MutationAlterPupils,
+        addTeacher: MutationTeachers
     }
 });
 
