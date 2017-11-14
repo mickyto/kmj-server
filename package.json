@@ -1,7 +1,7 @@
 {
-  "name": "graphql",
+  "name": "KMJ graphql-server",
   "version": "1.0.0",
-  "description": "Skukit GraphQL server",
+  "description": "KMJ GraphQL server",
   "scripts": {
     "start": "nodemon src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -17,14 +17,9 @@
     "express": "^4.14.0",
     "express-graphql": "^0.6.11",
     "graphql": "^0.11.7",
-    "graphql-relay": "^0.5.3",
-    "graphql-sequelize": "^5.4.2",
     "jsonwebtoken": "^8.1.0",
     "mongoose": "^4.6.6",
-    "mongoose-auto-increment": "^5.0.1",
-    "mysql": "^2.11.1",
-    "mysql2": "^1.4.2",
-    "sequelize": "^4.14.0"
+    "mongoose-auto-increment": "^5.0.1"
   },
   "devDependencies": {
     "nodemon": "^1.10.2"
