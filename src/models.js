@@ -1,11 +1,24 @@
 import mongoose from 'mongoose';
-import config from "../../config";
 import autoIncrement from'mongoose-auto-increment';
+import config from "../config";
 
 mongoose.Promise = global.Promise;
 const Schema = mongoose.Schema;
 const db = mongoose.createConnection(`mongodb://${config.mongoHost}/${config.mongoName}`);
 autoIncrement.initialize(db);
+
+
+const userSchema = new Schema({
+    _id: { type: Number, ref: 'id' },
+    login: String,
+    email: String,
+    password: String,
+    role: String,
+});
+userSchema.plugin(autoIncrement.plugin, {
+    model: 'Users',
+    startAt: 3
+});
 
 const clientSchema = new Schema({
     _id: { type: Number, ref: 'id' },
@@ -36,27 +49,6 @@ pupilSchema.plugin(autoIncrement.plugin, {
     startAt: 1
 });
 
-const userSchema = new Schema({
-    _id: { type: Number, ref: 'id' },
-    login: String,
-    email: String,
-    password: String,
-    role: String,
-});
-userSchema.plugin(autoIncrement.plugin, {
-    model: 'Users',
-    startAt: 3
-});
-
-const subjectSchema = new Schema({
-    _id: { type: Number, ref: 'id' },
-    name: String,
-});
-subjectSchema.plugin(autoIncrement.plugin, {
-    model: 'Subjects',
-    startAt: 1
-});
-
 const groupSchema = new Schema({
     _id: { type: Number, ref: 'id' },
     name: String,
@@ -79,13 +71,34 @@ teacherSchema.plugin(autoIncrement.plugin, {
     startAt: 1
 });
 
+const formatSchema = new Schema({
+    _id: { type: Number, ref: 'id' },
+    title: String,
+    priceForCycle: Number,
+    countOfLessons: Number,
+    duration: Object
+});
+formatSchema.plugin(autoIncrement.plugin, {
+    model: 'Formats',
+    startAt: 1
+});
 
+const subjectSchema = new Schema({
+    _id: { type: Number, ref: 'id' },
+    name: String,
+});
+subjectSchema.plugin(autoIncrement.plugin, {
+    model: 'Subjects',
+    startAt: 1
+});
+
+const Users = db.model('Users', userSchema);
 const Clients = db.model('Clients', clientSchema);
 const Pupils = db.model('Pupils', pupilSchema);
-const Users = db.model('Users', userSchema);
-const Subjects = db.model('Subjects', subjectSchema);
-const Teachers = db.model('Teachers', teacherSchema);
 const Groups = db.model('Groups', groupSchema);
+const Teachers = db.model('Teachers', teacherSchema);
+const Formats = db.model('Formats', formatSchema);
+const Subjects = db.model('Subjects', subjectSchema);
 
 
-export { Users, Clients, Pupils, Subjects, Teachers, Groups }
+export { Users, Clients, Pupils, Groups, Teachers, Formats, Subjects }

@@ -1,9 +1,9 @@
 {
-  "name": "KMJ graphql-server",
+  "name": "KMJ-graphql-server",
   "version": "1.0.0",
   "description": "KMJ GraphQL server",
   "scripts": {
-    "start": "nodemon src/index.js",
+    "start": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
