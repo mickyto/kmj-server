@@ -23,7 +23,8 @@ const addOrEditFormat = (args) => {
         };
 
         if (args.id) {
-            Formats.findOneAndUpdate({ _id: args.id }, callback)
+            Formats.findOneAndUpdate({ _id: args.id }, args, callback);
+            return;
         }
 
         Formats.create(args, callback);

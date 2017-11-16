@@ -2,7 +2,7 @@ import { Subjects } from '../models';
 
 const getSubjects = (ids) => {
 
-    // TODO why I need conditional query
+    // TODO why I need conditional query?
     const query = ids ? { _id: { $in: ids }} : {};
     return new Promise((resolve, reject) => {
         Subjects.find(query, (err, subjects) => {

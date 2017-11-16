@@ -51,10 +51,10 @@ const MutationAddOrEditFormat = {
             type: GraphQLString
         },
         priceForCycle: {
-            type: GraphQLString
+            type: GraphQLInt
         },
         countOfLessons: {
-            type: GraphQLString
+            type: GraphQLInt
         },
         duration: {
             type: GraphQLString
