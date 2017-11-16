@@ -1,31 +1,27 @@
-import {
-    GraphQLSchema,
-    GraphQLObjectType,
-} from 'graphql';
-import { nodeField } from './utils/node';
-import { QuerySubjects, MutationSubjects, MutationRemoveSubject } from './types/subjects';
-import { QueryGroups, MutationGroups, MutationRemoveGroup } from './types/groups';
-import { QueryUsers, MutationLogin } from './types/users';
-import { QueryClients, MutationClients, MutationAlterClients, QueryClient } from './types/clients';
-import { QueryPupils, MutationPupils, MutationAlterPupils, QueryPupil } from './types/pupils';
-import { QueryTeachers, MutationTeachers, QueryTeacher } from './types/teachers';
+import { GraphQLSchema, GraphQLObjectType } from 'graphql';
 
+import { QueryUsers, MutationLogin } from './types/users';
+import { QueryClients, QueryClient, MutationAddOrEditClient, MutationMoveClients } from './types/clients';
+import { QueryPupils, MutationPupils, MutationAlterPupils, QueryPupil } from './types/pupils';
+import { QueryGroups, MutationGroups, MutationRemoveGroup } from './types/groups';
+import { QueryTeachers, MutationTeachers, QueryTeacher } from './types/teachers';
+import { QueryFormats, MutationAddOrEditFormat, MutationRemoveFormat } from './types/formats';
+import { QuerySubjects, MutationAddOrEditSubject, MutationRemoveSubject } from './types/subjects';
 
 
 const queryType = new GraphQLObjectType({
     name: 'Query',
     fields: {
-        node: nodeField,
-        subjects: QuerySubjects,
         users: QueryUsers,
         clients: QueryClients,
         client: QueryClient,
         pupils: QueryPupils,
         pupil: QueryPupil,
+        groups: QueryGroups,
         teachers: QueryTeachers,
         teacher: QueryTeacher,
-        groups: QueryGroups,
-
+        formats: QueryFormats,
+        subjects: QuerySubjects,
     }
 });
 
@@ -33,15 +29,17 @@ const MutationType = new GraphQLObjectType({
     name: 'Mutation',
     fields: {
         login: MutationLogin,
-        addClient: MutationClients,
-        alterClients: MutationAlterClients,
-        addSubject: MutationSubjects,
+        addOrEditClient: MutationAddOrEditClient,
+        moveClients: MutationMoveClients,
         addPupil: MutationPupils,
         alterPupils: MutationAlterPupils,
-        addTeacher: MutationTeachers,
         addGroup: MutationGroups,
         removeGroup: MutationRemoveGroup,
-        removeSubject: MutationRemoveSubject
+        addTeacher: MutationTeachers,
+        addOrEditFormat: MutationAddOrEditFormat,
+        removeFormat: MutationRemoveFormat,
+        addOrEditSubject: MutationAddOrEditSubject,
+        removeSubject: MutationRemoveSubject,
     }
 });
 

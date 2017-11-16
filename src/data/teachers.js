@@ -1,4 +1,4 @@
-import { Teachers } from './models';
+import { Teachers } from '../models';
 
 const getTeachers = (ids) => {
 

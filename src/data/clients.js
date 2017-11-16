@@ -1,4 +1,4 @@
-import { Clients, Pupils } from './models';
+import { Clients, Pupils } from '../models';
 
 const getClients = (args) => {
     return new Promise((resolve, reject) => {
@@ -24,7 +24,6 @@ const getClients = (args) => {
 
 const getClient = (id) => {
     return new Promise((resolve, reject) => {
-
         Clients.findById(id, (err, client) => {
             if (err) reject(err);
             else resolve(client);
@@ -32,16 +31,17 @@ const getClient = (id) => {
     })
 };
 
-const addClient = (args) => {
+const addOrEditClient = (args) => {
     return new Promise((resolve, reject) => {
 
-        const callback = (err, res) => {
+        const callback = (err, client) => {
             if (err) reject(err);
-            if (!res) {
+            if (!client) {
                 resolve({error: 'Не удалось добавить или изменить данные клиента'});
                 return;
             }
-            resolve(res);
+            console.log(client)
+            resolve(client);
         };
 
         if (args.id) {
@@ -53,34 +53,34 @@ const addClient = (args) => {
     });
 };
 
-const alterClients = ({ ids: { ids }, operation }) => {
+const moveClients = ({ id, operation }) => {
     return new Promise((resolve, reject) => {
 
-        const callback = (err, res) => {
+        const callback = (err, client) => {
             if (err) reject(err);
-            if (!res) {
-                resolve({error: 'Операция не удалась'});
+            if (!client) {
+                resolve({error: 'Клиент не найден'});
                 return;
             }
-            resolve(res.result || res);
+            resolve(client.result || client);
         };
 
         if (operation === 'move') {
-            Clients.updateMany({ _id: { $in: ids }}, { $set: { status: 'trashed' }}, (err) => {
+            Clients.update({ _id: id }, { $set: { status: 'trashed' }}, (err) => {
                 if (err) reject(err);
-                Pupils.updateMany({ clientId: { $in: ids }}, { $set: { status: 'trashed' }}, callback);
+                Pupils.update({ clientId: id }, { $set: { status: 'trashed' }}, callback);
             });
         }
         else if (operation === 'remove') {
-            Clients.remove({ _id: { $in: ids }}, (err) => {
+            Clients.remove({ _id: id }, (err) => {
                 if (err) reject(err);
-                Pupils.remove({ clientId: { $in: ids }}, callback);
+                Pupils.remove({ clientId: id }, callback);
             });
         }
         else if (operation === 'recovery') {
-            Clients.updateMany({ _id: { $in: ids }}, { $unset: { status: 1 }}, (err) => {
+            Clients.update({ _id: id }, { $unset: { status: 1 }}, (err) => {
                 if (err) reject(err);
-                Pupils.updateMany({ clientId: { $in: ids }}, { $unset: { status: 1 }}, callback);
+                Pupils.update({ clientId: id }, { $unset: { status: 1 }}, callback);
             });
         }
         else {
@@ -89,4 +89,4 @@ const alterClients = ({ ids: { ids }, operation }) => {
     });
 };
 
-export { getClients, addClient, alterClients, getClient };
+export { getClients, getClient, addOrEditClient, moveClients };

@@ -5,7 +5,7 @@ import {
     GraphQLList
 } from 'graphql';
 import { teacherCrud, getTeachers, getTeacher } from '../data/teachers';
-import { getSubjects } from '../data/subject';
+import { getSubjects } from '../data/subjects';
 import { SubjectsType } from './subjects';
 import { IdsType } from './common';
 

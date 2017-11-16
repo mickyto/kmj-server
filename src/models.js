@@ -23,10 +23,12 @@ userSchema.plugin(autoIncrement.plugin, {
 const clientSchema = new Schema({
     _id: { type: Number, ref: 'id' },
     fio: String,
-    email: String,
     phone: String,
+    email: String,
     where_from: String,
-    status: String,
+    location: String,
+    description: String,
+    status: String
 });
 clientSchema.plugin(autoIncrement.plugin, {
     model: 'Clients',

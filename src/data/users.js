@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
-import { Users } from './models';
+
+import { Users } from '../models';
 import config from "../../config";
 
 
@@ -12,30 +13,30 @@ const gerUsers = () => {
     })
 };
 
-const getUser = ({email, password}) => {
+const getUser = ({ email, password }) => {
     return new Promise((resolve, reject) => {
-        Users.findOne({ email: email }).exec((err, res) => {
+        Users.findOne({ email: email }).exec((err, user) => {
             if (err) reject(err);
 
-            if (res === null) {
+            if (user === null) {
                 resolve({error: 'Пользователь не найден'});
                 return;
             }
 
-            if (res.password == password) {
+            if (user.password == password) {
 
                 const payload = {
-                    login: res.login || res.email,
+                    login: user.login || user.email,
                 };
 
-                if(res.role) {
-                    payload.role = res.role;
+                if(user.role) {
+                    payload.role = user.role;
                 }
 
-                res.token = jwt.sign(payload, config.secret, {
-                    expiresIn: '2h'
+                user.token = jwt.sign(payload, config.secret, {
+                    expiresIn: '3h'
                 });
-                resolve(res);
+                resolve(user);
             }
             else {
                 resolve({error: 'Вы ввели неверный логин или пароль'});
@@ -44,4 +45,4 @@ const getUser = ({email, password}) => {
     });
 };
 
-export { getUser, gerUsers };
+export { gerUsers, getUser };

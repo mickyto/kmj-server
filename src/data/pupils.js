@@ -1,4 +1,4 @@
-import { Pupils, Clients } from './models';
+import { Pupils, Clients } from '../models';
 
 const getPupils = (args) => {
     return new Promise((resolve, reject) => {

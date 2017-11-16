@@ -6,9 +6,9 @@ import {
     GraphQLNonNull,
 } from 'graphql';
 
-import { getClients, addClient, alterClients, getClient } from '../data/clients';
+import { getClients, getClient, addOrEditClient, moveClients } from '../data/clients';
 import { getPupilByClientId } from '../data/pupils';
-import { IdsType, OperationType } from './common';
+import { OperationType } from './common';
 import { PupilsType } from './pupils';
 
 
@@ -19,16 +19,22 @@ const ClientsType = new GraphQLObjectType({
             type: GraphQLInt,
             resolve: ({ _id }) => _id
         },
-        email: {
-            type: GraphQLString,
-        },
         fio: {
             type: GraphQLString,
         },
         phone: {
             type: GraphQLString,
         },
+        email: {
+            type: GraphQLString,
+        },
         where_from: {
+            type: GraphQLString,
+        },
+        location: {
+            type: GraphQLString,
+        },
+        description: {
             type: GraphQLString,
         },
         pupil: {
@@ -44,15 +50,37 @@ const ClientsType = new GraphQLObjectType({
     })
 });
 
-const MutationClients = {
+const QueryClients = {
+    type: new GraphQLList(ClientsType),
+    description: 'Get all clients',
+    args: {
+        show: {
+            type: GraphQLString
+        }
+    },
+    resolve: (root, { show }) => getClients(show)
+};
+
+const QueryClient = {
+    description: 'Get one client',
     type: ClientsType,
-    description: 'Add new client',
+    args: {
+        id: {
+            type: GraphQLInt
+        }
+    },
+    resolve: (root, { id }) => getClient(id)
+};
+
+const MutationAddOrEditClient = {
+    type: ClientsType,
+    description: 'Edit or add new client',
     args: {
         id: {
             type: GraphQLInt
         },
         fio: {
-            type: GraphQLString
+            type: new GraphQLNonNull(GraphQLString)
         },
         phone: {
             type: GraphQLString
@@ -62,49 +90,31 @@ const MutationClients = {
         },
         where_from: {
             type: GraphQLString
-        }
+        },
+        location: {
+            type: GraphQLString,
+        },
+        description: {
+            type: GraphQLString,
+        },
     },
-    resolve: (root, args) => addClient(args)
+    resolve: (root, args) => addOrEditClient(args)
 };
 
-const MutationAlterClients = {
+const MutationMoveClients = {
     type: OperationType,
-    description: 'Move client to trash',
+    description: 'Mark client as removed, recover or remove forever',
     args: {
-        ids: {
-            type: new GraphQLNonNull(IdsType)
+        id: {
+            type: new GraphQLNonNull(GraphQLInt)
         },
         operation: {
             type: new GraphQLNonNull(GraphQLString)
         }
     },
     resolve: (root, args) => {
-        return alterClients(args)
+        return moveClients(args)
     }
 };
 
-const QueryClients = {
-    type: new GraphQLList(ClientsType),
-    args: {
-        show: {
-            type: GraphQLString
-        }
-    },
-    resolve: (root, { show }) => {
-        return getClients(show)
-    }
-};
-
-const QueryClient = {
-    type: ClientsType,
-    args: {
-        id: {
-            type: GraphQLInt
-        }
-    },
-    resolve: (root, { id }) => {
-        return getClient(id)
-    }
-};
-
-export { QueryClients, MutationClients, MutationAlterClients, QueryClient, ClientsType }
+export { ClientsType, QueryClients, QueryClient,  MutationAddOrEditClient, MutationMoveClients }

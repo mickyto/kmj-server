@@ -1,4 +1,4 @@
-import { Groups } from './models';
+import { Groups } from '../models';
 
 const getGroups = (ids) => {
 

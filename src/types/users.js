@@ -6,7 +6,7 @@ import {
     GraphQLNonNull
 } from 'graphql';
 
-import { getUser, gerUsers } from '../data/users';
+import { gerUsers, getUser } from '../data/users';
 
 
 const UsersType = new GraphQLObjectType({
@@ -31,6 +31,12 @@ const UsersType = new GraphQLObjectType({
     }
 });
 
+const QueryUsers = {
+    type: new GraphQLList(UsersType),
+    description: 'Get all users',
+    resolve: () => gerUsers()
+};
+
 const MutationLogin = {
     type: UsersType,
     description: 'Login',
@@ -45,9 +51,6 @@ const MutationLogin = {
     resolve: (root, args) => getUser(args)
 };
 
-const QueryUsers = {
-    type: new GraphQLList(UsersType),
-    resolve: () => gerUsers()
-};
 
-export { MutationLogin, QueryUsers }
+
+export { QueryUsers, MutationLogin }

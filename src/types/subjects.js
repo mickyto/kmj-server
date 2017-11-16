@@ -5,7 +5,7 @@ import {
     GraphQLList,
     GraphQLNonNull
 } from 'graphql';
-import { subjectCrud, getSubjects, removeSubject } from '../data/subject';
+import { getSubjects, addOrEditSubject, removeSubject } from '../data/subjects';
 import { OperationType } from './common';
 
 
@@ -25,24 +25,13 @@ const SubjectsType = new GraphQLObjectType({
     }
 });
 
-const MutationRemoveSubject = {
-    type: OperationType,
-    args: {
-        id: {
-            type: new GraphQLNonNull(GraphQLInt)
-        }
-    },
-    resolve: (root, { id }) => removeSubject(id)
-};
-
 const QuerySubjects = {
     type: new GraphQLList(SubjectsType),
-    resolve: () => {
-        return getSubjects()
-    }
+    description: 'Get all subjects',
+    resolve: () => getSubjects()
 };
 
-const MutationSubjects = {
+const MutationAddOrEditSubject = {
     type: SubjectsType,
     description: 'Add or remove subject',
     args: {
@@ -53,7 +42,18 @@ const MutationSubjects = {
             type: GraphQLString
         }
     },
-    resolve: (root, args) => subjectCrud(args)
+    resolve: (root, args) => addOrEditSubject(args)
 };
 
-export { QuerySubjects, MutationSubjects, SubjectsType, MutationRemoveSubject };
+const MutationRemoveSubject = {
+    type: OperationType,
+    description: 'Remove one subject',
+    args: {
+        id: {
+            type: new GraphQLNonNull(GraphQLInt)
+        }
+    },
+    resolve: (root, { id }) => removeSubject(id)
+};
+
+export { SubjectsType, QuerySubjects, MutationAddOrEditSubject, MutationRemoveSubject };

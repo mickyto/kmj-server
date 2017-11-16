@@ -7,7 +7,7 @@ import {
 } from 'graphql';
 
 import { getPupils, addPupil, alterPupils, getPupil} from '../data/pupils';
-import { getSubjects } from '../data/subject';
+import { getSubjects } from '../data/subjects';
 import { getClient } from '../data/clients';
 import { IdsType, OperationType } from './common';
 import { SubjectsType } from './subjects';
