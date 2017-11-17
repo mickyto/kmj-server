@@ -24,7 +24,6 @@ const getPupils = (args) => {
 
 const getPupil = (id) => {
     return new Promise((resolve, reject) => {
-
         Pupils.findById(id, (err, pupil) => {
             if (err) reject(err);
             else resolve(pupil);
@@ -34,7 +33,6 @@ const getPupil = (id) => {
 
 const getPupilByClientId = (id) => {
     return new Promise((resolve, reject) => {
-
         Pupils.findOne({ clientId: id }, (err, pupil) => {
             if (err) reject(err);
             else resolve(pupil);
@@ -42,20 +40,23 @@ const getPupilByClientId = (id) => {
     })
 };
 
-const addPupil = (args) => {
+const addOrEditPupil = (args) => {
     return new Promise((resolve, reject) => {
 
-        const callback = (err, res) => {
+        const callback = (err, pupil) => {
             if (err) reject(err);
-            if (!res) {
+            if (!pupil) {
                 resolve({error: 'Не удалось добавить или изменить данные ученика'});
                 return;
             }
-            resolve(res);
+            resolve(pupil);
         };
 
         if (args.id) {
             Pupils.findOneAndUpdate({ _id: args.id }, args, callback)
+        }
+        else if (!args.clientId) {
+            resolve({error: 'Ошибка. Вы пытаетесь создать ученика без клиента'});
         }
         else {
             Pupils.create(args, callback);
@@ -63,52 +64,43 @@ const addPupil = (args) => {
     });
 };
 
-const alterPupils = ({ ids: { ids }, operation }) => {
+const movePupil = ({ id, operation }) => {
     return new Promise((resolve, reject) => {
 
-        const callback = (err, res) => {
-            if (err) reject(err);
-            if (!res) {
-                resolve({error: 'Операция не удалась'});
-                return;
-            }
-
-            if (operation === 'move') {
-                Pupils.update({ _id: res._id }, { $set: { status: 'trashed' }}, (err) => {
+        if (operation === 'move') {
+            Pupils.findOneAndUpdate({ _id: id }, { $set: { status: 'trashed' }}, (err, pupil) => {
+                if (err) reject(err);
+                Clients.update({ _id: pupil.clientId }, { $set: { status: 'trashed' }}, (err) => {
                     if (err) reject(err);
-                    Clients.update({ _id: res.clientId }, { $set: { status: 'trashed' }}, (err) => {
+                    resolve({ ok: 1 });
+                });
+            });
+        }
+        else if (operation === 'recovery') {
+            Pupils.findOneAndUpdate({ _id: id }, { $unset: { status: 1 }}, (err, pupil) => {
+                if (err) reject(err);
+                Clients.update({ _id: pupil.clientId }, { $unset: { status: 1 }}, (err) => {
+                    if (err) reject(err);
+                    resolve({ ok: 1 });
+                });
+            });
+        }
+        else if (operation === 'remove') {
+            Pupils.findById(id, (err, pupil) => {
+                if (err) reject(err);
+                Pupils.remove({ _id: pupil._id }, (err) => {
+                    if (err) reject(err);
+                    Clients.remove({ _id: pupil.clientId }, (err) => {
                         if (err) reject(err);
                         resolve({ ok: 1 });
                     });
                 });
-            }
-            else if (operation === 'recovery') {
-                Pupils.update({ _id: res._id }, { $unset: { status: 1 }}, (err) => {
-                    if (err) reject(err);
-                    Clients.update({ _id: res.clientId }, { $unset: { status: 1 }}, (err) => {
-                        if (err) reject(err);
-                        resolve({ ok: 1 });
-                    });
-                });
-            }
-            else if (operation === 'remove') {
-                Pupils.remove({ _id: res._id }, (err) => {
-                    if (err) reject(err);
-                    Clients.remove({ _id: res.clientId }, (err) => {
-                        if (err) reject(err);
-                        resolve({ ok: 1 });
-                    });
-                });
-            }
-            else {
-                resolve({error: 'Ошибка операции'});
-            }
-        };
-
-        for (let i = 0; i < ids.length; i++) {
-            Pupils.findById(ids[i], callback)
+            });
+        }
+        else {
+            resolve({error: 'Ошибка операции'});
         }
     });
 };
 
-export { getPupils, addPupil, alterPupils, getPupil, getPupilByClientId };
+export { getPupils, getPupil, addOrEditPupil, movePupil, getPupilByClientId };

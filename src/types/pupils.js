@@ -6,15 +6,15 @@ import {
     GraphQLNonNull,
 } from 'graphql';
 
-import { getPupils, addPupil, alterPupils, getPupil} from '../data/pupils';
-import { getSubjects } from '../data/subjects';
+import { getPupils, getPupil, addOrEditPupil, movePupil} from '../data/pupils';
+import { getGroups } from '../data/groups';
 import { getClient } from '../data/clients';
-import { IdsType, OperationType } from './common';
-import { SubjectsType } from './subjects';
-import { ClientsType } from './clients';
+import { IdType, OperationType } from './common';
+import { GroupType } from './groups';
+import { ClientType } from './clients';
 
 
-const PupilsType = new GraphQLObjectType({
+const PupilType = new GraphQLObjectType({
     name: 'Pupils',
     fields: () => ({
         pupilId: {
@@ -36,12 +36,12 @@ const PupilsType = new GraphQLObjectType({
         school: {
             type: GraphQLString,
         },
-        subjects: {
-            type: new GraphQLList(SubjectsType),
-            resolve: ({ subjects }) => getSubjects(subjects.ids)
+        groups: {
+            type: new GraphQLList(GroupType),
+            resolve: ({ groups }) => getGroups(groups)
         },
         parent: {
-            type: ClientsType,
+            type: ClientType,
             resolve: ({ clientId }) => getClient(clientId)
         },
         status: {
@@ -53,9 +53,31 @@ const PupilsType = new GraphQLObjectType({
     })
 });
 
-const MutationPupils = {
-    type: PupilsType,
-    description: 'Add new pupil',
+const QueryPupils = {
+    type: new GraphQLList(PupilType),
+    description: 'Get all pupils',
+    args: {
+        show: {
+            type: GraphQLString
+        }
+    },
+    resolve: (root, { show }) => getPupils(show)
+};
+
+const QueryPupil = {
+    type: PupilType,
+    description: 'Get one pupil',
+    args: {
+        id: {
+            type: GraphQLInt
+        }
+    },
+    resolve: (root, { id }) => getPupil(id)
+};
+
+const MutationAddOrEditPupil = {
+    type: PupilType,
+    description: 'Edit or add new pupil',
     args: {
         id: {
             type: GraphQLInt
@@ -72,8 +94,8 @@ const MutationPupils = {
         class: {
             type: GraphQLInt,
         },
-        subjects: {
-            type: IdsType,
+        groups: {
+            type: new GraphQLList(IdType),
         },
         school: {
             type: GraphQLString,
@@ -82,49 +104,21 @@ const MutationPupils = {
             type: GraphQLInt
         }
     },
-    resolve: (root, args) => {
-        return addPupil(args)
-    }
+    resolve: (root, args) => addOrEditPupil(args)
 };
 
-const MutationAlterPupils = {
+const MutationMovePupil = {
     type: OperationType,
-    description: 'Move client to trash',
+    description: 'Mark pupil as removed, recover or remove forever',
     args: {
-        ids: {
-            type: new GraphQLNonNull(IdsType)
+        id: {
+            type: new GraphQLNonNull(GraphQLInt)
         },
         operation: {
             type: new GraphQLNonNull(GraphQLString)
         }
     },
-    resolve: (root, args) => {
-        return alterPupils(args)
-    }
+    resolve: (root, args) => movePupil(args)
 };
 
-const QueryPupils = {
-    type: new GraphQLList(PupilsType),
-    args: {
-        show: {
-            type: GraphQLString
-        }
-    },
-    resolve: (root, { show }) => {
-        return getPupils(show)
-    }
-};
-
-const QueryPupil = {
-    type: PupilsType,
-    args: {
-        id: {
-            type: GraphQLInt
-        }
-    },
-    resolve: (root, { id }) => {
-        return getPupil(id)
-    }
-};
-
-export { QueryPupils, MutationPupils, MutationAlterPupils, QueryPupil, PupilsType };
+export { QueryPupils, MutationAddOrEditPupil, MutationMovePupil, QueryPupil, PupilType };

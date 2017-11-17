@@ -2,16 +2,15 @@ import {
     GraphQLObjectType,
     GraphQLString,
     GraphQLInt,
-    GraphQLList,
     GraphQLBoolean,
     GraphQLInputObjectType
 } from 'graphql';
 
-const IdsType = new GraphQLInputObjectType({
+const IdType = new GraphQLInputObjectType({
     name: 'IDs',
     fields: {
-        ids: {
-            type: new GraphQLList(GraphQLInt),
+        id: {
+            type: GraphQLInt,
         }
     }
 });
@@ -33,4 +32,4 @@ const OperationType = new GraphQLObjectType({
     }
 });
 
-export { IdsType, OperationType }
+export { IdType, OperationType }

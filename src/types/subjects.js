@@ -9,7 +9,7 @@ import { getSubjects, addOrEditSubject, removeSubject } from '../data/subjects';
 import { OperationType } from './common';
 
 
-const SubjectsType = new GraphQLObjectType({
+const SubjectType = new GraphQLObjectType({
     name: 'Subjects',
     fields: {
         subjectId: {
@@ -26,13 +26,13 @@ const SubjectsType = new GraphQLObjectType({
 });
 
 const QuerySubjects = {
-    type: new GraphQLList(SubjectsType),
+    type: new GraphQLList(SubjectType),
     description: 'Get all subjects',
     resolve: () => getSubjects()
 };
 
 const MutationAddOrEditSubject = {
-    type: SubjectsType,
+    type: SubjectType,
     description: 'Add or remove subject',
     args: {
         id: {
@@ -56,4 +56,4 @@ const MutationRemoveSubject = {
     resolve: (root, { id }) => removeSubject(id)
 };
 
-export { SubjectsType, QuerySubjects, MutationAddOrEditSubject, MutationRemoveSubject };
+export { SubjectType, QuerySubjects, MutationAddOrEditSubject, MutationRemoveSubject };

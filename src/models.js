@@ -41,7 +41,7 @@ const pupilSchema = new Schema({
     email: String,
     phone: String,
     class: Number,
-    subjects: Object,
+    groups: Array,
     school: String,
     status: String,
     clientId: Number
@@ -66,7 +66,7 @@ const teacherSchema = new Schema({
     fio: String,
     email: String,
     phone: String,
-    subjects: Object
+    subjects: Array
 });
 teacherSchema.plugin(autoIncrement.plugin, {
     model: 'Teachers',
@@ -78,7 +78,7 @@ const formatSchema = new Schema({
     title: String,
     priceForCycle: Number,
     countOfLessons: Number,
-    duration: Object
+    duration: String
 });
 formatSchema.plugin(autoIncrement.plugin, {
     model: 'Formats',

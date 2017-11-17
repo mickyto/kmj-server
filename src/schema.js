@@ -1,8 +1,8 @@
 import { GraphQLSchema, GraphQLObjectType } from 'graphql';
 
 import { QueryUsers, MutationLogin } from './types/users';
-import { QueryClients, QueryClient, MutationAddOrEditClient, MutationMoveClients } from './types/clients';
-import { QueryPupils, MutationPupils, MutationAlterPupils, QueryPupil } from './types/pupils';
+import { QueryClients, QueryClient, MutationAddOrEditClient, MutationMoveClient } from './types/clients';
+import { QueryPupils, MutationAddOrEditPupil, MutationMovePupil, QueryPupil } from './types/pupils';
 import { QueryGroups, MutationGroups, MutationRemoveGroup } from './types/groups';
 import { QueryTeachers, MutationTeachers, QueryTeacher } from './types/teachers';
 import { QueryFormats, MutationAddOrEditFormat, MutationRemoveFormat } from './types/formats';
@@ -32,9 +32,9 @@ const MutationType = new GraphQLObjectType({
     fields: {
         login: MutationLogin,
         addOrEditClient: MutationAddOrEditClient,
-        moveClients: MutationMoveClients,
-        addPupil: MutationPupils,
-        alterPupils: MutationAlterPupils,
+        moveClient: MutationMoveClient,
+        addOrEditPupil: MutationAddOrEditPupil,
+        movePupil: MutationMovePupil,
         addGroup: MutationGroups,
         removeGroup: MutationRemoveGroup,
         addTeacher: MutationTeachers,

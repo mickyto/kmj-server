@@ -6,10 +6,10 @@ import {
 } from 'graphql';
 import { teacherCrud, getTeachers, getTeacher } from '../data/teachers';
 import { getSubjects } from '../data/subjects';
-import { SubjectsType } from './subjects';
-import { IdsType } from './common';
+import { SubjectType } from './subjects';
+import { IdType } from './common';
 
-const TeachersType = new GraphQLObjectType({
+const TeacherType = new GraphQLObjectType({
     name: 'Teachers',
     fields: {
         teacherId: {
@@ -26,7 +26,7 @@ const TeachersType = new GraphQLObjectType({
             type: GraphQLString,
         },
         subjects: {
-            type: new GraphQLList(SubjectsType),
+            type: new GraphQLList(SubjectType),
             resolve: ({ subjects }) => getSubjects(subjects.ids)
         },
         error: {
@@ -36,14 +36,14 @@ const TeachersType = new GraphQLObjectType({
 });
 
 const QueryTeachers = {
-    type: new GraphQLList(TeachersType),
+    type: new GraphQLList(TeacherType),
     resolve: () => {
         return getTeachers()
     }
 };
 
 const QueryTeacher = {
-    type: TeachersType,
+    type: TeacherType,
     args: {
         id: {
             type: GraphQLInt
@@ -53,7 +53,7 @@ const QueryTeacher = {
 };
 
 const MutationTeachers = {
-    type: TeachersType,
+    type: TeacherType,
     description: 'Alter subjects',
     args: {
         id: {
@@ -69,10 +69,10 @@ const MutationTeachers = {
             type: GraphQLString,
         },
         subjects: {
-            type: IdsType,
+            type: new GraphQLList(IdType),
         },
     },
     resolve: (root, args) => teacherCrud(args)
 };
 
-export { QueryTeachers, MutationTeachers, TeachersType, QueryTeacher };
+export { QueryTeachers, MutationTeachers, TeacherType, QueryTeacher };

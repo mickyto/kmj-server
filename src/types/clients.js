@@ -9,10 +9,10 @@ import {
 import { getClients, getClient, addOrEditClient, moveClients } from '../data/clients';
 import { getPupilByClientId } from '../data/pupils';
 import { OperationType } from './common';
-import { PupilsType } from './pupils';
+import { PupilType } from './pupils';
 
 
-const ClientsType = new GraphQLObjectType({
+const ClientType = new GraphQLObjectType({
     name: 'Clients',
     fields: () => ({
         clientId: {
@@ -38,7 +38,7 @@ const ClientsType = new GraphQLObjectType({
             type: GraphQLString,
         },
         pupil: {
-            type: PupilsType,
+            type: PupilType,
             resolve: ({ _id }) => getPupilByClientId(_id)
         },
         status: {
@@ -51,7 +51,7 @@ const ClientsType = new GraphQLObjectType({
 });
 
 const QueryClients = {
-    type: new GraphQLList(ClientsType),
+    type: new GraphQLList(ClientType),
     description: 'Get all clients',
     args: {
         show: {
@@ -63,7 +63,7 @@ const QueryClients = {
 
 const QueryClient = {
     description: 'Get one client',
-    type: ClientsType,
+    type: ClientType,
     args: {
         id: {
             type: GraphQLInt
@@ -73,7 +73,7 @@ const QueryClient = {
 };
 
 const MutationAddOrEditClient = {
-    type: ClientsType,
+    type: ClientType,
     description: 'Edit or add new client',
     args: {
         id: {
@@ -101,7 +101,7 @@ const MutationAddOrEditClient = {
     resolve: (root, args) => addOrEditClient(args)
 };
 
-const MutationMoveClients = {
+const MutationMoveClient = {
     type: OperationType,
     description: 'Mark client as removed, recover or remove forever',
     args: {
@@ -117,4 +117,4 @@ const MutationMoveClients = {
     }
 };
 
-export { ClientsType, QueryClients, QueryClient,  MutationAddOrEditClient, MutationMoveClients }
+export { ClientType, QueryClients, QueryClient,  MutationAddOrEditClient, MutationMoveClient }

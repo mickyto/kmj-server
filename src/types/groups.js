@@ -6,11 +6,11 @@ import {
     GraphQLNonNull
 } from 'graphql';
 import { groupCrud, getGroups, removeGroup } from '../data/groups';
-import { TeachersType } from './teachers';
+import { TeacherType } from './teachers';
 import { getTeacher } from '../data/teachers';
 import { OperationType } from './common';
 
-const GroupsType = new GraphQLObjectType({
+const GroupType = new GraphQLObjectType({
     name: 'Groups',
     fields: {
         groupId: {
@@ -21,7 +21,7 @@ const GroupsType = new GraphQLObjectType({
             type: GraphQLString,
         },
         teacher: {
-            type: TeachersType,
+            type: TeacherType,
             resolve: ({ teacherId }) => getTeacher(teacherId)
         },
         error: {
@@ -41,14 +41,14 @@ const MutationRemoveGroup = {
 };
 
 const QueryGroups = {
-    type: new GraphQLList(GroupsType),
+    type: new GraphQLList(GroupType),
     resolve: () => {
         return getGroups()
     }
 };
 
 const MutationGroups = {
-    type: GroupsType,
+    type: GroupType,
     description: 'Add or remove Group',
     args: {
         id: {
@@ -67,4 +67,4 @@ const MutationGroups = {
     }
 };
 
-export { QueryGroups, MutationGroups, GroupsType, MutationRemoveGroup };
+export { QueryGroups, MutationGroups, GroupType, MutationRemoveGroup };
