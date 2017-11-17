@@ -23,7 +23,6 @@ const addOrEditSubject = (args) => {
             resolve(subject);
         };
 
-        console.log(args)
         if (args.id) {
             Subjects.findOneAndUpdate({ _id: args.id }, args, callback);
             return;

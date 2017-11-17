@@ -94,6 +94,15 @@ subjectSchema.plugin(autoIncrement.plugin, {
     startAt: 1
 });
 
+const channelSchema = new Schema({
+    _id: { type: Number, ref: 'id' },
+    name: String,
+});
+channelSchema.plugin(autoIncrement.plugin, {
+    model: 'Channels',
+    startAt: 1
+});
+
 const Users = db.model('Users', userSchema);
 const Clients = db.model('Clients', clientSchema);
 const Pupils = db.model('Pupils', pupilSchema);
@@ -101,6 +110,7 @@ const Groups = db.model('Groups', groupSchema);
 const Teachers = db.model('Teachers', teacherSchema);
 const Formats = db.model('Formats', formatSchema);
 const Subjects = db.model('Subjects', subjectSchema);
+const Channels = db.model('Channels', channelSchema);
 
 
-export { Users, Clients, Pupils, Groups, Teachers, Formats, Subjects }
+export { Users, Clients, Pupils, Groups, Teachers, Formats, Subjects, Channels }
