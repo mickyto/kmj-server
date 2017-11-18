@@ -2,12 +2,12 @@ import {
     GraphQLObjectType,
     GraphQLString,
     GraphQLInt,
-    GraphQLList
+    GraphQLList,
+    GraphQLNonNull
 } from 'graphql';
-import { teacherCrud, getTeachers, getTeacher } from '../data/teachers';
-import { getSubjects } from '../data/subjects';
-import { SubjectType } from './subjects';
-import { IdType } from './common';
+import { getTeachers, getTeacher, addOrEditTeacher, removeTeacher } from '../data/teachers';
+import { OperationType } from './common';
+
 
 const TeacherType = new GraphQLObjectType({
     name: 'Teachers',
@@ -25,9 +25,14 @@ const TeacherType = new GraphQLObjectType({
         email: {
             type: GraphQLString,
         },
-        subjects: {
-            type: new GraphQLList(SubjectType),
-            resolve: ({ subjects }) => getSubjects(subjects.ids)
+        age: {
+            type: GraphQLInt,
+        },
+        education: {
+            type: GraphQLString,
+        },
+        description: {
+            type: GraphQLString,
         },
         error: {
             type: GraphQLString,
@@ -37,13 +42,13 @@ const TeacherType = new GraphQLObjectType({
 
 const QueryTeachers = {
     type: new GraphQLList(TeacherType),
-    resolve: () => {
-        return getTeachers()
-    }
+    description: 'Get all teachers',
+    resolve: () => getTeachers()
 };
 
 const QueryTeacher = {
     type: TeacherType,
+    description: 'Get one teacher',
     args: {
         id: {
             type: GraphQLInt
@@ -52,27 +57,44 @@ const QueryTeacher = {
     resolve: (root, { id }) => getTeacher(id)
 };
 
-const MutationTeachers = {
+const MutationAddOrEditTeacher = {
     type: TeacherType,
-    description: 'Alter subjects',
+    description: 'Edit or add new client',
     args: {
         id: {
             type: GraphQLInt
         },
         fio: {
-            type: GraphQLString
+            type: new GraphQLNonNull(GraphQLString)
         },
         phone: {
-            type: GraphQLString,
+            type: GraphQLString
         },
         email: {
+            type: GraphQLString
+        },
+        age: {
+            type: GraphQLInt,
+        },
+        education: {
             type: GraphQLString,
         },
-        subjects: {
-            type: new GraphQLList(IdType),
+        description: {
+            type: GraphQLString,
         },
     },
-    resolve: (root, args) => teacherCrud(args)
+    resolve: (root, args) => addOrEditTeacher(args)
 };
 
-export { QueryTeachers, MutationTeachers, TeacherType, QueryTeacher };
+const MutationRemoveTeacher = {
+    type: OperationType,
+    description: 'Remove teacher',
+    args: {
+        id: {
+            type: new GraphQLNonNull(GraphQLInt)
+        }
+    },
+    resolve: (root, { id }) => removeTeacher(id)
+};
+
+export { TeacherType, QueryTeachers, QueryTeacher, MutationAddOrEditTeacher, MutationRemoveTeacher };

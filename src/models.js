@@ -51,6 +51,20 @@ pupilSchema.plugin(autoIncrement.plugin, {
     startAt: 1
 });
 
+const teacherSchema = new Schema({
+    _id: { type: Number, ref: 'id' },
+    fio: String,
+    email: String,
+    phone: String,
+    age: Number,
+    education: String,
+    description: String
+});
+teacherSchema.plugin(autoIncrement.plugin, {
+    model: 'Teachers',
+    startAt: 1
+});
+
 const groupSchema = new Schema({
     _id: { type: Number, ref: 'id' },
     name: String,
@@ -58,18 +72,6 @@ const groupSchema = new Schema({
 });
 groupSchema.plugin(autoIncrement.plugin, {
     model: 'Groups',
-    startAt: 1
-});
-
-const teacherSchema = new Schema({
-    _id: { type: Number, ref: 'id' },
-    fio: String,
-    email: String,
-    phone: String,
-    subjects: Array
-});
-teacherSchema.plugin(autoIncrement.plugin, {
-    model: 'Teachers',
     startAt: 1
 });
 

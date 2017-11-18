@@ -21,22 +21,19 @@ const getTeacher = (id) => {
     })
 };
 
-const teacherCrud = (args) => {
+const addOrEditTeacher = (args) => {
     return new Promise((resolve, reject) => {
 
         const callback = (err, res) => {
             if (err) reject(err);
             if (!res) {
-                resolve({error: 'Операция не удалась'});
+                resolve({error: 'Не удалось найти преподавателя'});
                 return;
             }
             resolve(res);
         };
 
-        if (args.id && Object.keys(args).length == 1) {
-            Teachers.findOneAndRemove({ _id: args.id }, callback)
-        }
-        else if (args.id && Object.keys(args).length != 1) {
+        if (args.id) {
             Teachers.findOneAndUpdate({ _id: args.id }, args, callback)
         }
         else {
@@ -45,4 +42,17 @@ const teacherCrud = (args) => {
     });
 };
 
-export { teacherCrud, getTeachers, getTeacher };
+const removeTeacher = (id) => {
+    return new Promise((resolve, reject) => {
+        Teachers.findOneAndRemove({ _id: id }, (err, res) => {
+            if (err) reject(err);
+            if (!res) {
+                resolve({error: 'Не удалось найти преподавателя'});
+                return;
+            }
+            resolve(res);
+        })
+    });
+};
+
+export { getTeachers, getTeacher, addOrEditTeacher, removeTeacher };
