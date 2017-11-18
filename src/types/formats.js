@@ -20,10 +20,10 @@ const FormatsType = new GraphQLObjectType({
             type: GraphQLString
         },
         priceForCycle: {
-            type: GraphQLInt
+            type: GraphQLString
         },
         countOfLessons: {
-            type: GraphQLInt
+            type: GraphQLString
         },
         duration: {
             type: GraphQLString
@@ -51,10 +51,10 @@ const MutationAddOrEditFormat = {
             type: GraphQLString
         },
         priceForCycle: {
-            type: GraphQLInt
+            type: GraphQLString
         },
         countOfLessons: {
-            type: GraphQLInt
+            type: GraphQLString
         },
         duration: {
             type: GraphQLString

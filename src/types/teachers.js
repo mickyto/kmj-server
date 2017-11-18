@@ -26,7 +26,7 @@ const TeacherType = new GraphQLObjectType({
             type: GraphQLString,
         },
         age: {
-            type: GraphQLInt,
+            type: GraphQLString,
         },
         education: {
             type: GraphQLString,
@@ -74,7 +74,7 @@ const MutationAddOrEditTeacher = {
             type: GraphQLString
         },
         age: {
-            type: GraphQLInt,
+            type: GraphQLString,
         },
         education: {
             type: GraphQLString,

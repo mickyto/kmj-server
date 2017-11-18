@@ -31,7 +31,7 @@ const PupilType = new GraphQLObjectType({
             type: GraphQLString,
         },
         class: {
-            type: GraphQLInt,
+            type: GraphQLString,
         },
         school: {
             type: GraphQLString,
@@ -92,7 +92,7 @@ const MutationAddOrEditPupil = {
             type: GraphQLString
         },
         class: {
-            type: GraphQLInt,
+            type: GraphQLString,
         },
         groups: {
             type: new GraphQLList(IdType),

@@ -40,7 +40,7 @@ const pupilSchema = new Schema({
     fio: String,
     email: String,
     phone: String,
-    class: Number,
+    class: String,
     groups: Array,
     school: String,
     status: String,
@@ -56,7 +56,7 @@ const teacherSchema = new Schema({
     fio: String,
     email: String,
     phone: String,
-    age: Number,
+    age: String,
     education: String,
     description: String
 });
@@ -78,8 +78,8 @@ groupSchema.plugin(autoIncrement.plugin, {
 const formatSchema = new Schema({
     _id: { type: Number, ref: 'id' },
     title: String,
-    priceForCycle: Number,
-    countOfLessons: Number,
+    priceForCycle: String,
+    countOfLessons: String,
     duration: String
 });
 formatSchema.plugin(autoIncrement.plugin, {
