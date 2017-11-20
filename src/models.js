@@ -67,8 +67,12 @@ teacherSchema.plugin(autoIncrement.plugin, {
 
 const groupSchema = new Schema({
     _id: { type: Number, ref: 'id' },
-    name: String,
-    teacherId: Number
+    title: String,
+    subject: Number,
+    dayOfWeek: Array,
+    teacher: Number,
+    time: String,
+    format: Number,
 });
 groupSchema.plugin(autoIncrement.plugin, {
     model: 'Groups',

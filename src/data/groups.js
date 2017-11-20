@@ -11,30 +11,46 @@ const getGroups = (ids) => {
     })
 };
 
-const removeGroup = (id) => {
+const getGroup = (id) => {
     return new Promise((resolve, reject) => {
-        Groups.findOneAndRemove({ _id: id }, (err, res) => {
+        Groups.findById(id, (err, group) => {
             if (err) reject(err);
-            if (!res) {
-                resolve({error: 'Не удалось добавить или удалить предмет'});
-                return;
-            }
-            resolve(res);
+            else resolve(group);
         })
     })
 };
 
-const groupCrud = (args) => {
+const addOrEditGroup = (args) => {
     return new Promise((resolve, reject) => {
-        Groups.create(args, (err, res) => {
+
+        const callback = (err, group) => {
             if (err) reject(err);
-            if (!res) {
-                resolve({error: 'Не удалось добавить или удалить предмет'});
-                return;
+            if (!group) {
+                resolve({error: 'Не удалось изменить или создать новую группу'});
             }
-            resolve(res);
-        });
+            resolve(group);
+        };
+
+        if (args.id) {
+            Groups.findOneAndUpdate({ _id: args.id }, args, callback);
+            return;
+        }
+
+        Groups.create(args, callback);
     });
 };
 
-export { groupCrud, getGroups, removeGroup };
+const removeGroup = (id) => {
+    return new Promise((resolve, reject) => {
+        Groups.findOneAndRemove({ _id: id }, (err, result) => {
+            if (err) reject(err);
+            if (!result) {
+                resolve({error: 'Не удалось удалить группу'});
+                return;
+            }
+            resolve(result);
+        })
+    })
+};
+
+export { getGroups, getGroup, addOrEditGroup, removeGroup };

@@ -12,6 +12,15 @@ const getSubjects = (ids) => {
     })
 };
 
+const getSubject = (id) => {
+    return new Promise((resolve, reject) => {
+        Subjects.findById(id, (err, subject) => {
+            if (err) reject(err);
+            else resolve(subject);
+        })
+    })
+};
+
 const addOrEditSubject = (args) => {
     return new Promise((resolve, reject) => {
 
@@ -45,4 +54,4 @@ const removeSubject = (id) => {
     })
 };
 
-export { getSubjects, addOrEditSubject, removeSubject };
+export { getSubjects, getSubject, addOrEditSubject, removeSubject };

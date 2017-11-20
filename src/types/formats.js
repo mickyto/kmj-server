@@ -9,7 +9,7 @@ import { getFormats, addOrEditFormat, removeFormat } from '../data/formats';
 import { OperationType } from './common';
 
 
-const FormatsType = new GraphQLObjectType({
+const FormatType = new GraphQLObjectType({
     name: 'Formats',
     fields: {
         formatId: {
@@ -35,14 +35,14 @@ const FormatsType = new GraphQLObjectType({
 });
 
 const QueryFormats = {
-    type: new GraphQLList(FormatsType),
+    type: new GraphQLList(FormatType),
     description: 'Get all formats',
     resolve: () => getFormats()
 };
 
 const MutationAddOrEditFormat = {
-    type: FormatsType,
-    description: 'Add new format',
+    type: FormatType,
+    description: 'Edit or add new format',
     args: {
         id: {
             type: GraphQLInt
@@ -74,4 +74,4 @@ const MutationRemoveFormat = {
     resolve: (root, { id }) => removeFormat(id)
 };
 
-export { FormatsType, QueryFormats, MutationAddOrEditFormat, MutationRemoveFormat };
+export { FormatType, QueryFormats, MutationAddOrEditFormat, MutationRemoveFormat };

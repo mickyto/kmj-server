@@ -13,10 +13,9 @@ const getTeachers = (ids) => {
 
 const getTeacher = (id) => {
     return new Promise((resolve, reject) => {
-
-        Teachers.findById(id, (err, pupil) => {
+        Teachers.findById(id, (err, teacher) => {
             if (err) reject(err);
-            else resolve(pupil);
+            else resolve(teacher);
         })
     })
 };
@@ -24,13 +23,13 @@ const getTeacher = (id) => {
 const addOrEditTeacher = (args) => {
     return new Promise((resolve, reject) => {
 
-        const callback = (err, res) => {
+        const callback = (err, teacher) => {
             if (err) reject(err);
-            if (!res) {
+            if (!teacher) {
                 resolve({error: 'Не удалось найти преподавателя'});
                 return;
             }
-            resolve(res);
+            resolve(teacher);
         };
 
         if (args.id) {
@@ -44,13 +43,13 @@ const addOrEditTeacher = (args) => {
 
 const removeTeacher = (id) => {
     return new Promise((resolve, reject) => {
-        Teachers.findOneAndRemove({ _id: id }, (err, res) => {
+        Teachers.findOneAndRemove({ _id: id }, (err, result) => {
             if (err) reject(err);
-            if (!res) {
+            if (!result) {
                 resolve({error: 'Не удалось найти преподавателя'});
                 return;
             }
-            resolve(res);
+            resolve(result);
         })
     });
 };

@@ -11,6 +11,15 @@ const getFormats = (ids) => {
     })
 };
 
+const getFormat = (id) => {
+    return new Promise((resolve, reject) => {
+        Formats.findById(id, (err, format) => {
+            if (err) reject(err);
+            else resolve(format);
+        })
+    })
+};
+
 const addOrEditFormat = (args) => {
     return new Promise((resolve, reject) => {
 
@@ -44,4 +53,4 @@ const removeFormat = (id) => {
     })
 };
 
-export { getFormats, addOrEditFormat, removeFormat };
+export { getFormats, getFormat, addOrEditFormat, removeFormat };

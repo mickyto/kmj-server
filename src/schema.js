@@ -4,7 +4,7 @@ import { QueryUsers, MutationLogin } from './types/users';
 import { QueryClients, QueryClient, MutationAddOrEditClient, MutationMoveClient } from './types/clients';
 import { QueryPupils, MutationAddOrEditPupil, MutationMovePupil, QueryPupil } from './types/pupils';
 import { QueryTeachers, QueryTeacher, MutationAddOrEditTeacher, MutationRemoveTeacher } from './types/teachers';
-import { QueryGroups, MutationGroups, MutationRemoveGroup } from './types/groups';
+import { QueryGroups, QueryGroup, MutationAddOrEditGroup, MutationRemoveGroup } from './types/groups';
 import { QueryFormats, MutationAddOrEditFormat, MutationRemoveFormat } from './types/formats';
 import { QuerySubjects, MutationAddOrEditSubject, MutationRemoveSubject } from './types/subjects';
 import { QueryChannels, MutationAddOrEditChannel, MutationRemoveChannel } from './types/channels';
@@ -21,6 +21,7 @@ const queryType = new GraphQLObjectType({
         teachers: QueryTeachers,
         teacher: QueryTeacher,
         groups: QueryGroups,
+        group: QueryGroup,
         formats: QueryFormats,
         subjects: QuerySubjects,
         channels: QueryChannels,
@@ -37,7 +38,7 @@ const MutationType = new GraphQLObjectType({
         movePupil: MutationMovePupil,
         addOrEditTeacher: MutationAddOrEditTeacher,
         removeTeacher: MutationRemoveTeacher,
-        addGroup: MutationGroups,
+        addOrEditGroup: MutationAddOrEditGroup,
         removeGroup: MutationRemoveGroup,
         addOrEditFormat: MutationAddOrEditFormat,
         removeFormat: MutationRemoveFormat,
