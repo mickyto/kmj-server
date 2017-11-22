@@ -6,7 +6,8 @@ import {
     GraphQLNonNull
 } from 'graphql';
 
-import { gerUsers, getUser } from '../data/users';
+import { gerUsers } from '../data/users';
+import { getUser } from '../sequelize';
 
 
 const UsersType = new GraphQLObjectType({
@@ -14,7 +15,7 @@ const UsersType = new GraphQLObjectType({
     fields: {
         userId: {
             type: GraphQLInt,
-            resolve: ({ _id }) => _id
+            resolve: ({ id }) => id
         },
         email: {
             type: GraphQLString

@@ -1,22 +1,21 @@
 import jwt from 'jsonwebtoken';
 
-import { Users } from '../models';
+import { Users } from '../sequelize';
 import config from "../../config";
 
 
 const gerUsers = () => {
     return new Promise((resolve, reject) => {
-        Users.find((err, users) => {
-            if (err) reject(err);
-            else resolve(users)
-        })
+        Users.findAll()
+            .then(users => resolve(users))
+            .catch(error => reject(error))
     })
 };
 
 const getUser = ({ email, password }) => {
     return new Promise((resolve, reject) => {
-        Users.findOne({ email: email }).exec((err, user) => {
-            if (err) reject(err);
+
+        Users.findOne({ where: { email: email }}).then(user => {
 
             if (user === null) {
                 resolve({error: 'Пользователь не найден'});
@@ -41,6 +40,8 @@ const getUser = ({ email, password }) => {
             else {
                 resolve({error: 'Вы ввели неверный логин или пароль'});
             }
+        }).catch(error => {
+            reject(error);
         });
     });
 };
