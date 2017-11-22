@@ -6,8 +6,7 @@ import {
     GraphQLNonNull
 } from 'graphql';
 
-import { gerUsers } from '../data/users';
-import { getUser } from '../sequelize';
+import { gerUsers, getUser } from '../data/users';
 
 
 const UsersType = new GraphQLObjectType({

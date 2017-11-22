@@ -1,4 +1,4 @@
-import { Clients, Pupils } from '../models';
+import { Clients, Pupils, Op } from '../sequelize';
 
 const getClients = (args) => {
     return new Promise((resolve, reject) => {
@@ -6,49 +6,41 @@ const getClients = (args) => {
         let query;
 
         if (args && args === 'trashed') {
-            query = { status : "trashed" }
+            query = { where: { status : "trashed" }}
         }
         else if (args === 'active') {
-            query = { status : { $exists : false } }
+            query = { where: { status : { [Op.ne]: null }}}
         }
         else {
             query = {}
         }
 
-        Clients.find(query, (err, clients) => {
-            if (err) reject(err);
-            else resolve(clients);
-        })
+        Clients.findAll(query)
+            .then(clients => resolve(clients))
+            .catch(error => reject(error));
     })
 };
 
 const getClient = (id) => {
     return new Promise((resolve, reject) => {
-        Clients.findById(id, (err, client) => {
-            if (err) reject(err);
-            else resolve(client);
-        })
+        Clients.findById(id)
+            .then(client => resolve(client))
+            .catch(error => reject(error));
     })
 };
 
 const addOrEditClient = (args) => {
     return new Promise((resolve, reject) => {
 
-        const callback = (err, client) => {
-            if (err) reject(err);
-            if (!client) {
-                resolve({error: 'Не удалось добавить или изменить данные клиента'});
-                return;
-            }
-            console.log(client)
-            resolve(client);
-        };
-
         if (args.id) {
-            Clients.findOneAndUpdate({ _id: args.id }, args, callback)
+            Clients.update(args, { where: { client_id: args.id }})
+                .then(client => resolve(client))
+                .catch(error => reject(error));
         }
         else {
-            Clients.create(args, callback);
+            Clients.create(args)
+                .then(client => resolve(client))
+                .catch(error => reject(error));
         }
     });
 };
@@ -56,32 +48,26 @@ const addOrEditClient = (args) => {
 const moveClients = ({ id, operation }) => {
     return new Promise((resolve, reject) => {
 
-        const callback = (err, client) => {
-            if (err) reject(err);
-            if (!client) {
-                resolve({error: 'Клиент не найден'});
-                return;
-            }
-            resolve(client.result || client);
-        };
-
         if (operation === 'move') {
-            Clients.update({ _id: id }, { $set: { status: 'trashed' }}, (err) => {
-                if (err) reject(err);
-                Pupils.update({ clientId: id }, { $set: { status: 'trashed' }}, callback);
-            });
+            Clients.update({ status: 'trashed' }, { where: { client_id: id }})
+                .then(client => {
+                    Pupils.update({ status: 'trashed' }, { where: { client_id: client.id }});
+                })
+                .catch(error => reject(error));
         }
         else if (operation === 'remove') {
-            Clients.remove({ _id: id }, (err) => {
-                if (err) reject(err);
-                Pupils.remove({ clientId: id }, callback);
-            });
+            Clients.destroy({ where: { client_id: id }})
+                .then(client => {
+                    Pupils.destroy({ where: { client_id: client.id }});
+                })
+                .catch(error => reject(error));
         }
         else if (operation === 'recovery') {
-            Clients.update({ _id: id }, { $unset: { status: 1 }}, (err) => {
-                if (err) reject(err);
-                Pupils.update({ clientId: id }, { $unset: { status: 1 }}, callback);
-            });
+            Clients.update({ status: null }, { where: { client_id: id }})
+                .then(client => {
+                    Pupils.update({ status: null }, { where: { client_id: client.id }});
+                })
+                .catch(error => reject(error));
         }
         else {
             resolve({error: 'Ошибка операции'});
