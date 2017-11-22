@@ -3,7 +3,22 @@ KMJ-server
 
 GraphQL server for KMJ UI. This server was created to response to [KMJ project](https://github.com/mickyto/kazakovmj) 
 
+## Set up Mysql
+```bash
+    docker run -d -e MYSQL_ALLOW_EMPTY_PASSWORD=yes --name mysql -i -t mysql:8.0.3
 
+    # Create new database [ if needed ]
+    docker exec -i -t mysql mysql -uroot -e "CREATE DATABASE kmj CHARACTER SET utf8 COLLATE utf8_general_ci;"
+
+    # Provision database [ if needed ]
+    docker cp mysql.sample.db.sql mysql:/
+    docker exec -i mysql mysql -u root kmj < mysql.sample.db.sql
+```
+
+## Set up PhpMyAdmin
+```bash
+    docker run --name myadmin -d --link mysql:db -p 4000:80 phpmyadmin/phpmyadmin
+```
 
 ## Set up MongoDB
 ```bash
