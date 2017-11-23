@@ -14,7 +14,7 @@ const SubjectType = new GraphQLObjectType({
     fields: {
         subjectId: {
             type: GraphQLInt,
-            resolve: ({ _id }) => _id
+            resolve: ({ id }) => id
         },
         name: {
             type: GraphQLString,

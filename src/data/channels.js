@@ -1,47 +1,39 @@
-import { Channels } from '../models';
+import { Channels, Op } from '../sequelize';
 
 const getChannels = (ids) => {
 
     // TODO why I need conditional query?
-    const query = ids ? { _id: { $in: ids }} : {};
+    const query = ids ? { where: { channel_id: { [Op.in]: ids }}} : {};
     return new Promise((resolve, reject) => {
-        Channels.find(query, (err, channels) => {
-            if (err) reject(err);
-            else resolve(channels);
-        })
+        Channels.findAll(query)
+            .then(channels => resolve(channels))
+            .catch(error => reject(error))
     })
 };
 
 const addOrEditChannel = (args) => {
     return new Promise((resolve, reject) => {
 
-        const callback = (err, channel) => {
-            if (err) reject(err);
-            if (!channel) {
-                resolve({error: 'Не удалось изменить или создать новый канал привлечения'});
-            }
-            resolve(channel);
-        };
-
         if (args.id) {
-            Channels.findOneAndUpdate({ _id: args.id }, args, callback);
+            Channels.update(args, { where: { channel_id: args.id }})
+                .then(channel => resolve(channel))
+                .catch(error => reject(error));
             return;
         }
 
-        Channels.create(args, callback);
+        Channels.create(args)
+            .then(channel => resolve(channel))
+            .catch(error => reject(error));
     });
 };
 
 const removeChannel = (id) => {
     return new Promise((resolve, reject) => {
-        Channels.findOneAndRemove({ _id: id }, (err, result) => {
-            if (err) reject(err);
-            if (!result) {
-                resolve({error: 'Не удалось удалить канал привлечения'});
-                return;
-            }
-            resolve(result);
-        })
+        Channels.destroy({ where: { channel_id: id }})
+            .then(channel_id => {
+                resolve(channel_id)
+            })
+            .catch(error => reject(error));
     })
 };
 

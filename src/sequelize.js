@@ -60,9 +60,6 @@ const Clients = sequelize.define('clients', {
     email: {
         type: Sequelize.STRING
     },
-    channel_id: {
-        type: Sequelize.INTEGER
-    },
     location: {
         type: Sequelize.STRING
     },
@@ -75,7 +72,6 @@ const Clients = sequelize.define('clients', {
 });
 
 const Pupils = sequelize.define('pupils', {
-    clientId: Number,
     id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -108,8 +104,19 @@ const Pupils = sequelize.define('pupils', {
     }
 });
 
+const Subjects = sequelize.define('subjects', {
+    id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        field: 'subject_id'
+    },
+    name: {
+        type: Sequelize.STRING,
+    }
+});
+
 const Channels = sequelize.define('channels', {
-    channelId: Number,
     id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -121,11 +128,8 @@ const Channels = sequelize.define('channels', {
     }
 });
 
-Clients.sync().then(() => {
-    console.log('hellooo')
-});
 
 Pupils.belongsTo(Clients);
 Clients.belongsTo(Channels);
 
-export { Op, Users, Clients, Pupils };
+export { Op, Users, Clients, Pupils, Subjects, Channels };
