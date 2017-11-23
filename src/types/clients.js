@@ -17,7 +17,7 @@ const ClientType = new GraphQLObjectType({
     fields: () => ({
         clientId: {
             type: GraphQLInt,
-            resolve: ({ _id }) => _id
+            resolve: ({ id }) => id
         },
         fio: {
             type: GraphQLString,

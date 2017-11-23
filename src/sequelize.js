@@ -17,7 +17,8 @@ const sequelize = new Sequelize(
         define: {
             charset: 'utf8',
             collate: 'utf8_general_ci',
-            timestamps: false
+            timestamps: false,
+            underscored: true,
         }
     }
 );
@@ -33,10 +34,10 @@ const Users = sequelize.define('users', {
         type: Sequelize.STRING
     },
     email: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
     },
     password: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
     },
     role: {
         type: Sequelize.STRING
@@ -51,7 +52,7 @@ const Clients = sequelize.define('clients', {
         field: 'client_id'
     },
     fio: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
     },
     phone: {
         type: Sequelize.STRING
@@ -71,7 +72,7 @@ const Clients = sequelize.define('clients', {
     status: {
         type: Sequelize.STRING
     }
-}, { underscored: true });
+});
 
 const Pupils = sequelize.define('pupils', {
     clientId: Number,
@@ -82,7 +83,7 @@ const Pupils = sequelize.define('pupils', {
         field: 'pupil_id'
     },
     fio: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
     },
     phone: {
         type: Sequelize.STRING
@@ -105,8 +106,26 @@ const Pupils = sequelize.define('pupils', {
     client_id: {
         type: Sequelize.INTEGER
     }
-}, { underscored: true });
+});
+
+const Channels = sequelize.define('channels', {
+    channelId: Number,
+    id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        field: 'channel_id'
+    },
+    name: {
+        type: Sequelize.STRING,
+    }
+});
+
+Clients.sync().then(() => {
+    console.log('hellooo')
+});
 
 Pupils.belongsTo(Clients);
+Clients.belongsTo(Channels);
 
 export { Op, Users, Clients, Pupils };
