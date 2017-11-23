@@ -19,7 +19,7 @@ const PupilType = new GraphQLObjectType({
     fields: () => ({
         pupilId: {
             type: GraphQLInt,
-            resolve: ({ _id }) => _id
+            resolve: ({ id }) => id
         },
         fio: {
             type: GraphQLString,
@@ -42,7 +42,7 @@ const PupilType = new GraphQLObjectType({
         },
         parent: {
             type: ClientType,
-            resolve: ({ clientId }) => getClient(clientId)
+            resolve: ({ client_id }) => getClient(client_id)
         },
         status: {
             type: GraphQLString,
@@ -100,8 +100,8 @@ const MutationAddOrEditPupil = {
         school: {
             type: GraphQLString,
         },
-        clientId: {
-            type: GraphQLInt
+        client_id: {
+            type: GraphQLInt,
         }
     },
     resolve: (root, args) => addOrEditPupil(args)

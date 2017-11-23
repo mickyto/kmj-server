@@ -18,7 +18,7 @@ const OperationType = new GraphQLObjectType({
     fields: {
         isSuccess: {
             type: GraphQLInt,
-            resolve: (result) => result === 1
+            resolve: (result) => result == 1
         }
     }
 });

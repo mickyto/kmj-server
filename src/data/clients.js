@@ -52,9 +52,7 @@ const moveClients = ({ id, operation }) => {
             Clients.update({ status: 'trashed' }, { where: { client_id: id }})
                 .then(client => {
                     Pupils.update({ status: 'trashed' }, { where: { client_id: client.id }})
-                        .then(result => {
-                            resolve(result)
-                        });
+                        .then(result => resolve(result));
                 })
                 .catch(error => reject(error));
         }
@@ -62,9 +60,7 @@ const moveClients = ({ id, operation }) => {
             Clients.destroy({ where: { client_id: id }})
                 .then(client => {
                     Pupils.destroy({ where: { client_id: client.id }})
-                        .then(result => {
-                            resolve(result)
-                        });
+                        .then(result => resolve(result));
                 })
                 .catch(error => reject(error));
         }
@@ -72,9 +68,7 @@ const moveClients = ({ id, operation }) => {
             Clients.update({ status: null }, { where: { client_id: id }})
                 .then(client => {
                     Pupils.update({ status: null }, { where: { client_id: client.id }})
-                        .then(result => {
-                            resolve(result)
-                        });
+                        .then(result => resolve(result));
                 })
                 .catch(error => reject(error));
         }

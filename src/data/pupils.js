@@ -1,4 +1,4 @@
-import { Pupils, Clients } from '../models';
+import { Pupils, Clients } from '../sequelize';
 
 const getPupils = (args) => {
     return new Promise((resolve, reject) => {
@@ -6,60 +6,52 @@ const getPupils = (args) => {
         let query;
 
         if (args && args === 'trashed') {
-            query = { status : "trashed" }
+            query = { where: { status : "trashed" }}
         }
         else if (args === 'active') {
-            query = { status : { $exists : false } }
+            query = { where: { status : null }}
         }
         else {
             query = {}
         }
 
-        Pupils.find(query, (err, pupils) => {
-            if (err) reject(err);
-            else resolve(pupils);
-        })
+        Pupils.findAll(query)
+            .then(pupils => resolve(pupils))
+            .catch(error => reject(error));
     })
 };
 
 const getPupil = (id) => {
     return new Promise((resolve, reject) => {
-        Pupils.findById(id, (err, pupil) => {
-            if (err) reject(err);
-            else resolve(pupil);
-        })
+        Pupils.findById(id)
+            .then(pupil => resolve(pupil))
+            .catch(error => reject(error));
     })
 };
 
 const getPupilByClientId = (id) => {
     return new Promise((resolve, reject) => {
-        Pupils.findOne({ clientId: id }, (err, pupil) => {
-            if (err) reject(err);
-            else resolve(pupil);
-        })
+        Pupils.findOne({ where: { client_id: id }})
+            .then(pupil => resolve(pupil))
+            .catch(error => reject(error));
     })
 };
 
 const addOrEditPupil = (args) => {
     return new Promise((resolve, reject) => {
 
-        const callback = (err, pupil) => {
-            if (err) reject(err);
-            if (!pupil) {
-                resolve({error: 'Не удалось добавить или изменить данные ученика'});
-                return;
-            }
-            resolve(pupil);
-        };
-
         if (args.id) {
-            Pupils.findOneAndUpdate({ _id: args.id }, args, callback)
+            Pupils.update(args, { where: { client_id: args.id }})
+                .then(pupil => resolve(pupil))
+                .catch(error => reject(error));
         }
-        else if (!args.clientId) {
+        else if (!args.client_id) {
             resolve({error: 'Ошибка. Вы пытаетесь создать ученика без клиента'});
         }
         else {
-            Pupils.create(args, callback);
+            Pupils.create(args)
+                .then(pupil => resolve(pupil))
+                .catch(error => reject(error));
         }
     });
 };
@@ -68,34 +60,19 @@ const movePupil = ({ id, operation }) => {
     return new Promise((resolve, reject) => {
 
         if (operation === 'move') {
-            Pupils.findOneAndUpdate({ _id: id }, { $set: { status: 'trashed' }}, (err, pupil) => {
-                if (err) reject(err);
-                Clients.update({ _id: pupil.clientId }, { $set: { status: 'trashed' }}, (err) => {
-                    if (err) reject(err);
-                    resolve({ ok: 1 });
-                });
-            });
+            Pupils.update({ status: 'trashed' }, { where: { pupil_id: id }})
+                .then(result => resolve(result))
+                .catch(error => reject(error));
         }
         else if (operation === 'recovery') {
-            Pupils.findOneAndUpdate({ _id: id }, { $unset: { status: 1 }}, (err, pupil) => {
-                if (err) reject(err);
-                Clients.update({ _id: pupil.clientId }, { $unset: { status: 1 }}, (err) => {
-                    if (err) reject(err);
-                    resolve({ ok: 1 });
-                });
-            });
+            Pupils.update({ status: null }, { where: { pupil_id: id }})
+                .then(result => resolve(result))
+                .catch(error => reject(error));
         }
         else if (operation === 'remove') {
-            Pupils.findById(id, (err, pupil) => {
-                if (err) reject(err);
-                Pupils.remove({ _id: pupil._id }, (err) => {
-                    if (err) reject(err);
-                    Clients.remove({ _id: pupil.clientId }, (err) => {
-                        if (err) reject(err);
-                        resolve({ ok: 1 });
-                    });
-                });
-            });
+            Pupils.destroy({ where: { pupil_id: id }})
+                .then(result => resolve(result))
+                .catch(error => reject(error))
         }
         else {
             resolve({error: 'Ошибка операции'});

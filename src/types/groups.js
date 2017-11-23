@@ -20,7 +20,7 @@ const GroupType = new GraphQLObjectType({
     fields: {
         groupId: {
             type: GraphQLInt,
-            resolve: ({ _id }) => _id
+            resolve: ({ id }) => id
         },
         title: {
             type: GraphQLString,

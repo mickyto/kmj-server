@@ -1,55 +1,44 @@
-import { Groups } from '../models';
+import { Groups, Op } from '../sequelize';
 
 const getGroups = (ids) => {
 
-    const query = ids ? { _id: { $in: ids }} : {};
+    const query = ids ? { where: { group_id: { [Op.in]: ids }}} : {};
     return new Promise((resolve, reject) => {
-        Groups.find(query, (err, groups) => {
-            if (err) reject(err);
-            else resolve(groups);
-        })
+        Groups.findAll(query)
+            .then(groups => resolve(groups))
+            .catch(error => reject(error))
     })
 };
 
 const getGroup = (id) => {
     return new Promise((resolve, reject) => {
-        Groups.findById(id, (err, group) => {
-            if (err) reject(err);
-            else resolve(group);
-        })
+        Groups.findById(id)
+            .then(group => resolve(group))
+            .catch(error => reject(error))
     })
 };
 
 const addOrEditGroup = (args) => {
     return new Promise((resolve, reject) => {
 
-        const callback = (err, group) => {
-            if (err) reject(err);
-            if (!group) {
-                resolve({error: 'Не удалось изменить или создать новую группу'});
-            }
-            resolve(group);
-        };
-
         if (args.id) {
-            Groups.findOneAndUpdate({ _id: args.id }, args, callback);
+            Groups.update(args, { where: { group_id: args.id }})
+                .then(group => resolve(group))
+                .catch(error => reject(error));
             return;
         }
 
-        Groups.create(args, callback);
+        Groups.create(args)
+            .then(group => resolve(group))
+            .catch(error => reject(error));
     });
 };
 
 const removeGroup = (id) => {
     return new Promise((resolve, reject) => {
-        Groups.findOneAndRemove({ _id: id }, (err, result) => {
-            if (err) reject(err);
-            if (!result) {
-                resolve({error: 'Не удалось удалить группу'});
-                return;
-            }
-            resolve(result);
-        })
+        Groups.destroy({ where: { group_id: id }})
+            .then(result => resolve(result))
+            .catch(error => reject(error));
     })
 };
 
