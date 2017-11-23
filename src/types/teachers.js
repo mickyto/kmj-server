@@ -14,7 +14,7 @@ const TeacherType = new GraphQLObjectType({
     fields: {
         teacherId: {
             type: GraphQLInt,
-            resolve: ({ _id }) => _id
+            resolve: ({ id }) => id
         },
         fio: {
             type: GraphQLString,

@@ -1,56 +1,44 @@
-import { Teachers } from '../models';
+import { Teachers, Op } from '../sequelize';
 
 const getTeachers = (ids) => {
 
-    const query = ids ? { _id: { $in: ids }} : {};
+    const query = ids ? { where: { teacher_id: { [Op.in]: ids }}} : {};
     return new Promise((resolve, reject) => {
-        Teachers.find(query, (err, teachers) => {
-            if (err) reject(err);
-            else resolve(teachers);
-        })
+        Teachers.findAll(query)
+            .then(teachers => resolve(teachers))
+            .catch(error => reject(error))
     })
 };
 
 const getTeacher = (id) => {
     return new Promise((resolve, reject) => {
-        Teachers.findById(id, (err, teacher) => {
-            if (err) reject(err);
-            else resolve(teacher);
-        })
+        Teachers.findById(id)
+            .then(teacher => resolve(teacher))
+            .catch(error => reject(error))
     })
 };
 
 const addOrEditTeacher = (args) => {
     return new Promise((resolve, reject) => {
 
-        const callback = (err, teacher) => {
-            if (err) reject(err);
-            if (!teacher) {
-                resolve({error: 'Не удалось найти преподавателя'});
-                return;
-            }
-            resolve(teacher);
-        };
-
         if (args.id) {
-            Teachers.findOneAndUpdate({ _id: args.id }, args, callback)
+            Teachers.update(args, { where: { teacher_id: args.id }})
+                .then(teacher => resolve(teacher))
+                .catch(error => reject(error));
+            return;
         }
-        else {
-            Teachers.create(args, callback);
-        }
+
+        Teachers.create(args)
+            .then(teacher => resolve(teacher))
+            .catch(error => reject(error));
     });
 };
 
 const removeTeacher = (id) => {
     return new Promise((resolve, reject) => {
-        Teachers.findOneAndRemove({ _id: id }, (err, result) => {
-            if (err) reject(err);
-            if (!result) {
-                resolve({error: 'Не удалось найти преподавателя'});
-                return;
-            }
-            resolve(result);
-        })
+        Teachers.destroy({ where: { teacher_id: id }})
+            .then(result => resolve(result))
+            .catch(error => reject(error));
     });
 };
 

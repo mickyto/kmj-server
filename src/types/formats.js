@@ -14,7 +14,7 @@ const FormatType = new GraphQLObjectType({
     fields: {
         formatId: {
             type: GraphQLInt,
-            resolve: ({ _id }) => _id
+            resolve: ({ id }) => id
         },
         title: {
             type: GraphQLString

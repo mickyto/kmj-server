@@ -38,9 +38,7 @@ const addOrEditSubject = (args) => {
 const removeSubject = (id) => {
     return new Promise((resolve, reject) => {
         Subjects.destroy({ where: { subject_id: id }})
-            .then(subject_id => {
-                resolve(subject_id)
-            })
+            .then(result => resolve(result))
             .catch(error => reject(error));
     })
 };

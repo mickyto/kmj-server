@@ -104,6 +104,54 @@ const Pupils = sequelize.define('pupils', {
     }
 });
 
+const Teachers = sequelize.define('teachers', {
+    id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        field: 'teacher_id'
+    },
+    fio: {
+        type: Sequelize.STRING,
+    },
+    phone: {
+        type: Sequelize.STRING
+    },
+    email: {
+        type: Sequelize.STRING
+    },
+    age: {
+        type: Sequelize.STRING
+    },
+    education: {
+        type: Sequelize.STRING
+    },
+    description: {
+        type: Sequelize.STRING
+    }
+});
+
+const Formats = sequelize.define('formats', {
+    id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        field: 'format_id'
+    },
+    title: {
+        type: Sequelize.STRING,
+    },
+    priceForCycle: {
+        type: Sequelize.STRING,
+    },
+    countOfLessons: {
+        type: Sequelize.STRING,
+    },
+    duration: {
+        type: Sequelize.STRING,
+    }
+});
+
 const Subjects = sequelize.define('subjects', {
     id: {
         type: Sequelize.INTEGER,
@@ -132,4 +180,4 @@ const Channels = sequelize.define('channels', {
 Pupils.belongsTo(Clients);
 Clients.belongsTo(Channels);
 
-export { Op, Users, Clients, Pupils, Subjects, Channels };
+export { Op, Users, Clients, Pupils, Teachers, Formats, Subjects, Channels };

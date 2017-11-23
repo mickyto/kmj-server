@@ -30,9 +30,7 @@ const addOrEditChannel = (args) => {
 const removeChannel = (id) => {
     return new Promise((resolve, reject) => {
         Channels.destroy({ where: { channel_id: id }})
-            .then(channel_id => {
-                resolve(channel_id)
-            })
+            .then(result => resolve(result))
             .catch(error => reject(error));
     })
 };
