@@ -135,11 +135,8 @@ const Groups = sequelize.define('groups', {
     title: {
         type: Sequelize.STRING,
     },
-    dayOfWeek: {
+    daysOfWeek: {
         type: Sequelize.JSON ,
-    },
-    time: {
-        type: Sequelize.STRING,
     }
 });
 
@@ -188,6 +185,15 @@ const Channels = sequelize.define('channels', {
     }
 });
 
+const PupilGroup = sequelize.define('pupil_group', {
+    id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        field: 'id'
+    }
+});
+
 
 Pupils.belongsTo(Clients, { foreignKey: 'client_id' });
 Clients.belongsTo(Channels, { foreignKey: 'channel_id' });
@@ -197,4 +203,4 @@ Groups.belongsTo(Formats);
 Groups.belongsToMany(Pupils, { as: 'groups', through: 'pupil_group', foreignKey: 'group_id' });
 Pupils.belongsToMany(Groups, { as: 'pupils', through: 'pupil_group', foreignKey: 'pupil_id' });
 
-export { Op, Users, Clients, Pupils, Teachers, Groups, Formats, Subjects, Channels };
+export { Op, Users, Clients, Pupils, Teachers, Groups, Formats, Subjects, Channels, PupilGroup };

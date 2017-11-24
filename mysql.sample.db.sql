@@ -39,7 +39,7 @@ CREATE TABLE `clients` (
   `fio` varchar(255) NOT NULL,
   `phone` varchar(255) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
-  `channel_id` int(10) DEFAULT NULL,
+  `channel_id` int(10) UNSIGNED DEFAULT NULL,
   `location` varchar(255) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
   `status` varchar(255) DEFAULT NULL,
@@ -108,9 +108,8 @@ CREATE TABLE `groups` (
   `group_id` int(10) UNSIGNED NOT NULL,
   `title` varchar(255) NOT NULL,
   `subject_id` int(10) UNSIGNED DEFAULT NULL,
-  `dayOfWeek` json DEFAULT NULL,
+  `daysOfWeek` json DEFAULT NULL,
   `teacher_id` int(10) UNSIGNED DEFAULT NULL,
-  `time` varchar(255) DEFAULT NULL,
   `format_id` int(10) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -214,8 +213,8 @@ ALTER TABLE `pupils`
 --
 ALTER TABLE `pupil_group`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `pupil_group_pupil_id_group_id_unique` (`pupil_id`,`group_id`),
-  ADD KEY `pupil_group_group_id_foreign` (`group_id`);
+  ADD KEY `pupil_group_pupil_id_index` (`pupil_id`),
+  ADD KEY `pupil_group_group_id_index` (`group_id`);
 
 --
 -- Индексы таблицы `teachers`
@@ -256,22 +255,22 @@ ALTER TABLE `channels`
 --
 
 --
--- AUTO_INCREMENT для таблицы `categories`
+-- AUTO_INCREMENT для таблицы `users`
 --
 ALTER TABLE `users`
   MODIFY `user_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
--- AUTO_INCREMENT для таблицы `category_property`
+-- AUTO_INCREMENT для таблицы `clients`
 --
 ALTER TABLE `clients`
   MODIFY `client_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 --
--- AUTO_INCREMENT для таблицы `default_values`
+-- AUTO_INCREMENT для таблицы `pupils`
 --
 ALTER TABLE `pupils`
   MODIFY `pupil_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 --
--- AUTO_INCREMENT для таблицы `category_property`
+-- AUTO_INCREMENT для таблицы `pupil_group`
 --
 ALTER TABLE `pupil_group`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
@@ -286,18 +285,45 @@ ALTER TABLE `teachers`
 ALTER TABLE `groups`
   MODIFY `group_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 --
--- AUTO_INCREMENT для таблицы `measures`
+-- AUTO_INCREMENT для таблицы `formats`
 --
 ALTER TABLE `formats`
   MODIFY `format_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 --
--- AUTO_INCREMENT для таблицы `products`
+-- AUTO_INCREMENT для таблицы `subjects`
 --
 ALTER TABLE `subjects`
   MODIFY `subject_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 --
--- AUTO_INCREMENT для таблицы `properties`
+-- AUTO_INCREMENT для таблицы `channels`
 --
 ALTER TABLE `channels`
   MODIFY `channel_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
+
+
+--
+-- Ограничения внешнего ключа таблицы `pupils`
+--
+ALTER TABLE `pupils`
+  ADD CONSTRAINT `pupils_client_id_foreign` FOREIGN KEY (`client_id`) REFERENCES `clients` (`client_id`) ON DELETE CASCADE;
+
+--
+-- Ограничения внешнего ключа таблицы `pupil_group`
+--
+ALTER TABLE `pupil_group`
+  ADD CONSTRAINT `pupil_group_group_id_foreign` FOREIGN KEY (`group_id`) REFERENCES `groups` (`group_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `pupil_group_pupil_id_foreign` FOREIGN KEY (`pupil_id`) REFERENCES `pupils` (`pupil_id`) ON DELETE CASCADE;
+
+--
+-- Ограничения внешнего ключа таблицы `groups`
+--
+ALTER TABLE `groups`
+  ADD CONSTRAINT `groups_teacher_id_foreign` FOREIGN KEY (`teacher_id`) REFERENCES `teachers` (`teacher_id`),
+  ADD CONSTRAINT `groups_subject_id_foreign` FOREIGN KEY (`subject_id`) REFERENCES `subjects` (`subject_id`),
+  ADD CONSTRAINT `groups_format_id_foreign` FOREIGN KEY (`format_id`) REFERENCES `formats` (`format_id`);
+--
+-- Ограничения внешнего ключа таблицы `clients`
+--
+ALTER TABLE `clients`
+  ADD CONSTRAINT `clients_channel_id_foreign` FOREIGN KEY (`channel_id`) REFERENCES `channels` (`channel_id`) ON DELETE CASCADE;

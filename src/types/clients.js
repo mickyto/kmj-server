@@ -8,7 +8,9 @@ import {
 
 import { getClients, getClient, addOrEditClient, moveClients } from '../data/clients';
 import { getPupilByClientId } from '../data/pupils';
+import { getChannel } from '../data/channels';
 import { OperationType } from './common';
+import { ChannelsType } from '../types/channels';
 import { PupilType } from './pupils';
 
 
@@ -29,7 +31,8 @@ const ClientType = new GraphQLObjectType({
             type: GraphQLString,
         },
         where_from: {
-            type: GraphQLString,
+            type: ChannelsType,
+            resolve: ({ channel_id }) => getChannel(channel_id)
         },
         location: {
             type: GraphQLString,
@@ -39,7 +42,7 @@ const ClientType = new GraphQLObjectType({
         },
         pupil: {
             type: PupilType,
-            resolve: ({ _id }) => getPupilByClientId(_id)
+            resolve: ({ id }) => getPupilByClientId(id)
         },
         status: {
             type: GraphQLString,
@@ -88,7 +91,7 @@ const MutationAddOrEditClient = {
         email: {
             type: GraphQLString
         },
-        where_from: {
+        channel_id: {
             type: GraphQLString
         },
         location: {

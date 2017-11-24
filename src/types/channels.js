@@ -56,4 +56,4 @@ const MutationRemoveChannel = {
     resolve: (root, { id }) => removeChannel(id)
 };
 
-export { QueryChannels, MutationAddOrEditChannel, MutationRemoveChannel };
+export { ChannelsType, QueryChannels, MutationAddOrEditChannel, MutationRemoveChannel };

@@ -11,6 +11,14 @@ const getChannels = (ids) => {
     })
 };
 
+const getChannel = (id) => {
+    return new Promise((resolve, reject) => {
+        Channels.findById(id)
+            .then(channel => resolve(channel))
+            .catch(error => reject(error))
+    })
+};
+
 const addOrEditChannel = (args) => {
     return new Promise((resolve, reject) => {
 
@@ -35,4 +43,4 @@ const removeChannel = (id) => {
     })
 };
 
-export { getChannels, addOrEditChannel, removeChannel };
+export { getChannels, addOrEditChannel, removeChannel, getChannel };

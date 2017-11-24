@@ -3,7 +3,8 @@ import {
     GraphQLString,
     GraphQLInt,
     GraphQLList,
-    GraphQLNonNull
+    GraphQLNonNull,
+    GraphQLInputObjectType
 } from 'graphql';
 
 import { TeacherType } from './teachers';
@@ -14,6 +15,30 @@ import { getGroups, getGroup, addOrEditGroup, removeGroup } from '../data/groups
 import { getSubject } from '../data/subjects';
 import { getTeacher } from '../data/teachers';
 import { getFormat } from '../data/formats';
+
+const DayInputType = new GraphQLInputObjectType({
+    name: 'DayInput',
+    fields: {
+        day: {
+            type: GraphQLString,
+        },
+        time: {
+            type: GraphQLString,
+        }
+    }
+});
+
+const DayOutputType = new GraphQLObjectType({
+    name: 'DayOutput',
+    fields: {
+        day: {
+            type: GraphQLString,
+        },
+        time: {
+            type: GraphQLString,
+        }
+    }
+});
 
 const GroupType = new GraphQLObjectType({
     name: 'Groups',
@@ -27,21 +52,18 @@ const GroupType = new GraphQLObjectType({
         },
         subject: {
             type: SubjectType,
-            resolve: ({ subject }) => getSubject(subject)
+            resolve: ({ subject_id }) => getSubject(subject_id)
         },
-        dayOfWeek: {
-            type: new GraphQLList(GraphQLString),
+        daysOfWeek: {
+            type: new GraphQLList(DayOutputType),
         },
         teacher: {
             type: TeacherType,
-            resolve: ({ teacher }) => getTeacher(teacher)
-        },
-        time: {
-            type: GraphQLString,
+            resolve: ({ teacher_id }) => getTeacher(teacher_id)
         },
         format: {
             type: FormatType,
-            resolve: ({ format }) => getFormat(format)
+            resolve: ({ format_id }) => getFormat(format_id)
         },
         error: {
             type: GraphQLString,
@@ -76,23 +98,23 @@ const MutationAddOrEditGroup = {
         title: {
             type: GraphQLString
         },
-        subject: {
+        subject_id: {
             type: GraphQLInt,
         },
-        dayOfWeek: {
-            type: new GraphQLList(GraphQLString),
+        daysOfWeek: {
+            type: new GraphQLList(DayInputType),
         },
-        teacher: {
+        teacher_id: {
             type: GraphQLInt,
         },
-        time: {
-            type: GraphQLString,
-        },
-        format: {
+        format_id: {
             type: GraphQLInt,
         },
     },
-    resolve: (root, args) => addOrEditGroup(args)
+    resolve: (root, args) => {
+        console.log(args)
+        return addOrEditGroup(args)
+    }
 };
 
 const MutationRemoveGroup = {
