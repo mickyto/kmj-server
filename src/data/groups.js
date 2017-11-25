@@ -1,10 +1,8 @@
-import { Groups, Op } from '../sequelize';
+import { Groups } from '../sequelize';
 
-const getGroups = (ids) => {
-
-    const query = ids ? { where: { group_id: { [Op.in]: ids }}} : {};
+const getGroups = () => {
     return new Promise((resolve, reject) => {
-        Groups.findAll(query)
+        Groups.findAll()
             .then(groups => resolve(groups))
             .catch(error => reject(error))
     })

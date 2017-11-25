@@ -29,6 +29,14 @@ const getPupil = (id) => {
     })
 };
 
+const getPupilGroups = (id) => {
+    return new Promise((resolve, reject) => {
+        Pupils.findById(id)
+            .then(pupil => resolve(pupil.getGroups()))
+            .catch(error => reject(error));
+    })
+};
+
 const getPupilByClientId = (id) => {
     return new Promise((resolve, reject) => {
         Pupils.findOne({ where: { client_id: id }})
@@ -41,8 +49,12 @@ const addOrEditPupil = (args) => {
     return new Promise((resolve, reject) => {
 
         if (args.id) {
-            Pupils.update(args, { where: { client_id: args.id }})
-                .then(pupil => resolve(pupil))
+            Pupils.findById(args.id)
+                .then(pupil => {
+                    Pupils.update(args, { where: { pupil_id: args.id }});
+                    pupil.setGroups(args.groups.map(({ id }) => id));
+                    return resolve(pupil);
+                })
                 .catch(error => reject(error));
         }
         else if (!args.client_id) {
@@ -50,7 +62,10 @@ const addOrEditPupil = (args) => {
         }
         else {
             Pupils.create(args)
-                .then(pupil => resolve(pupil))
+                .then(pupil => {
+                    pupil.addGroups(args.groups.map(({ id }) => id));
+                    return resolve(pupil)
+                })
                 .catch(error => reject(error));
         }
     });
@@ -80,4 +95,4 @@ const movePupil = ({ id, operation }) => {
     });
 };
 
-export { getPupils, getPupil, addOrEditPupil, movePupil, getPupilByClientId };
+export { getPupils, getPupil, addOrEditPupil, movePupil, getPupilGroups, getPupilByClientId };

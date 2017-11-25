@@ -118,10 +118,10 @@ const Teachers = sequelize.define('teachers', {
         type: Sequelize.STRING
     },
     education: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING(1234)
     },
     description: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING(1234)
     }
 });
 
@@ -185,22 +185,13 @@ const Channels = sequelize.define('channels', {
     }
 });
 
-const PupilGroup = sequelize.define('pupil_group', {
-    id: {
-        type: Sequelize.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-        field: 'id'
-    }
-});
-
 
 Pupils.belongsTo(Clients, { foreignKey: 'client_id' });
 Clients.belongsTo(Channels, { foreignKey: 'channel_id' });
 Groups.belongsTo(Teachers);
 Groups.belongsTo(Subjects);
 Groups.belongsTo(Formats);
-Groups.belongsToMany(Pupils, { as: 'groups', through: 'pupil_group', foreignKey: 'group_id' });
-Pupils.belongsToMany(Groups, { as: 'pupils', through: 'pupil_group', foreignKey: 'pupil_id' });
+Groups.belongsToMany(Pupils, { through: 'pupil_groups' });
+Pupils.belongsToMany(Groups, { through: 'pupil_groups' });
 
-export { Op, Users, Clients, Pupils, Teachers, Groups, Formats, Subjects, Channels, PupilGroup };
+export { Op, Users, Clients, Pupils, Teachers, Groups, Formats, Subjects, Channels };

@@ -6,8 +6,7 @@ import {
     GraphQLNonNull,
 } from 'graphql';
 
-import { getPupils, getPupil, addOrEditPupil, movePupil} from '../data/pupils';
-import { getGroups } from '../data/groups';
+import { getPupils, getPupil, addOrEditPupil, movePupil, getPupilGroups } from '../data/pupils';
 import { getClient } from '../data/clients';
 import { IdType, OperationType } from './common';
 import { GroupType } from './groups';
@@ -38,7 +37,7 @@ const PupilType = new GraphQLObjectType({
         },
         groups: {
             type: new GraphQLList(GroupType),
-            resolve: ({ groups }) => getGroups(groups)
+            resolve: ({ id }) => getPupilGroups(id)
         },
         parent: {
             type: ClientType,

@@ -8,7 +8,6 @@ import {
 import { getChannels, addOrEditChannel, removeChannel } from '../data/channels';
 import { OperationType } from './common';
 
-// TODO FIX change channel then add new one will replace previously changed
 const ChannelsType = new GraphQLObjectType({
     name: 'Channels',
     fields: {
