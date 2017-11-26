@@ -19,7 +19,11 @@ const sequelize = new Sequelize(
             collate: 'utf8_general_ci',
             timestamps: false,
             underscored: true,
-        }
+        },
+        dialectOptions: {
+            useUTC: false //for reading from database
+        },
+        timezone: '+03:00'
     }
 );
 
@@ -218,6 +222,9 @@ const PupilTrainings = sequelize.define('pupil_trainings', {
     },
     right_answer: {
         type: Sequelize.STRING,
+    },
+    date: {
+        type: Sequelize.STRING,
     }
 });
 
@@ -232,4 +239,4 @@ Trainings.belongsTo(Subjects);
 Trainings.belongsToMany(Pupils, { through: 'pupil_trainings' });
 Pupils.belongsToMany(Trainings, { through: 'pupil_trainings' });
 
-export { Op, Users, Clients, Pupils, Teachers, Groups, Formats, Subjects, Channels, Trainings };
+export { Op, Users, Clients, Pupils, Teachers, Groups, Formats, Subjects, Channels, Trainings, PupilTrainings };

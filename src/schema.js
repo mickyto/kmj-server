@@ -9,6 +9,7 @@ import { QueryFormats, MutationAddOrEditFormat, MutationRemoveFormat } from './t
 import { QuerySubjects, MutationAddOrEditSubject, MutationRemoveSubject } from './types/subjects';
 import { QueryChannels, MutationAddOrEditChannel, MutationRemoveChannel } from './types/channels';
 import { QueryTrainings, QueryTraining, MutationAddOrEditTraining, MutationRemoveTraining } from './types/trainings';
+import { QueryPupilResults, QueryPupilTrainingResults, MutationAddResult, MutationClearPupilResults } from './types/trainingResults';
 
 
 const queryType = new GraphQLObjectType({
@@ -28,6 +29,8 @@ const queryType = new GraphQLObjectType({
         channels: QueryChannels,
         trainings: QueryTrainings,
         training: QueryTraining,
+        pupilResults: QueryPupilResults,
+        pupilTrainingResults: QueryPupilTrainingResults,
     }
 });
 
@@ -51,6 +54,8 @@ const MutationType = new GraphQLObjectType({
         removeChannel: MutationRemoveChannel,
         addOrEditTraining: MutationAddOrEditTraining,
         removeTraining: MutationRemoveTraining,
+        addTrainingResult: MutationAddResult,
+        clearTrainingResult: MutationClearPupilResults,
     }
 });
 

@@ -31,8 +31,8 @@ const getUser = ({ email, password }) => {
                             }
 
                             const payload = {
-                                login: pupil.fio,
-                                email: pupil.email
+                                login: pupil.fio || pupil.email,
+                                id: pupil.id
                             };
                             pupil.token = jwt.sign(payload, config.secret, {
                                 expiresIn: '3h'
