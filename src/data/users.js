@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-import { Users } from '../sequelize';
+import { Users, Pupils } from '../sequelize';
 import config from "../../config";
 
 
@@ -18,7 +18,28 @@ const getUser = ({ email, password }) => {
             .then(user => {
 
                 if (user === null) {
-                    resolve({error: 'Пользователь не найден'});
+                    Pupils.findOne({ where: { email: email }})
+                        .then(pupil => {
+
+                            if (pupil === null) {
+                                resolve({error: 'Пользователь не найден'});
+                            }
+
+                            if (password != 10994) {
+                                resolve({error: 'Вы ввели неверный пароль'});
+                                return;
+                            }
+
+                            const payload = {
+                                login: pupil.fio,
+                                email: pupil.email
+                            };
+                            pupil.token = jwt.sign(payload, config.secret, {
+                                expiresIn: '3h'
+                            });
+                            return resolve(pupil)
+                        })
+                        .catch(error => reject(error));
                     return;
                 }
 

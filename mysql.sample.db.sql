@@ -5,6 +5,7 @@
 
 
 SET CHARSET 'utf8';
+SET GLOBAL time_zone = '+3:00';
 
 -- --------------------------------------------------------
 
@@ -231,6 +232,37 @@ INSERT INTO `channels` (`channel_id`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Структура таблицы `trainings`
+--
+
+CREATE TABLE `trainings` (
+  `training_id` int(10) UNSIGNED NOT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `action` varchar(255) DEFAULT NULL,
+  `url` varchar(255) DEFAULT NULL,
+  `subject_id` int(10) UNSIGNED NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `pupil_trainings`
+--
+
+CREATE TABLE `pupil_trainings` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `pupil_id` int(10) UNSIGNED NOT NULL,
+  `training_id` int(10) UNSIGNED NOT NULL,
+  `tex` varchar(255) NOT NULL,
+  `pupil_answer` varchar(255) NOT NULL,
+  `right_answer` varchar(255) NOT NULL,
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Индексы сохранённых таблиц
 --
 
@@ -296,6 +328,22 @@ ALTER TABLE `channels`
   ADD PRIMARY KEY (`channel_id`);
 
 --
+-- Индексы таблицы `trainings`
+--
+ALTER TABLE `trainings`
+  ADD PRIMARY KEY (`training_id`),
+  ADD KEY `trainings_subject_id_index` (`subject_id`);
+
+--
+-- Индексы таблицы `pupil_trainings`
+--
+ALTER TABLE `pupil_trainings`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `pupil_trainings_pupil_id_index` (`pupil_id`),
+  ADD KEY `pupil_trainings_training_id_index` (`training_id`);
+
+
+--
 --
 -- AUTO_INCREMENT для сохранённых таблиц
 --
@@ -345,6 +393,16 @@ ALTER TABLE `subjects`
 --
 ALTER TABLE `channels`
   MODIFY `channel_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+--
+-- AUTO_INCREMENT для таблицы `trainings`
+--
+ALTER TABLE `trainings`
+  MODIFY `training_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT для таблицы `pupil_trainings`
+--
+ALTER TABLE `pupil_trainings`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 
 
@@ -353,14 +411,12 @@ ALTER TABLE `channels`
 --
 ALTER TABLE `pupils`
   ADD CONSTRAINT `pupils_client_id_foreign` FOREIGN KEY (`client_id`) REFERENCES `clients` (`client_id`) ON DELETE CASCADE;
-
 --
 -- Ограничения внешнего ключа таблицы `pupil_groups`
 --
 ALTER TABLE `pupil_groups`
   ADD CONSTRAINT `pupil_groups_group_id_foreign` FOREIGN KEY (`group_id`) REFERENCES `groups` (`group_id`) ON DELETE CASCADE,
   ADD CONSTRAINT `pupil_groups_pupil_id_foreign` FOREIGN KEY (`pupil_id`) REFERENCES `pupils` (`pupil_id`) ON DELETE CASCADE;
-
 --
 -- Ограничения внешнего ключа таблицы `groups`
 --
@@ -373,3 +429,15 @@ ALTER TABLE `groups`
 --
 ALTER TABLE `clients`
   ADD CONSTRAINT `clients_channel_id_foreign` FOREIGN KEY (`channel_id`) REFERENCES `channels` (`channel_id`) ON DELETE CASCADE;
+--
+-- Ограничения внешнего ключа сохраненных таблиц
+--
+ALTER TABLE `trainings`
+  ADD CONSTRAINT `trainings_subject_id_foreign` FOREIGN KEY (`subject_id`) REFERENCES `subjects` (`subject_id`) ON DELETE CASCADE;
+--
+-- Ограничения внешнего ключа таблицы `pupil_trainings`
+--
+ALTER TABLE `pupil_trainings`
+  ADD CONSTRAINT `pupil_trainings_pupil_id_foreign` FOREIGN KEY (`pupil_id`) REFERENCES `pupils` (`pupil_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `pupil_trainings_training_id_foreign` FOREIGN KEY (`training_id`) REFERENCES `trainings` (`training_id`) ON DELETE CASCADE;
+COMMIT;

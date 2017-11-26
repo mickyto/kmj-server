@@ -8,6 +8,7 @@ import { QueryGroups, QueryGroup, MutationAddOrEditGroup, MutationRemoveGroup } 
 import { QueryFormats, MutationAddOrEditFormat, MutationRemoveFormat } from './types/formats';
 import { QuerySubjects, MutationAddOrEditSubject, MutationRemoveSubject } from './types/subjects';
 import { QueryChannels, MutationAddOrEditChannel, MutationRemoveChannel } from './types/channels';
+import { QueryTrainings, QueryTraining, MutationAddOrEditTraining, MutationRemoveTraining } from './types/trainings';
 
 
 const queryType = new GraphQLObjectType({
@@ -25,6 +26,8 @@ const queryType = new GraphQLObjectType({
         formats: QueryFormats,
         subjects: QuerySubjects,
         channels: QueryChannels,
+        trainings: QueryTrainings,
+        training: QueryTraining,
     }
 });
 
@@ -46,6 +49,8 @@ const MutationType = new GraphQLObjectType({
         removeSubject: MutationRemoveSubject,
         addOrEditChannel: MutationAddOrEditChannel,
         removeChannel: MutationRemoveChannel,
+        addOrEditTraining: MutationAddOrEditTraining,
+        removeTraining: MutationRemoveTraining,
     }
 });
 

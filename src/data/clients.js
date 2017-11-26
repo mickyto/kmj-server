@@ -1,14 +1,14 @@
 import { Clients, Pupils } from '../sequelize';
 
-const getClients = (args) => {
+const getClients = (show) => {
     return new Promise((resolve, reject) => {
 
         let query;
 
-        if (args && args === 'trashed') {
+        if (show && show === 'trashed') {
             query = { where: { status : "trashed" }}
         }
-        else if (args === 'active') {
+        else if (show === 'active') {
             query = { where: { status : null }}
         }
         else {
