@@ -204,6 +204,10 @@ const Trainings = sequelize.define('trainings', {
     },
     url: {
         type: Sequelize.STRING,
+    },
+    isActive: {
+        type: Sequelize.BOOLEAN,
+        field: 'is_active'
     }
 });
 

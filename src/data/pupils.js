@@ -37,10 +37,10 @@ const getPupilGroups = (id) => {
     })
 };
 
-const getPupilByClientId = (id) => {
+const getPupilsByClientId = (id) => {
     return new Promise((resolve, reject) => {
-        Pupils.findOne({ where: { client_id: id }})
-            .then(pupil => resolve(pupil))
+        Pupils.findAll({ where: { client_id: id }})
+            .then(pupils => resolve(pupils))
             .catch(error => reject(error));
     })
 };
@@ -95,4 +95,4 @@ const movePupil = ({ id, operation }) => {
     });
 };
 
-export { getPupils, getPupil, addOrEditPupil, movePupil, getPupilGroups, getPupilByClientId };
+export { getPupils, getPupil, addOrEditPupil, movePupil, getPupilGroups, getPupilsByClientId };

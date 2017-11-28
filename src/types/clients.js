@@ -7,7 +7,7 @@ import {
 } from 'graphql';
 
 import { getClients, getClient, addOrEditClient, moveClients } from '../data/clients';
-import { getPupilByClientId } from '../data/pupils';
+import { getPupilsByClientId } from '../data/pupils';
 import { getChannel } from '../data/channels';
 import { OperationType } from './common';
 import { ChannelsType } from '../types/channels';
@@ -40,9 +40,9 @@ const ClientType = new GraphQLObjectType({
         description: {
             type: GraphQLString,
         },
-        pupil: {
-            type: PupilType,
-            resolve: ({ id }) => getPupilByClientId(id)
+        pupils: {
+            type: new GraphQLList(PupilType),
+            resolve: ({ id }) => getPupilsByClientId(id)
         },
         status: {
             type: GraphQLString,

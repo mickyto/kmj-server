@@ -3,7 +3,8 @@ import {
     GraphQLString,
     GraphQLInt,
     GraphQLList,
-    GraphQLNonNull
+    GraphQLNonNull,
+    GraphQLBoolean
 } from 'graphql';
 import { getTrainings, getTraining, addOrEditTraining, removeTraining } from '../data/trainings';
 import { getSubject } from '../data/subjects';
@@ -31,6 +32,9 @@ const TrainingType = new GraphQLObjectType({
             type: SubjectType,
             resolve: ({ subject_id }) => getSubject(subject_id)
         },
+        isActive: {
+            type: GraphQLBoolean,
+        },
         error: {
             type: GraphQLString,
         }
@@ -41,11 +45,14 @@ const QueryTrainings = {
     type: new GraphQLList(TrainingType),
     description: 'Get all trainings',
     args: {
-        show: {
+        subject: {
             type: GraphQLInt
+        },
+        isUser: {
+            type: GraphQLBoolean
         }
     },
-    resolve: (root, { show }) => getTrainings(show)
+    resolve: (root, args) => getTrainings(args)
 };
 
 const QueryTraining = {
@@ -77,6 +84,9 @@ const MutationAddOrEditTraining = {
         },
         subject_id: {
             type: GraphQLInt,
+        },
+        isActive: {
+            type: GraphQLBoolean,
         }
     },
     resolve: (root, args) => addOrEditTraining(args)

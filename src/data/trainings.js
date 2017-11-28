@@ -1,8 +1,16 @@
 import { Trainings } from '../sequelize';
 
-const getTrainings = (show) => {
+const getTrainings = ({ isUser, subject }) => {
     return new Promise((resolve, reject) => {
-        const query = show ? { where: { subject_id : show }} : {};
+
+        const query = { where: {}};
+        if (subject) {
+            query.where.subject_id = subject
+        }
+        if (isUser !== undefined) {
+            query.where.is_active = isUser
+        }
+
         Trainings.findAll(query)
             .then(trainings => resolve(trainings))
             .catch(error => reject(error))
