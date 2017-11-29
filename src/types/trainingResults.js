@@ -64,25 +64,22 @@ const QueryPupilTrainingResults = {
     type: new GraphQLList(TrainingResultsType),
     description: 'Get all results for pupil',
     args: {
-        pupilId: {
-            type: GraphQLInt
+        token: {
+            type: GraphQLString
         },
         trainingId: {
             type: new GraphQLNonNull(GraphQLInt)
         }
     },
-    resolve: (root, args) => {
-        console.log(args)
-        return getPupilTrainingResults(args)
-    }
+    resolve: (root, args) => getPupilTrainingResults(args)
 };
 
 const MutationAddResult = {
     type: TrainingResultsType,
     description: 'Add training result',
     args: {
-        pupilId: {
-            type: new GraphQLNonNull(GraphQLInt)
+        token: {
+            type: new GraphQLNonNull(GraphQLString)
         },
         trainingId: {
             type: new GraphQLNonNull(GraphQLInt)
@@ -97,7 +94,10 @@ const MutationAddResult = {
             type: new GraphQLNonNull(GraphQLString)
         }
     },
-    resolve: (root, args) => addResult(args)
+    resolve: (root, args) => {
+        console.log(args)
+        return addResult(args)
+    }
 };
 
 const MutationClearPupilResults = {

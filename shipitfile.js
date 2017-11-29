@@ -26,7 +26,7 @@ module.exports = function (shipit) {
     });
 
     shipit.blTask('startContainer', function () {
-        return shipit.remote('docker run -d--name kmj -w /usr/src/app/ -p 8080:8080 -v ' + wd + '/current:/usr/src/app/ node:8.7.0 npm start');
+        return shipit.remote('docker run -d --name kmj -w /usr/src/app/ --link mysql -p 8080:8080 -v ' + wd + '/current:/usr/src/app/ node:8.7.0 npm start');
     });
 
     shipit.blTask('restartContainer', function () {

@@ -1,3 +1,6 @@
+import jwt from 'jsonwebtoken';
+
+import config from "../../config";
 import { PupilTrainings } from '../sequelize';
 
 const getPupilResults = (id) => {
@@ -10,7 +13,15 @@ const getPupilResults = (id) => {
 
 const getPupilTrainingResults = (args) => {
     return new Promise((resolve, reject) => {
-        PupilTrainings.findAll({ where: { pupil_id : args.pupilId, training_id: args.trainingId }})
+
+        if (!args.token) {
+            resolve();
+            return;
+        }
+        const pupilData = jwt.verify(args.token, config.secret);
+        const pupilId = pupilData ? pupilData.id : '';
+
+        PupilTrainings.findAll({ where: { pupil_id : pupilId, training_id: args.trainingId }})
             .then(results => resolve(results))
             .catch(error => reject(error));
     })
@@ -18,16 +29,26 @@ const getPupilTrainingResults = (args) => {
 
 const addResult = (args) => {
     return new Promise((resolve, reject) => {
-        const data = {
-            pupil_id: args.pupilId,
-            training_id: args.trainingId,
-            tex: args.tex,
-            pupil_answer: args.pupilAnswer,
-            right_answer: args.rightAnswer
-        };
-        PupilTrainings.create(data)
-            .then(result => resolve(result))
-            .catch(error => reject(error));
+        console.log(args);
+        if (!args.token) {
+            resolve();
+            return;
+        }
+
+        jwt.verify(args.token, config.secret, (err, decoded) => {
+            if (err) reject(error);
+            console.log(decoded.id);
+            const data = {
+                pupil_id: decoded.id,
+                training_id: args.trainingId,
+                tex: args.tex,
+                pupil_answer: args.pupilAnswer,
+                right_answer: args.rightAnswer
+            };
+            PupilTrainings.create(data)
+                .then(result => resolve(result))
+                .catch(error => reject(error));
+        });
     })
 };
 

@@ -240,9 +240,9 @@ CREATE TABLE `trainings` (
   `title` varchar(255) DEFAULT NULL,
   `action` varchar(255) DEFAULT NULL,
   `url` varchar(255) DEFAULT NULL,
-  `subject_id` int(10) UNSIGNED NOT NULL
+  `subject_id` int(10) UNSIGNED NOT NULL,
+  `is_active` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 
 -- --------------------------------------------------------
 
@@ -382,7 +382,7 @@ ALTER TABLE `groups`
 -- AUTO_INCREMENT для таблицы `formats`
 --
 ALTER TABLE `formats`
-  MODIFY `format_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+  MODIFY `format_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT для таблицы `subjects`
 --
@@ -392,7 +392,7 @@ ALTER TABLE `subjects`
 -- AUTO_INCREMENT для таблицы `channels`
 --
 ALTER TABLE `channels`
-  MODIFY `channel_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+  MODIFY `channel_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT для таблицы `trainings`
 --

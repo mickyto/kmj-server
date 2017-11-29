@@ -34,9 +34,7 @@ const getUser = ({ email, password }) => {
                                 login: pupil.fio || pupil.email,
                                 id: pupil.id
                             };
-                            pupil.token = jwt.sign(payload, config.secret, {
-                                expiresIn: '3h'
-                            });
+                            pupil.token = jwt.sign(payload, config.secret);
                             return resolve(pupil)
                         })
                         .catch(error => reject(error));
