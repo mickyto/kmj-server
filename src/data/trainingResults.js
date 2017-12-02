@@ -29,7 +29,6 @@ const getPupilTrainingResults = (args) => {
 
 const addResult = (args) => {
     return new Promise((resolve, reject) => {
-        console.log(args);
         if (!args.token) {
             resolve();
             return;
@@ -37,7 +36,10 @@ const addResult = (args) => {
 
         jwt.verify(args.token, config.secret, (err, decoded) => {
             if (err) reject(error);
-            console.log(decoded.id);
+            if (!decoded.id) {
+                resolve();
+                return;
+            }
             const data = {
                 pupil_id: decoded.id,
                 training_id: args.trainingId,

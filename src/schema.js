@@ -10,7 +10,7 @@ import { QuerySubjects, MutationAddOrEditSubject, MutationRemoveSubject } from '
 import { QueryChannels, MutationAddOrEditChannel, MutationRemoveChannel } from './types/channels';
 import { QueryTrainings, QueryTraining, MutationAddOrEditTraining, MutationRemoveTraining } from './types/trainings';
 import { QueryPupilResults, QueryPupilTrainingResults, MutationAddResult, MutationClearPupilResults } from './types/trainingResults';
-
+import { CompileProgramMutation } from './types/compilation';
 
 const queryType = new GraphQLObjectType({
     name: 'Query',
@@ -56,6 +56,7 @@ const MutationType = new GraphQLObjectType({
         removeTraining: MutationRemoveTraining,
         addTrainingResult: MutationAddResult,
         clearTrainingResult: MutationClearPupilResults,
+        compileProgram: CompileProgramMutation,
     }
 });
 
