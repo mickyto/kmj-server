@@ -232,6 +232,18 @@ const PupilTrainings = sequelize.define('pupil_trainings', {
     }
 });
 
+const Themes = sequelize.define('themes', {
+    id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        field: 'theme_id'
+    },
+    title: {
+        type: Sequelize.STRING,
+    }
+});
+
 Pupils.belongsTo(Clients, { foreignKey: 'client_id' });
 Clients.belongsTo(Channels, { foreignKey: 'channel_id' });
 Groups.belongsTo(Teachers);
@@ -243,4 +255,4 @@ Trainings.belongsTo(Subjects);
 Trainings.belongsToMany(Pupils, { through: 'pupil_trainings' });
 Pupils.belongsToMany(Trainings, { through: 'pupil_trainings' });
 
-export { Op, Users, Clients, Pupils, Teachers, Groups, Formats, Subjects, Channels, Trainings, PupilTrainings };
+export { Op, Users, Clients, Pupils, Teachers, Groups, Formats, Subjects, Channels, Trainings, PupilTrainings, Themes };

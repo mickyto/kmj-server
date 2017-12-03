@@ -27,7 +27,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`user_id`, `email`, `password`, `role`, `login`) VALUES
 (1, 'egayi@yandex.ru', '12121212', 'super_admin', 'Igor'),
-(2, 'kazakovmj@yandex.ru', '11235813', 'super_admin', 'Maximka');
+(2, 'kazakovmj@yandex.ru', '11235813', 'super_admin', 'Maxim');
 
 -- --------------------------------------------------------
 
