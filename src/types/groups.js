@@ -111,10 +111,7 @@ const MutationAddOrEditGroup = {
             type: GraphQLInt,
         },
     },
-    resolve: (root, args) => {
-        console.log(args)
-        return addOrEditGroup(args)
-    }
+    resolve: (root, args) => addOrEditGroup(args)
 };
 
 const MutationRemoveGroup = {

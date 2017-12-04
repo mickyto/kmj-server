@@ -244,6 +244,72 @@ const Themes = sequelize.define('themes', {
     }
 });
 
+const Tests = sequelize.define('tests', {
+    id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        field: 'test_id'
+    },
+    cin: {
+        type: Sequelize.STRING,
+    },
+    cout: {
+        type: Sequelize.STRING,
+    }
+});
+
+const Works = sequelize.define('works', {
+    id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        field: 'work_id'
+    },
+    title: {
+        type: Sequelize.STRING,
+    }
+});
+
+const WorkContents = sequelize.define('work_contents', {
+    id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        field: 'id'
+    },
+    sort: {
+        type: Sequelize.INTEGER,
+    }
+});
+
+const WorkExecutions = sequelize.define('work_executions', {
+    id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        field: 'id'
+    },
+    status: {
+        type: Sequelize.BOOLEAN,
+    },
+    date: {
+        type: Sequelize.DATE,
+    }
+});
+
+const ProgExercises = sequelize.define('prog_exercises', {
+    id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        field: 'prog_exercise_id'
+    },
+    text: {
+        type: Sequelize.STRING,
+    }
+});
+
 Pupils.belongsTo(Clients, { foreignKey: 'client_id' });
 Clients.belongsTo(Channels, { foreignKey: 'channel_id' });
 Groups.belongsTo(Teachers);
@@ -254,5 +320,12 @@ Pupils.belongsToMany(Groups, { through: 'pupil_groups' });
 Trainings.belongsTo(Subjects);
 Trainings.belongsToMany(Pupils, { through: 'pupil_trainings' });
 Pupils.belongsToMany(Trainings, { through: 'pupil_trainings' });
+ProgExercises.hasMany(Tests);
+ProgExercises.belongsTo(Themes);
+ProgExercises.belongsToMany(Works, { through: 'work_contents' });
+Works.belongsToMany(ProgExercises, { through: 'work_contents' });
+Pupils.belongsToMany(ProgExercises, { through: 'work_executions' });
+ProgExercises.belongsToMany(Pupils, { through: 'work_executions' });
 
-export { Op, Users, Clients, Pupils, Teachers, Groups, Formats, Subjects, Channels, Trainings, PupilTrainings, Themes };
+export { Op, Users, Clients, Pupils, Teachers, Groups, Formats, Subjects, Channels,
+    Trainings, PupilTrainings, Themes, Tests, ProgExercises, Works, WorkContents, WorkExecutions };

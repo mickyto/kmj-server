@@ -12,6 +12,8 @@ import { QueryTrainings, QueryTraining, MutationAddOrEditTraining, MutationRemov
 import { QueryPupilResults, QueryPupilTrainingResults, MutationAddResult, MutationClearPupilResults } from './types/trainingResults';
 import { CompileProgramMutation } from './types/compilation';
 import { QueryThemes, MutationAddOrEditTheme, MutationRemoveTheme } from './types/themes';
+import { QueryWorks, MutationAddOrEditWork, MutationRemoveWork } from './types/works';
+import { QueryProgExercises, QueryProgExercise, MutationAddOrEditProgExercise, MutationRemoveProgExercise } from './types/progExercises';
 
 const queryType = new GraphQLObjectType({
     name: 'Query',
@@ -33,6 +35,9 @@ const queryType = new GraphQLObjectType({
         pupilResults: QueryPupilResults,
         pupilTrainingResults: QueryPupilTrainingResults,
         themes: QueryThemes,
+        works: QueryWorks,
+        progExercises: QueryProgExercises,
+        progExercise: QueryProgExercise,
     }
 });
 
@@ -61,6 +66,10 @@ const MutationType = new GraphQLObjectType({
         compileProgram: CompileProgramMutation,
         addOrEditTheme: MutationAddOrEditTheme,
         removeTheme: MutationRemoveTheme,
+        addOrEditWork: MutationAddOrEditWork,
+        removeWork: MutationRemoveWork,
+        addOrEditProgExercise: MutationAddOrEditProgExercise,
+        removeProgExercise: MutationRemoveProgExercise,
     }
 });
 
