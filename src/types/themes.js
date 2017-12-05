@@ -5,13 +5,15 @@ import {
     GraphQLList,
     GraphQLNonNull
 } from 'graphql';
-import { getThemes, addOrEditTheme, removeTheme } from '../data/themes';
+import { getThemes, getTheme, addOrEditTheme, removeTheme } from '../data/themes';
+import { getProgExercisesByTheme } from '../data/progExercises';
 import { OperationType } from './common';
+import { ProgExerciseType } from './progExercises';
 
 
 const ThemeType = new GraphQLObjectType({
     name: 'Themes',
-    fields: {
+    fields: () => ({
         themeId: {
             type: GraphQLInt,
             resolve: ({ id }) => id
@@ -19,16 +21,31 @@ const ThemeType = new GraphQLObjectType({
         title: {
             type: GraphQLString,
         },
+        exercises: {
+            type: new GraphQLList(ProgExerciseType),
+            resolve: ({ id }) => getProgExercisesByTheme(id)
+        },
         error: {
             type: GraphQLString,
         }
-    }
+    })
 });
 
 const QueryThemes = {
     type: new GraphQLList(ThemeType),
     description: 'Get all themes',
     resolve: () => getThemes()
+};
+
+const QueryTheme = {
+    type: ThemeType,
+    description: 'Get one theme',
+    args: {
+        id: {
+            type: GraphQLInt
+        }
+    },
+    resolve: (root, { id }) => getTheme(id)
 };
 
 const MutationAddOrEditTheme = {
@@ -56,4 +73,4 @@ const MutationRemoveTheme = {
     resolve: (root, { id }) => removeTheme(id)
 };
 
-export { ThemeType, QueryThemes, MutationAddOrEditTheme, MutationRemoveTheme };
+export { ThemeType, QueryTheme, QueryThemes, MutationAddOrEditTheme, MutationRemoveTheme };

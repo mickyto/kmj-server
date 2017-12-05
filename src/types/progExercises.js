@@ -24,6 +24,9 @@ const TestInputType = new GraphQLInputObjectType({
         },
         cout: {
             type: GraphQLString
+        },
+        sort: {
+            type: GraphQLInt
         }
     }
 });
@@ -39,6 +42,9 @@ const TestOutputType = new GraphQLObjectType({
         },
         cout: {
             type: GraphQLString
+        },
+        sort: {
+            type: GraphQLInt
         }
     }
 });
@@ -46,8 +52,8 @@ const TestOutputType = new GraphQLObjectType({
 
 const ProgExerciseType = new GraphQLObjectType({
     name: 'ProgExercises',
-    fields: {
-        ProgExerciseId: {
+    fields: () => ({
+        exerciseId: {
             type: GraphQLInt,
             resolve: ({ id }) => id
         },
@@ -65,7 +71,7 @@ const ProgExerciseType = new GraphQLObjectType({
         error: {
             type: GraphQLString,
         }
-    }
+    })
 });
 
 const QueryProgExercises = {
@@ -95,17 +101,14 @@ const MutationAddOrEditProgExercise = {
         text: {
             type: GraphQLString,
         },
-        theme: {
+        theme_id: {
             type: GraphQLInt
         },
         tests: {
             type: new GraphQLList(TestInputType)
         }
     },
-    resolve: (root, args) => {
-        console.log(args)
-        return addOrEditProgExercise(args)
-    }
+    resolve: (root, args) => addOrEditProgExercise(args)
 };
 
 const MutationRemoveProgExercise = {

@@ -208,6 +208,9 @@ const Trainings = sequelize.define('trainings', {
     isActive: {
         type: Sequelize.BOOLEAN,
         field: 'is_active'
+    },
+    speed: {
+        type: Sequelize.INTEGER
     }
 });
 
@@ -256,6 +259,9 @@ const Tests = sequelize.define('tests', {
     },
     cout: {
         type: Sequelize.STRING,
+    },
+    sort: {
+        type: Sequelize.INTEGER
     }
 });
 

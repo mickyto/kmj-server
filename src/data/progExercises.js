@@ -16,6 +16,16 @@ const getProgExercise = (id) => {
     })
 };
 
+const getProgExercisesByTheme = (id) => {
+    return new Promise((resolve, reject) => {
+        ProgExercises.findAll({ where: { theme_id: id }})
+            .then(progExercises => resolve(progExercises))
+            .catch(error => reject(error))
+    })
+};
+
+
+
 const getTestsByProgExerciseId = (id) => {
     return new Promise((resolve, reject) => {
         Tests.findAll({ where: { prog_exercise_id: id }})
@@ -28,30 +38,45 @@ const addOrEditProgExercise = (args) => {
     return new Promise((resolve, reject) => {
 
         if (args.id) {
-            ProgExercises.update(args, { where: { progExercise_id: args.id }})
-                .then(progExercise => {
-                    progExercise.setTests(args.tests);
-                    return resolve(progExercise)
-                })
+
+            Tests.destroy({ where: { prog_exercise_id: args.id }});
+
+            args.tests.forEach(test => {
+                test.prog_exercise_id = args.id;
+                Tests.create(test)
+                    .then(res => {
+                        console.log(test)
+                        console.log(res)
+                    })
+                    .catch(error => reject(error));
+            });
+
+            ProgExercises.update({
+                text: args.text,
+                theme_id: args.theme_id
+            }, { where: { prog_exercise_id: args.id }})
+                .then(res => resolve(res))
                 .catch(error => reject(error));
             return;
         }
 
-        ProgExercises.create(args)
-            .then(progExercise => {
-                progExercise.addTests(args.tests);
-                return resolve(progExercise)
+        return resolve(ProgExercises.create(args, {
+            include: [ Tests ]
+        })
+            .then(res => {
+                console.log(args)
+                console.log(res)
             })
-            .catch(error => reject(error));
-    });
+            .catch(error => reject(error)));
+    })
 };
 
 const removeProgExercise = (id) => {
     return new Promise((resolve, reject) => {
-        ProgExercises.destroy({ where: { progExercise_id: id }})
+        ProgExercises.destroy({ where: { prog_exercise_id: id }})
             .then(result => resolve(result))
             .catch(error => reject(error));
     })
 };
 
-export { getProgExercises, getProgExercise, getTestsByProgExerciseId, addOrEditProgExercise, removeProgExercise };
+export { getProgExercises, getProgExercise, getProgExercisesByTheme, getTestsByProgExerciseId, addOrEditProgExercise, removeProgExercise };

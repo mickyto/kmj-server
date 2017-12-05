@@ -11,7 +11,7 @@ import { QueryChannels, MutationAddOrEditChannel, MutationRemoveChannel } from '
 import { QueryTrainings, QueryTraining, MutationAddOrEditTraining, MutationRemoveTraining } from './types/trainings';
 import { QueryPupilResults, QueryPupilTrainingResults, MutationAddResult, MutationClearPupilResults } from './types/trainingResults';
 import { CompileProgramMutation } from './types/compilation';
-import { QueryThemes, MutationAddOrEditTheme, MutationRemoveTheme } from './types/themes';
+import { QueryThemes, QueryTheme, MutationAddOrEditTheme, MutationRemoveTheme } from './types/themes';
 import { QueryWorks, MutationAddOrEditWork, MutationRemoveWork } from './types/works';
 import { QueryProgExercises, QueryProgExercise, MutationAddOrEditProgExercise, MutationRemoveProgExercise } from './types/progExercises';
 
@@ -35,6 +35,7 @@ const queryType = new GraphQLObjectType({
         pupilResults: QueryPupilResults,
         pupilTrainingResults: QueryPupilTrainingResults,
         themes: QueryThemes,
+        theme: QueryTheme,
         works: QueryWorks,
         progExercises: QueryProgExercises,
         progExercise: QueryProgExercise,
