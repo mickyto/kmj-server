@@ -5,8 +5,11 @@ import {
     GraphQLList,
     GraphQLNonNull
 } from 'graphql';
-import { getWorks, addOrEditWork, removeWork } from '../data/works';
-import { OperationType } from './common';
+import { getWorks, addOrEditWork, removeWork, getWork, getWorkExercises, getWorkPupils } from '../data/works';
+import { IdType, OperationType } from './common';
+import { ProgExerciseType } from './progExercises';
+import { PupilType } from './pupils';
+
 
 
 const WorkType = new GraphQLObjectType({
@@ -17,13 +20,32 @@ const WorkType = new GraphQLObjectType({
             resolve: ({ id }) => id
         },
         title: {
-            type: GraphQLString,
+            type: GraphQLString
+        },
+        exercises: {
+            type: new GraphQLList(ProgExerciseType),
+            resolve: ({ id }) => getWorkExercises(id)
+        },
+        pupils: {
+            type: new GraphQLList(PupilType),
+            resolve: ({ id }) => getWorkPupils(id)
         },
         error: {
             type: GraphQLString,
         }
     }
 });
+
+const QueryWork = {
+    description: 'Get one work',
+    type: WorkType,
+    args: {
+        id: {
+            type: GraphQLInt
+        }
+    },
+    resolve: (root, { id }) => getWork(id)
+};
 
 const QueryWorks = {
     type: new GraphQLList(WorkType),
@@ -40,7 +62,16 @@ const MutationAddOrEditWork = {
         },
         title: {
             type: GraphQLString
-        }
+        },
+        exercises: {
+            type: new GraphQLList(GraphQLInt),
+        },
+        pupils: {
+            type: new GraphQLList(GraphQLInt),
+        }/*,
+        sort: {
+            type: GraphQLInt
+        }*/
     },
     resolve: (root, args) => addOrEditWork(args)
 };
@@ -56,4 +87,4 @@ const MutationRemoveWork = {
     resolve: (root, { id }) => removeWork(id)
 };
 
-export { WorkType, QueryWorks, MutationAddOrEditWork, MutationRemoveWork };
+export { WorkType, QueryWorks, QueryWork, MutationAddOrEditWork, MutationRemoveWork };

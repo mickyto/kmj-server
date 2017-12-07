@@ -12,7 +12,7 @@ import { QueryTrainings, QueryTraining, MutationAddOrEditTraining, MutationRemov
 import { QueryPupilResults, QueryPupilTrainingResults, MutationAddResult, MutationClearPupilResults } from './types/trainingResults';
 import { CompileProgramMutation } from './types/compilation';
 import { QueryThemes, QueryTheme, MutationAddOrEditTheme, MutationRemoveTheme } from './types/themes';
-import { QueryWorks, MutationAddOrEditWork, MutationRemoveWork } from './types/works';
+import { QueryWorks, QueryWork, MutationAddOrEditWork, MutationRemoveWork } from './types/works';
 import { QueryProgExercises, QueryProgExercise, MutationAddOrEditProgExercise, MutationRemoveProgExercise } from './types/progExercises';
 
 const queryType = new GraphQLObjectType({
@@ -37,6 +37,7 @@ const queryType = new GraphQLObjectType({
         themes: QueryThemes,
         theme: QueryTheme,
         works: QueryWorks,
+        work: QueryWork,
         progExercises: QueryProgExercises,
         progExercise: QueryProgExercise,
     }

@@ -304,12 +304,12 @@ const WorkExecutions = sequelize.define('work_executions', {
     }
 });
 
-const ProgExercises = sequelize.define('prog_exercises', {
+const Exercises = sequelize.define('exercises', {
     id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true,
-        field: 'prog_exercise_id'
+        field: 'exercise_id'
     },
     text: {
         type: Sequelize.STRING,
@@ -326,12 +326,17 @@ Pupils.belongsToMany(Groups, { through: 'pupil_groups' });
 Trainings.belongsTo(Subjects);
 Trainings.belongsToMany(Pupils, { through: 'pupil_trainings' });
 Pupils.belongsToMany(Trainings, { through: 'pupil_trainings' });
-ProgExercises.hasMany(Tests);
-ProgExercises.belongsTo(Themes);
-ProgExercises.belongsToMany(Works, { through: 'work_contents' });
-Works.belongsToMany(ProgExercises, { through: 'work_contents' });
-Pupils.belongsToMany(ProgExercises, { through: 'work_executions' });
-ProgExercises.belongsToMany(Pupils, { through: 'work_executions' });
+Exercises.hasMany(Tests);
+Exercises.belongsTo(Themes);
+
+Works.belongsToMany(Exercises, {  through: 'work_contents' });
+Exercises.belongsToMany(Works, {  through: 'work_contents' });
+
+Pupils.belongsToMany(Exercises, { through: 'work_executions' });
+Exercises.belongsToMany(Pupils, { through: 'work_executions' });
+
+Pupils.belongsToMany(Works, { through: 'pupil_works' });
+Works.belongsToMany(Pupils, { through: 'pupil_works' });
 
 export { Op, Users, Clients, Pupils, Teachers, Groups, Formats, Subjects, Channels,
-    Trainings, PupilTrainings, Themes, Tests, ProgExercises, Works, WorkContents, WorkExecutions };
+    Trainings, PupilTrainings, Themes, Tests, Exercises, Works, WorkContents, WorkExecutions };

@@ -57,7 +57,7 @@ const addResult = (args) => {
 const clearPupilResults = (id) => {
     return new Promise((resolve, reject) => {
         PupilTrainings.destroy({ where: { pupil_id: id }})
-            .then(result => resolve(result))
+            .then(result => resolve(result))  
             .catch(error => reject(error));
     })
 };

@@ -1,11 +1,8 @@
-import { Works, Op } from '../sequelize';
+import { Works } from '../sequelize';
 
-const getWorks = (ids) => {
-
-    // TODO why I need conditional query?
-    const query = ids ? { where: { work_id: { [Op.in]: ids }}} : {};
+const getWorks = () => {
     return new Promise((resolve, reject) => {
-        Works.findAll(query)
+        Works.findAll()
             .then(works => resolve(works))
             .catch(error => reject(error))
     })
@@ -19,18 +16,42 @@ const getWork = (id) => {
     })
 };
 
+const getWorkExercises = (id) => {
+    return new Promise((resolve, reject) => {
+        Works.findById(id)
+            .then(work => resolve(work.getExercises()))
+            .catch(error => reject(error))
+    })
+};
+
+const getWorkPupils = (id) => {
+    return new Promise((resolve, reject) => {
+        Works.findById(id)
+            .then(work => resolve(work.getPupils()))
+            .catch(error => reject(error))
+    })
+};
+
 const addOrEditWork = (args) => {
     return new Promise((resolve, reject) => {
 
         if (args.id) {
-            Works.update(args, { where: { work_id: args.id }})
-                .then(work => resolve(work))
+            Works.update({ title: args.title }, { where: { work_id: args.id }})
+                .then(work => {
+                    work.setExercises(args.exercises);
+                    work.setPupils(args.pupils);
+                    resolve(work)
+                })
                 .catch(error => reject(error));
             return;
         }
 
-        Works.create(args)
-            .then(work => resolve(work))
+        Works.create({ title: args.title })
+            .then(work => {
+                work.addPupils(args.pupils);
+                work.addExercises(args.exercises);
+                resolve(work)
+            })
             .catch(error => reject(error));
     });
 };
@@ -43,4 +64,4 @@ const removeWork = (id) => {
     })
 };
 
-export { getWorks, getWork, addOrEditWork, removeWork };
+export { getWorks, getWork, getWorkExercises, getWorkPupils,  addOrEditWork, removeWork };
