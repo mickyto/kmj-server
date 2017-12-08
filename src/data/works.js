@@ -6,11 +6,9 @@ import { Works, Pupils } from '../sequelize';
 const getWorks = (token) => {
     return new Promise((resolve, reject) => {
 
-        console.log(token)
-
         if (token) {
             jwt.verify(token, config.secret, (err, decoded) => {
-                if (err) reject(error);
+                if (err) reject(err);
                 if (!decoded.id) {
                     resolve();
                     return;

@@ -5,40 +5,30 @@ import {
     GraphQLList,
     GraphQLNonNull
 } from 'graphql';
-import { getPupilResults, getPupilTrainingResults, addResult, clearPupilResults } from '../data/trainingResults';
+import { getPupilResults, getPupilWorkExecutions, addResult, clearPupilResults } from '../data/workExecutions';
 import { getPupil } from '../data/pupils';
-import { getTraining } from '../data/trainings';
+import { getProgExercise } from '../data/exercises';
 
 import { OperationType } from './common';
 import { PupilType } from './pupils';
-import { TrainingType } from './trainings';
+import { ProgExerciseType } from './exercises';
 
 
-const TrainingResultsType = new GraphQLObjectType({
-    name: 'TrainingResults',
+const WorkExecutionsType = new GraphQLObjectType({
+    name: 'WorkExecutions',
     fields: {
-        resultId: {
-            type: GraphQLInt,
-            resolve: ({ id }) => id
+        id: {
+            type: GraphQLInt
         },
         pupil: {
             type: PupilType,
             resolve: ({ pupil_id }) => getPupil(pupil_id)
         },
-        training: {
-            type: TrainingType,
-            resolve: ({ training_id }) => getTraining(training_id)
-        },
-        tex: {
+        program: {
             type: GraphQLString,
         },
-        pupilAnswer: {
-            type: GraphQLString,
-            resolve: ({ pupil_answer }) => pupil_answer
-        },
-        rightAnswer: {
-            type: GraphQLString,
-            resolve: ({ right_answer }) => right_answer
+        status: {
+            type: GraphQLInt
         },
         date: {
             type: GraphQLString,
@@ -50,7 +40,7 @@ const TrainingResultsType = new GraphQLObjectType({
 });
 
 const QueryPupilResults = {
-    type: new GraphQLList(TrainingResultsType),
+    type: new GraphQLList(WorkExecutionsType),
     description: 'Get all results for pupil',
     args: {
         id: {
@@ -60,22 +50,22 @@ const QueryPupilResults = {
     resolve: (root, { id }) => getPupilResults(id)
 };
 
-const QueryPupilTrainingResults = {
-    type: new GraphQLList(TrainingResultsType),
+const QueryPupilWorkExecutions = {
+    type: new GraphQLList(WorkExecutionsType),
     description: 'Get all results for pupil',
     args: {
-        token: {
-            type: GraphQLString
+        workId: {
+            type: new GraphQLNonNull(GraphQLInt)
         },
-        trainingId: {
+        pupilId: {
             type: new GraphQLNonNull(GraphQLInt)
         }
     },
-    resolve: (root, args) => getPupilTrainingResults(args)
+    resolve: (root, args) => getPupilWorkExecutions(args)
 };
 
 const MutationAddResult = {
-    type: TrainingResultsType,
+    type: WorkExecutionsType,
     description: 'Add training result',
     args: {
         token: {
@@ -111,4 +101,4 @@ const MutationClearPupilResults = {
     resolve: (root, args) => clearPupilResults(args)
 };
 
-export { QueryPupilResults, QueryPupilTrainingResults, MutationAddResult, MutationClearPupilResults };
+export { WorkExecutionsType, QueryPupilResults, QueryPupilWorkExecutions, MutationAddResult, MutationClearPupilResults };

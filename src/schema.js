@@ -13,7 +13,8 @@ import { QueryPupilResults, QueryPupilTrainingResults, MutationAddResult, Mutati
 import { CompileProgramMutation } from './types/compilation';
 import { QueryThemes, QueryTheme, MutationAddOrEditTheme, MutationRemoveTheme } from './types/themes';
 import { QueryWorks, QueryWork, MutationAddOrEditWork, MutationRemoveWork } from './types/works';
-import { QueryProgExercises, QueryProgExercise, MutationAddOrEditProgExercise, MutationRemoveProgExercise } from './types/progExercises';
+import { QueryProgExercises, QueryProgExercise, MutationAddOrEditProgExercise, MutationRemoveProgExercise } from './types/exercises';
+import { QueryPupilWorkExecutions } from './types/workExecutions';
 
 const queryType = new GraphQLObjectType({
     name: 'Query',
@@ -40,6 +41,7 @@ const queryType = new GraphQLObjectType({
         work: QueryWork,
         progExercises: QueryProgExercises,
         progExercise: QueryProgExercise,
+        //pupilWorkExecutions: QueryPupilWorkExecutions,
     }
 });
 

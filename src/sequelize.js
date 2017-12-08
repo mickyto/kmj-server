@@ -296,6 +296,9 @@ const WorkExecutions = sequelize.define('work_executions', {
         autoIncrement: true,
         field: 'id'
     },
+    program: {
+        type: Sequelize.STRING,
+    },
     status: {
         type: Sequelize.BOOLEAN,
     },

@@ -6,8 +6,8 @@ import {
     GraphQLNonNull
 } from 'graphql';
 import { getWorks, addOrEditWork, removeWork, getWork, getWorkExercises, getWorkPupils } from '../data/works';
-import { IdType, OperationType } from './common';
-import { ProgExerciseType } from './progExercises';
+import { OperationType } from './common';
+import { ProgExerciseType } from './exercises';
 import { PupilType } from './pupils';
 
 

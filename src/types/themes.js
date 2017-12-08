@@ -6,9 +6,9 @@ import {
     GraphQLNonNull
 } from 'graphql';
 import { getThemes, getTheme, addOrEditTheme, removeTheme } from '../data/themes';
-import { getProgExercisesByTheme } from '../data/progExercises';
+import { getProgExercisesByTheme } from '../data/exercises';
 import { OperationType } from './common';
-import { ProgExerciseType } from './progExercises';
+import { ProgExerciseType } from './exercises';
 
 
 const ThemeType = new GraphQLObjectType({

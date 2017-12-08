@@ -8,9 +8,11 @@ import {
 } from 'graphql';
 
 import { ThemeType } from './themes';
+import { WorkExecutionsType } from './workExecutions';
 import { OperationType } from './common';
-import { getProgExercises, getProgExercise, getTestsByProgExerciseId, addOrEditProgExercise, removeProgExercise } from '../data/progExercises';
+import { getProgExercises, getProgExercise, getTestsByProgExerciseId, addOrEditProgExercise, removeProgExercise } from '../data/exercises';
 import { getTheme } from '../data/themes';
+import { getPupilExecution } from '../data/workExecutions';
 
 
 const TestInputType = new GraphQLInputObjectType({
@@ -67,6 +69,15 @@ const ProgExerciseType = new GraphQLObjectType({
         tests: {
             type: new GraphQLList(TestOutputType),
             resolve: ({ id }) => getTestsByProgExerciseId(id)
+        },
+        pupilExecution: {
+            type: WorkExecutionsType,
+            args: {
+                token: {
+                    type: GraphQLString
+                }
+            },
+            resolve: ({ id }, { token }) => getPupilExecution(id, token)
         },
         error: {
             type: GraphQLString,
