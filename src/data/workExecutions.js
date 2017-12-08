@@ -5,7 +5,6 @@ import { Exercises } from '../sequelize';
 
 const getPupilExecution = (exerciseId, token) => {
     return new Promise((resolve, reject) => {
-        console.log(token)
 
         jwt.verify(token, config.secret, (err, decoded) => {
             if (err) reject(err);

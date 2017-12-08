@@ -1,7 +1,8 @@
 import {
     GraphQLObjectType,
     GraphQLString,
-    GraphQLNonNull
+    GraphQLNonNull,
+    GraphQLInt
 } from 'graphql';
 
 import { compileProgram } from '../data/compileProgram';
@@ -14,7 +15,8 @@ const ProgramType = new GraphQLObjectType({
             type: GraphQLString
         },
         error: {
-            type: GraphQLString
+            type: GraphQLString,
+            resolve: ({ error }) => error
         }
     }
 });
@@ -26,11 +28,14 @@ const CompileProgramMutation = {
         token: {
             type: new GraphQLNonNull(GraphQLString)
         },
+        exercise_id: {
+            type: new GraphQLNonNull(GraphQLInt)
+        },
         code: {
             type: new GraphQLNonNull(GraphQLString)
         }
     },
-    resolve: (root, { code }) => compileProgram(code)
+    resolve: (root, args) => compileProgram(args)
 };
 
 

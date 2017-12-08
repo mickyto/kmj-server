@@ -7,11 +7,9 @@ import {
 } from 'graphql';
 import { getPupilResults, getPupilWorkExecutions, addResult, clearPupilResults } from '../data/workExecutions';
 import { getPupil } from '../data/pupils';
-import { getProgExercise } from '../data/exercises';
 
 import { OperationType } from './common';
 import { PupilType } from './pupils';
-import { ProgExerciseType } from './exercises';
 
 
 const WorkExecutionsType = new GraphQLObjectType({

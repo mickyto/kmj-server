@@ -35,7 +35,7 @@ const addResult = (args) => {
         }
 
         jwt.verify(args.token, config.secret, (err, decoded) => {
-            if (err) reject(error);
+            if (err) reject(err);
             if (!decoded.id) {
                 resolve();
                 return;
