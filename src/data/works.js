@@ -1,7 +1,27 @@
-import { Works } from '../sequelize';
+import jwt from 'jsonwebtoken';
 
-const getWorks = () => {
+import config from "../../config";
+import { Works, Pupils } from '../sequelize';
+
+const getWorks = (token) => {
     return new Promise((resolve, reject) => {
+
+        console.log(token)
+
+        if (token) {
+            jwt.verify(token, config.secret, (err, decoded) => {
+                if (err) reject(error);
+                if (!decoded.id) {
+                    resolve();
+                    return;
+                }
+                Pupils.findById(decoded.id)
+                    .then(pupil => resolve(pupil.getWorks()))
+                    .catch(error => reject(error));
+            });
+            return;
+        }
+
         Works.findAll()
             .then(works => resolve(works))
             .catch(error => reject(error))

@@ -49,8 +49,13 @@ const QueryWork = {
 
 const QueryWorks = {
     type: new GraphQLList(WorkType),
-    description: 'Get all works',
-    resolve: () => getWorks()
+    description: 'Get all works or works of pupil',
+    args: {
+        token: {
+            type: GraphQLString
+        }
+    },
+    resolve: (root, { token }) => getWorks(token)
 };
 
 const MutationAddOrEditWork = {
