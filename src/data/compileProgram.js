@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import fs from 'fs';
 
 import config from "../../config";
-import { Exercises, Tests } from '../sequelize';
+import { Exercises } from '../sequelize';
 
 
 const compileProgram = ({ code, token, exercise_id }) => {
@@ -11,7 +11,7 @@ const compileProgram = ({ code, token, exercise_id }) => {
 
         const file = `tmp/${token}.cpp`;
 
-        fs.writeFileSync(file, code)
+        fs.writeFileSync(file, code);
 
         Exercises.findById(exercise_id)
             .then(exercise => {
@@ -24,22 +24,31 @@ const compileProgram = ({ code, token, exercise_id }) => {
                     .then(tests => {
 
                         cmd.get(`g++ -o tmp/${token} ${file}`, (err, data, stderr) => {
-                            if(stderr) return resolve({ error: 'Ошибка во время компиляции файла' });
+                            if(stderr) {
+                                fs.unlinkSync(file);
+                                return resolve({ error: 'Ваш код не компилируется, проверьте синтаксис' });
+                            }
                             for (let i = 0; i < tests.length; i++) {
 
                                 const testFile = `tmp/test${exercise_id}${i}.txt`;
 
                                 fs.writeFileSync(testFile, tests[i].cin);
                                 cmd.get(`tmp/${token} < tmp/test${exercise_id}${i}.txt`, (err, data) => {
+
+                                    fs.unlinkSync(testFile);
+
                                     if(data && data == tests[i].cout) {
-                                        fs.unlinkSync(testFile);
                                         if (tests.length - (i + 1) !== 0) return;
                                         fs.unlinkSync(file);
                                         fs.unlinkSync(`tmp/${token}`);
                                         exercise.addPupil(decoded.id, { through: { status: 1 }});
                                         return resolve({ output: 'accepted' });
                                     }
-                                    else return resolve({ error: 'Ошибка после теста № ' + (i + 1) });
+                                    else {
+                                        fs.unlinkSync(file);
+                                        fs.unlinkSync(`tmp/${token}`);
+                                        return resolve({ error: 'Ошибка после теста № ' + (i + 1) });
+                                    }
                                 });
                             }
                         });
