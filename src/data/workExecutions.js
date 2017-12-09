@@ -19,4 +19,15 @@ const getPupilExecution = (exerciseId, token) => {
     })
 };
 
-export { getPupilExecution };
+const getPupilExecutions = (pupilId, workId) => {
+    return new Promise((resolve, reject) => {
+
+
+            WorkExecutions.findOne({where: { pupil_id: decoded.id, exercise_id: exerciseId }})
+                .then(executions => resolve(executions))
+                .catch(error => reject(error))
+
+    })
+};
+
+export { getPupilExecution, getPupilExecutions };

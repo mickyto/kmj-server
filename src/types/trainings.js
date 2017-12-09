@@ -35,13 +35,13 @@ const TrainingType = new GraphQLObjectType({
             resolve: ({ subject_id }) => getSubject(subject_id)
         },
         pupilTraining: {
-            type: TrainingResultsType,
+            type: new GraphQLList(TrainingResultsType),
             args: {
                 token: {
                     type: GraphQLString
                 }
             },
-            resolve: ({ id }, { token }) => getPupilTrainingResults({ id, token })
+            resolve: ({ id }, { token }) => getPupilTrainingResults({ trainingId: id, token })
         },
         isActive: {
             type: GraphQLBoolean,

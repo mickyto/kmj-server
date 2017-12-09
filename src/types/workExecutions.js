@@ -14,7 +14,7 @@ import { PupilType } from './pupils';
 
 const WorkExecutionsType = new GraphQLObjectType({
     name: 'WorkExecutions',
-    fields: {
+    fields: () => ({
         id: {
             type: GraphQLInt
         },
@@ -34,7 +34,7 @@ const WorkExecutionsType = new GraphQLObjectType({
         error: {
             type: GraphQLString,
         }
-    }
+    })
 });
 
 const QueryPupilResults = {

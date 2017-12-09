@@ -32,6 +32,10 @@ const TrainingResultsType = new GraphQLObjectType({
         tex: {
             type: GraphQLString,
         },
+        isCorrect: {
+            type: GraphQLString,
+            resolve: ({ is_correct }) => is_correct
+        },
         pupilAnswer: {
             type: GraphQLString,
             resolve: ({ pupil_answer }) => pupil_answer

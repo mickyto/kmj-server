@@ -8,9 +8,11 @@ import {
 
 import { getPupils, getPupil, addOrEditPupil, movePupil, getPupilGroups } from '../data/pupils';
 import { getClient } from '../data/clients';
+import { getPupilExecutions } from '../data/workExecutions';
 import { IdType, OperationType } from './common';
 import { GroupType } from './groups';
 import { ClientType } from './clients';
+import { WorkExecutionsType } from './workExecutions';
 
 
 const PupilType = new GraphQLObjectType({
@@ -34,6 +36,15 @@ const PupilType = new GraphQLObjectType({
         },
         school: {
             type: GraphQLString,
+        },
+        pupilExecution: {
+            type: new GraphQLList(WorkExecutionsType),
+            args: {
+                workId: {
+                    type: GraphQLInt
+                }
+            },
+            resolve: ({ id }, { workId }) => getPupilExecutions(id, workId)
         },
         groups: {
             type: new GraphQLList(GroupType),
