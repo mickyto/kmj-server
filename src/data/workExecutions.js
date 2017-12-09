@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 
 import config from "../../config";
-import { Exercises } from '../sequelize';
+import { WorkExecutions } from '../sequelize';
 
 const getPupilExecution = (exerciseId, token) => {
     return new Promise((resolve, reject) => {
@@ -12,8 +12,8 @@ const getPupilExecution = (exerciseId, token) => {
                 resolve();
                 return;
             }
-            Exercises.findById(exerciseId)
-                .then(exercise => resolve(exercise.getPupils({where: {pupil_id: decoded.id}})))
+            WorkExecutions.findOne({where: { pupil_id: decoded.id, exercise_id: exerciseId }})
+                .then(executions => resolve(executions))
                 .catch(error => reject(error))
         });
     })

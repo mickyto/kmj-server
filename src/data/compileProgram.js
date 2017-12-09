@@ -18,7 +18,10 @@ const compileProgram = ({ code, token, exercise_id }) => {
 
                 const decoded = jwt.verify(token, config.secret);
 
-                exercise.addPupil(decoded.id, { through: { program: code, status: 0 }});
+                const d = new Date();
+                const utc = d.getTime() + (d.getTimezoneOffset() * 60000);
+
+                exercise.addPupil(decoded.id, { through: { program: code, status: 0, date: new Date(utc + (3600000 * 3)).toISOString() }});
 
                 exercise.getTests()
                     .then(tests => {
@@ -39,15 +42,18 @@ const compileProgram = ({ code, token, exercise_id }) => {
 
                                     if(data && data == tests[i].cout) {
                                         if (tests.length - (i + 1) !== 0) return;
+
                                         fs.unlinkSync(file);
                                         fs.unlinkSync(`tmp/${token}`);
                                         exercise.addPupil(decoded.id, { through: { status: 1 }});
                                         return resolve({ output: 'accepted' });
                                     }
                                     else {
-                                        fs.unlinkSync(file);
-                                        fs.unlinkSync(`tmp/${token}`);
-                                        return resolve({ error: 'Ошибка после теста № ' + (i + 1) });
+                                        if (tests.length - (i + 1) == 0) {
+                                            fs.unlinkSync(file);
+                                            fs.unlinkSync(`tmp/${token}`);
+                                        }
+                                        return resolve({ error: 'Ошибка в тесте № ' + (i + 1) });
                                     }
                                 });
                             }
