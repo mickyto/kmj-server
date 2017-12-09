@@ -7,14 +7,16 @@ import {
     GraphQLBoolean
 } from 'graphql';
 import { getTrainings, getTraining, addOrEditTraining, removeTraining } from '../data/trainings';
+import { getPupilTrainingResults } from '../data/trainingResults';
 import { getSubject } from '../data/subjects';
 import { OperationType } from './common';
 import { SubjectType } from './subjects';
+import { TrainingResultsType } from './trainingResults';
 
 
 const TrainingType = new GraphQLObjectType({
     name: 'Trainings',
-    fields: {
+    fields: () => ({
         trainingId: {
             type: GraphQLInt,
             resolve: ({ id }) => id
@@ -32,13 +34,22 @@ const TrainingType = new GraphQLObjectType({
             type: SubjectType,
             resolve: ({ subject_id }) => getSubject(subject_id)
         },
+        pupilTraining: {
+            type: TrainingResultsType,
+            args: {
+                token: {
+                    type: GraphQLString
+                }
+            },
+            resolve: ({ id }, { token }) => getPupilTrainingResults({ id, token })
+        },
         isActive: {
             type: GraphQLBoolean,
         },
         error: {
             type: GraphQLString,
         }
-    }
+    })
 });
 
 const QueryTrainings = {

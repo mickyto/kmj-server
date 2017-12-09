@@ -1,3 +1,5 @@
+import { doMagic } from '../data/magic';
+
 import {
     GraphQLObjectType,
     GraphQLInt,
@@ -23,4 +25,10 @@ const OperationType = new GraphQLObjectType({
     }
 });
 
-export { IdType, OperationType }
+const MutationMagic = {
+    type: OperationType,
+    description: 'Do magic under DB',
+    resolve: () => doMagic()
+};
+
+export { IdType, OperationType, MutationMagic }

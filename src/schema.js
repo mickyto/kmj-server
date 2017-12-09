@@ -1,6 +1,7 @@
 import { GraphQLSchema, GraphQLObjectType } from 'graphql';
 
 import { QueryUsers, MutationLogin } from './types/users';
+import { MutationMagic} from './types/common';
 import { QueryClients, QueryClient, MutationAddOrEditClient, MutationMoveClient } from './types/clients';
 import { QueryPupils, MutationAddOrEditPupil, MutationMovePupil, QueryPupil } from './types/pupils';
 import { QueryTeachers, QueryTeacher, MutationAddOrEditTeacher, MutationRemoveTeacher } from './types/teachers';
@@ -74,6 +75,7 @@ const MutationType = new GraphQLObjectType({
         removeWork: MutationRemoveWork,
         addOrEditProgExercise: MutationAddOrEditProgExercise,
         removeProgExercise: MutationRemoveProgExercise,
+        magic: MutationMagic
     }
 });
 

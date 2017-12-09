@@ -16,7 +16,7 @@ import { TrainingType } from './trainings';
 
 const TrainingResultsType = new GraphQLObjectType({
     name: 'TrainingResults',
-    fields: {
+    fields: ()=> ({
         resultId: {
             type: GraphQLInt,
             resolve: ({ id }) => id
@@ -46,7 +46,7 @@ const TrainingResultsType = new GraphQLObjectType({
         error: {
             type: GraphQLString,
         }
-    }
+    })
 });
 
 const QueryPupilResults = {
@@ -111,4 +111,4 @@ const MutationClearPupilResults = {
     resolve: (root, args) => clearPupilResults(args)
 };
 
-export { QueryPupilResults, QueryPupilTrainingResults, MutationAddResult, MutationClearPupilResults };
+export { TrainingResultsType, QueryPupilResults, QueryPupilTrainingResults, MutationAddResult, MutationClearPupilResults };

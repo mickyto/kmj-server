@@ -230,6 +230,9 @@ const PupilTrainings = sequelize.define('pupil_trainings', {
     right_answer: {
         type: Sequelize.STRING,
     },
+    is_correct: {
+        type: Sequelize.BOOLEAN,
+    },
     date: {
         type: Sequelize.STRING,
     }
@@ -327,8 +330,10 @@ Groups.belongsTo(Formats);
 Groups.belongsToMany(Pupils, { through: 'pupil_groups' });
 Pupils.belongsToMany(Groups, { through: 'pupil_groups' });
 Trainings.belongsTo(Subjects);
+
 Trainings.belongsToMany(Pupils, { through: 'pupil_trainings' });
 Pupils.belongsToMany(Trainings, { through: 'pupil_trainings' });
+
 Exercises.hasMany(Tests);
 Exercises.belongsTo(Themes);
 
