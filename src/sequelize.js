@@ -327,9 +327,10 @@ Clients.belongsTo(Channels, { foreignKey: 'channel_id' });
 Groups.belongsTo(Teachers);
 Groups.belongsTo(Subjects);
 Groups.belongsTo(Formats);
+Trainings.belongsTo(Subjects);
+
 Groups.belongsToMany(Pupils, { through: 'pupil_groups' });
 Pupils.belongsToMany(Groups, { through: 'pupil_groups' });
-Trainings.belongsTo(Subjects);
 
 Trainings.belongsToMany(Pupils, { through: 'pupil_trainings' });
 Pupils.belongsToMany(Trainings, { through: 'pupil_trainings' });

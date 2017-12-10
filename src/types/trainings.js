@@ -6,12 +6,13 @@ import {
     GraphQLNonNull,
     GraphQLBoolean
 } from 'graphql';
-import { getTrainings, getTraining, addOrEditTraining, removeTraining } from '../data/trainings';
+import { getTrainings, getTraining, addOrEditTraining, removeTraining, getTrainingPupils } from '../data/trainings';
 import { getPupilTrainingResults } from '../data/trainingResults';
 import { getSubject } from '../data/subjects';
 import { OperationType } from './common';
 import { SubjectType } from './subjects';
 import { TrainingResultsType } from './trainingResults';
+import { PupilType } from './pupils';
 
 
 const TrainingType = new GraphQLObjectType({
@@ -33,6 +34,10 @@ const TrainingType = new GraphQLObjectType({
         subject: {
             type: SubjectType,
             resolve: ({ subject_id }) => getSubject(subject_id)
+        },
+        pupils: {
+            type: new GraphQLList(PupilType),
+            resolve: ({ id }) => getTrainingPupils(id)
         },
         pupilTraining: {
             type: new GraphQLList(TrainingResultsType),

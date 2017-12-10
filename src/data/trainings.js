@@ -31,6 +31,14 @@ const getTraining = (id) => {
     })
 };
 
+const getTrainingPupils = (id) => {
+    return new Promise((resolve, reject) => {
+        Trainings.findById(id)
+            .then(training => resolve(training.getPupils()))
+            .catch(error => reject(error))
+    })
+};
+
 const addOrEditTraining = (args) => {
     return new Promise((resolve, reject) => {
 
@@ -55,4 +63,4 @@ const removeTraining = (id) => {
     });
 };
 
-export { getTrainings, getTraining, addOrEditTraining, removeTraining };
+export { getTrainings, getTraining, addOrEditTraining, removeTraining, getTrainingPupils };
