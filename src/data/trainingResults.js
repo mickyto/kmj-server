@@ -44,7 +44,7 @@ const addResult = (args) => {
                 pupil_id: decoded.id,
                 training_id: args.trainingId,
                 tex: args.tex,
-                is_correct: args.pupilAnswer == args.rightAnswer,
+                is_correct: args.pupilAnswer.replace(/ /g,'') == args.rightAnswer.replace(/ /g,''),
                 pupil_answer: args.pupilAnswer,
                 right_answer: args.rightAnswer
             };

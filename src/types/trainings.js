@@ -31,6 +31,9 @@ const TrainingType = new GraphQLObjectType({
         url: {
             type: GraphQLString,
         },
+        speed: {
+            type: GraphQLInt,
+        },
         subject: {
             type: SubjectType,
             resolve: ({ subject_id }) => getSubject(subject_id)
@@ -97,6 +100,9 @@ const MutationAddOrEditTraining = {
         },
         url: {
             type: GraphQLString,
+        },
+        speed: {
+            type: GraphQLInt,
         },
         subject_id: {
             type: GraphQLInt,
