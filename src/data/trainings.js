@@ -34,7 +34,7 @@ const getTraining = (id) => {
 const getTrainingPupils = (id) => {
     return new Promise((resolve, reject) => {
         Trainings.findById(id)
-            .then(training => resolve(training.getPupils()))
+            .then(training => resolve(training.getPupils({ order: [['fio', 'ASC']] })))
             .catch(error => reject(error))
     })
 };
