@@ -1,4 +1,4 @@
-import { Pupils } from '../sequelize';
+import { Pupils, Works } from '../sequelize';
 
 const getPupils = (args) => {
     return new Promise((resolve, reject) => {
@@ -45,10 +45,16 @@ const getPupilsByClientId = (id) => {
     })
 };
 
-const getPupilExercises = (id) => {
+const getPupilExercises = (id, workId) => {
     return new Promise((resolve, reject) => {
         Pupils.findById(id)
-            .then(pupil => resolve(pupil.getExercises()))
+            .then(pupil => pupil.getExercises({ include: [ Works ] })
+                .then(exercises => {
+                    const filtered = exercises.filter(exercise => {
+                        return exercise.works.filter(work => work.id == workId).length > 0
+                    });
+                    return resolve(filtered)
+                }))
             .catch(error => reject(error));
     })
 };

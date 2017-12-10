@@ -43,7 +43,12 @@ const PupilType = new GraphQLObjectType({
         },
         exercises: {
             type: new GraphQLList(ProgExerciseType),
-            resolve: ({ id }) => getPupilExercises(id)
+            args: {
+                workId: {
+                    type: GraphQLInt
+                }
+            },
+            resolve: ({ id }, { workId }) => getPupilExercises(id, workId)
         },
         groups: {
             type: new GraphQLList(GroupType),
