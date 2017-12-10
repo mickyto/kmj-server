@@ -6,13 +6,14 @@ import {
     GraphQLNonNull,
 } from 'graphql';
 
-import { getPupils, getPupil, addOrEditPupil, movePupil, getPupilGroups } from '../data/pupils';
+import { getPupils, getPupil, addOrEditPupil, movePupil, getPupilGroups, getPupilExercises } from '../data/pupils';
 import { getClient } from '../data/clients';
 import { getPupilExecutions } from '../data/workExecutions';
 import { IdType, OperationType } from './common';
 import { GroupType } from './groups';
 import { ClientType } from './clients';
 import { WorkExecutionsType } from './workExecutions';
+import { ProgExerciseType } from './exercises';
 
 
 const PupilType = new GraphQLObjectType({
@@ -23,19 +24,23 @@ const PupilType = new GraphQLObjectType({
             resolve: ({ id }) => id
         },
         fio: {
-            type: GraphQLString,
+            type: GraphQLString
         },
         phone: {
-            type: GraphQLString,
+            type: GraphQLString
         },
         email: {
-            type: GraphQLString,
+            type: GraphQLString
         },
         class: {
-            type: GraphQLString,
+            type: GraphQLString
         },
         school: {
-            type: GraphQLString,
+            type: GraphQLString
+        },
+        exercises: {
+            type: new GraphQLList(ProgExerciseType),
+            resolve: ({ id }) => getPupilExercises(id)
         },
         pupilExecution: {
             type: new GraphQLList(WorkExecutionsType),
@@ -55,10 +60,10 @@ const PupilType = new GraphQLObjectType({
             resolve: ({ client_id }) => getClient(client_id)
         },
         status: {
-            type: GraphQLString,
+            type: GraphQLString
         },
         error: {
-            type: GraphQLString,
+            type: GraphQLString
         }
     })
 });
@@ -102,16 +107,16 @@ const MutationAddOrEditPupil = {
             type: GraphQLString
         },
         class: {
-            type: GraphQLString,
+            type: GraphQLString
         },
         groups: {
-            type: new GraphQLList(IdType),
+            type: new GraphQLList(IdType)
         },
         school: {
-            type: GraphQLString,
+            type: GraphQLString
         },
         client_id: {
-            type: GraphQLInt,
+            type: GraphQLInt
         }
     },
     resolve: (root, args) => addOrEditPupil(args)

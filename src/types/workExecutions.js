@@ -22,6 +22,9 @@ const WorkExecutionsType = new GraphQLObjectType({
             type: PupilType,
             resolve: ({ pupil_id }) => getPupil(pupil_id)
         },
+        exercise_id: {
+            type: GraphQLInt
+        },
         program: {
             type: GraphQLString,
         },

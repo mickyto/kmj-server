@@ -70,6 +70,9 @@ const ProgExerciseType = new GraphQLObjectType({
             type: new GraphQLList(TestOutputType),
             resolve: ({ id }) => getTestsByProgExerciseId(id)
         },
+        work_executions: {
+            type: WorkExecutionsType
+        },
         pupilExecution: {
             type: WorkExecutionsType,
             args: {

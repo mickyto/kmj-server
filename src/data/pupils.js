@@ -1,4 +1,4 @@
-import { Pupils, Clients } from '../sequelize';
+import { Pupils } from '../sequelize';
 
 const getPupils = (args) => {
     return new Promise((resolve, reject) => {
@@ -41,6 +41,14 @@ const getPupilsByClientId = (id) => {
     return new Promise((resolve, reject) => {
         Pupils.findAll({ where: { client_id: id }})
             .then(pupils => resolve(pupils))
+            .catch(error => reject(error));
+    })
+};
+
+const getPupilExercises = (id) => {
+    return new Promise((resolve, reject) => {
+        Pupils.findById(id)
+            .then(pupil => resolve(pupil.getExercises()))
             .catch(error => reject(error));
     })
 };
@@ -95,4 +103,4 @@ const movePupil = ({ id, operation }) => {
     });
 };
 
-export { getPupils, getPupil, addOrEditPupil, movePupil, getPupilGroups, getPupilsByClientId };
+export { getPupils, getPupil, addOrEditPupil, movePupil, getPupilGroups, getPupilsByClientId, getPupilExercises };
