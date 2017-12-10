@@ -59,8 +59,8 @@ const QueryTrainings = {
         subject: {
             type: GraphQLInt
         },
-        isUser: {
-            type: GraphQLBoolean
+        token: {
+            type: GraphQLString
         }
     },
     resolve: (root, args) => getTrainings(args)

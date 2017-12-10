@@ -1,14 +1,20 @@
+import jwt from 'jsonwebtoken';
+
+import config from "../../config";
 import { Trainings } from '../sequelize';
 
-const getTrainings = ({ isUser, subject }) => {
+const getTrainings = ({ token, subject }) => {
     return new Promise((resolve, reject) => {
 
-        const query = { where: {}};
+        const query = { where: { is_active: 1 }};
         if (subject) {
             query.where.subject_id = subject
         }
-        if (isUser !== undefined) {
-            query.where.is_active = isUser
+        if (token) {
+            const decoded = jwt.verify(token, config.secret);
+            if (decoded.role) {
+                delete query.where.is_active
+            }
         }
 
         Trainings.findAll(query)
