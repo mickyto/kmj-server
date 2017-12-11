@@ -66,7 +66,7 @@ const addOrEditPupil = (args) => {
             Pupils.findById(args.id)
                 .then(pupil => {
                     Pupils.update(args, { where: { pupil_id: args.id }});
-                    pupil.setGroups(args.groups.map(({ id }) => id));
+                    pupil.setGroups(args.groups);
                     return resolve(pupil);
                 })
                 .catch(error => reject(error));
@@ -77,7 +77,7 @@ const addOrEditPupil = (args) => {
         else {
             Pupils.create(args)
                 .then(pupil => {
-                    pupil.addGroups(args.groups.map(({ id }) => id));
+                    pupil.addGroups(args.groups);
                     return resolve(pupil)
                 })
                 .catch(error => reject(error));

@@ -30,7 +30,7 @@ const ClientType = new GraphQLObjectType({
         email: {
             type: GraphQLString,
         },
-        where_from: {
+        channel: {
             type: ChannelsType,
             resolve: ({ channel_id }) => getChannel(channel_id)
         },

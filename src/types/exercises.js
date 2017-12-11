@@ -10,7 +10,7 @@ import {
 import { ThemeType } from './themes';
 import { WorkExecutionsType } from './workExecutions';
 import { OperationType } from './common';
-import { getProgExercises, getProgExercise, getTestsByProgExerciseId, addOrEditProgExercise, removeProgExercise } from '../data/exercises';
+import { getExercises, getExercise, getTestsByExerciseId, addOrEditExercise, removeExercise } from '../data/exercises';
 import { getTheme } from '../data/themes';
 import { getPupilExecution } from '../data/workExecutions';
 
@@ -52,8 +52,8 @@ const TestOutputType = new GraphQLObjectType({
 });
 
 
-const ProgExerciseType = new GraphQLObjectType({
-    name: 'ProgExercises',
+const ExerciseType = new GraphQLObjectType({
+    name: 'Exercises',
     fields: () => ({
         exerciseId: {
             type: GraphQLInt,
@@ -68,7 +68,7 @@ const ProgExerciseType = new GraphQLObjectType({
         },
         tests: {
             type: new GraphQLList(TestOutputType),
-            resolve: ({ id }) => getTestsByProgExerciseId(id)
+            resolve: ({ id }) => getTestsByExerciseId(id)
         },
         work_executions: {
             type: WorkExecutionsType
@@ -88,25 +88,25 @@ const ProgExerciseType = new GraphQLObjectType({
     })
 });
 
-const QueryProgExercises = {
-    type: new GraphQLList(ProgExerciseType),
+const QueryExercises = {
+    type: new GraphQLList(ExerciseType),
     description: 'Get all programming exercises',
-    resolve: () => getProgExercises()
+    resolve: () => getExercises()
 };
 
-const QueryProgExercise= {
-    type: ProgExerciseType,
+const QueryExercise= {
+    type: ExerciseType,
     description: 'Get one programming exercise',
     args: {
         id: {
             type: GraphQLInt
         }
     },
-    resolve: (root, { id }) => getProgExercise(id)
+    resolve: (root, { id }) => getExercise(id)
 };
 
-const MutationAddOrEditProgExercise = {
-    type: ProgExerciseType,
+const MutationAddOrEditExercise = {
+    type: ExerciseType,
     description: 'Edit or add new programming exercise',
     args: {
         id: {
@@ -122,10 +122,10 @@ const MutationAddOrEditProgExercise = {
             type: new GraphQLList(TestInputType)
         }
     },
-    resolve: (root, args) => addOrEditProgExercise(args)
+    resolve: (root, args) => addOrEditExercise(args)
 };
 
-const MutationRemoveProgExercise = {
+const MutationRemoveExercise = {
     type: OperationType,
     description: 'Remove one programming exercise',
     args: {
@@ -133,7 +133,7 @@ const MutationRemoveProgExercise = {
             type: new GraphQLNonNull(GraphQLInt)
         }
     },
-    resolve: (root, { id }) => removeProgExercise(id)
+    resolve: (root, { id }) => removeExercise(id)
 };
 
-export { ProgExerciseType, QueryProgExercises, QueryProgExercise, MutationAddOrEditProgExercise, MutationRemoveProgExercise };
+export { ExerciseType, QueryExercises, QueryExercise, MutationAddOrEditExercise, MutationRemoveExercise };

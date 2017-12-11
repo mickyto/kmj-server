@@ -7,7 +7,7 @@ import {
 } from 'graphql';
 import { getWorks, addOrEditWork, removeWork, getWork, getWorkExercises, getWorkPupils } from '../data/works';
 import { OperationType } from './common';
-import { ProgExerciseType } from './exercises';
+import { ExerciseType } from './exercises';
 import { PupilType } from './pupils';
 
 
@@ -23,7 +23,7 @@ const WorkType = new GraphQLObjectType({
             type: GraphQLString
         },
         exercises: {
-            type: new GraphQLList(ProgExerciseType),
+            type: new GraphQLList(ExerciseType),
             resolve: ({ id }) => getWorkExercises(id)
         },
         pupils: {

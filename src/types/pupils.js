@@ -8,10 +8,10 @@ import {
 
 import { getPupils, getPupil, addOrEditPupil, movePupil, getPupilGroups, getPupilExercises } from '../data/pupils';
 import { getClient } from '../data/clients';
-import { IdType, OperationType } from './common';
+import { OperationType } from './common';
 import { GroupType } from './groups';
 import { ClientType } from './clients';
-import { ProgExerciseType } from './exercises';
+import { ExerciseType } from './exercises';
 import { TrainingResultsType } from './trainingResults';
 
 
@@ -42,7 +42,7 @@ const PupilType = new GraphQLObjectType({
             resolve: ({ pupil_trainings }) => pupil_trainings
         },
         exercises: {
-            type: new GraphQLList(ProgExerciseType),
+            type: new GraphQLList(ExerciseType),
             args: {
                 workId: {
                     type: GraphQLInt
@@ -109,7 +109,7 @@ const MutationAddOrEditPupil = {
             type: GraphQLString
         },
         groups: {
-            type: new GraphQLList(IdType)
+            type: new GraphQLList(GraphQLInt)
         },
         school: {
             type: GraphQLString

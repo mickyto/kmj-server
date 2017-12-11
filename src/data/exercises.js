@@ -1,6 +1,6 @@
 import { Exercises, Tests } from '../sequelize';
 
-const getProgExercises = () => {
+const getExercises = () => {
     return new Promise((resolve, reject) => {
         Exercises.findAll()
             .then(exercises => resolve(exercises))
@@ -8,7 +8,7 @@ const getProgExercises = () => {
     })
 };
 
-const getProgExercise = (id) => {
+const getExercise = (id) => {
     return new Promise((resolve, reject) => {
         Exercises.findById(id)
             .then(exercise => resolve(exercise))
@@ -16,7 +16,7 @@ const getProgExercise = (id) => {
     })
 };
 
-const getProgExercisesByTheme = (id) => {
+const getExercisesByTheme = (id) => {
     return new Promise((resolve, reject) => {
         Exercises.findAll({ where: { theme_id: id }})
             .then(exercises => resolve(exercises))
@@ -24,7 +24,7 @@ const getProgExercisesByTheme = (id) => {
     })
 };
 
-const getTestsByProgExerciseId = (id) => {
+const getTestsByExerciseId = (id) => {
     return new Promise((resolve, reject) => {
         Tests.findAll({ where: { exercise_id: id }})
             .then(tests => resolve(tests))
@@ -32,7 +32,7 @@ const getTestsByProgExerciseId = (id) => {
     })
 };
 
-const addOrEditProgExercise = (args) => {
+const addOrEditExercise = (args) => {
     return new Promise((resolve, reject) => {
 
         if (args.id) {
@@ -59,7 +59,7 @@ const addOrEditProgExercise = (args) => {
     })
 };
 
-const removeProgExercise = (id) => {
+const removeExercise = (id) => {
     return new Promise((resolve, reject) => {
         Exercises.destroy({ where: { exercise_id: id }})
             .then(result => resolve(result))
@@ -67,4 +67,4 @@ const removeProgExercise = (id) => {
     })
 };
 
-export { getProgExercises, getProgExercise, getProgExercisesByTheme, getTestsByProgExerciseId, addOrEditProgExercise, removeProgExercise };
+export { getExercises, getExercise, getExercisesByTheme, getTestsByExerciseId, addOrEditExercise, removeExercise };

@@ -2,18 +2,8 @@ import { doMagic } from '../data/magic';
 
 import {
     GraphQLObjectType,
-    GraphQLInt,
-    GraphQLInputObjectType
+    GraphQLInt
 } from 'graphql';
-
-const IdType = new GraphQLInputObjectType({
-    name: 'IDs',
-    fields: {
-        id: {
-            type: GraphQLInt,
-        }
-    }
-});
 
 const OperationType = new GraphQLObjectType({
     name: 'Operation',
@@ -31,4 +21,4 @@ const MutationMagic = {
     resolve: () => doMagic()
 };
 
-export { IdType, OperationType, MutationMagic }
+export { OperationType, MutationMagic }

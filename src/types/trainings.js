@@ -105,7 +105,7 @@ const MutationAddOrEditTraining = {
             type: GraphQLInt,
         },
         subject_id: {
-            type: GraphQLInt,
+            type: new GraphQLNonNull(GraphQLInt),
         },
         isActive: {
             type: GraphQLBoolean,

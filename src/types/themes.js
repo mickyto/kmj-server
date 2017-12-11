@@ -6,9 +6,9 @@ import {
     GraphQLNonNull
 } from 'graphql';
 import { getThemes, getTheme, addOrEditTheme, removeTheme } from '../data/themes';
-import { getProgExercisesByTheme } from '../data/exercises';
+import { getExercisesByTheme } from '../data/exercises';
 import { OperationType } from './common';
-import { ProgExerciseType } from './exercises';
+import { ExerciseType } from './exercises';
 
 
 const ThemeType = new GraphQLObjectType({
@@ -22,8 +22,8 @@ const ThemeType = new GraphQLObjectType({
             type: GraphQLString,
         },
         exercises: {
-            type: new GraphQLList(ProgExerciseType),
-            resolve: ({ id }) => getProgExercisesByTheme(id)
+            type: new GraphQLList(ExerciseType),
+            resolve: ({ id }) => getExercisesByTheme(id)
         },
         error: {
             type: GraphQLString,
