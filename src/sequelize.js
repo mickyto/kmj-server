@@ -302,6 +302,9 @@ const WorkExecutions = sequelize.define('work_executions', {
     program: {
         type: Sequelize.STRING,
     },
+    attempt: {
+        type: Sequelize.INTEGER,
+    },
     status: {
         type: Sequelize.BOOLEAN,
     },

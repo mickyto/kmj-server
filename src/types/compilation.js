@@ -33,6 +33,9 @@ const CompileProgramMutation = {
         },
         code: {
             type: new GraphQLNonNull(GraphQLString)
+        },
+        attempt: {
+            type: GraphQLInt
         }
     },
     resolve: (root, args) => compileProgram(args)

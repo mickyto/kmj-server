@@ -23,6 +23,9 @@ const WorkExecutionsType = new GraphQLObjectType({
         program: {
             type: GraphQLString,
         },
+        attempt: {
+            type: GraphQLInt,
+        },
         status: {
             type: GraphQLInt
         },

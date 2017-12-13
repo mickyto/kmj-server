@@ -12,6 +12,7 @@ const getPupilExecution = (exerciseId, token) => {
                 resolve();
                 return;
             }
+
             WorkExecutions.findOne({where: { pupil_id: decoded.id, exercise_id: exerciseId }})
                 .then(executions => resolve(executions))
                 .catch(error => reject(error))
