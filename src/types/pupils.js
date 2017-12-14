@@ -18,9 +18,8 @@ import { TrainingResultsType } from './trainingResults';
 const PupilType = new GraphQLObjectType({
     name: 'Pupils',
     fields: () => ({
-        pupilId: {
-            type: GraphQLInt,
-            resolve: ({ id }) => id
+        id: {
+            type: GraphQLInt
         },
         fio: {
             type: GraphQLString

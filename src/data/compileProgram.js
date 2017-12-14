@@ -34,7 +34,7 @@ const compileProgram = ({ code, token, attempt, exercise_id }) => {
 
                             cmd.get(`g++ -o tmp/${token} ${file}`, (err, data, stderr) => {
                                 if(stderr) {
-                                    fs.unlinkSync(file);
+                                    if (fs.existsSync(file)) fs.unlinkSync(file);
                                     return resolve({ error: 'Ваш код не компилируется, проверьте синтаксис' });
                                 }
                                 for (let i = 0; i < tests.length; i++) {
@@ -49,15 +49,15 @@ const compileProgram = ({ code, token, attempt, exercise_id }) => {
                                         if(data && data == tests[i].cout) {
                                             if (tests.length - (i + 1) !== 0) return;
 
-                                            fs.unlinkSync(file);
-                                            fs.unlinkSync(`tmp/${token}`);
+                                            if (fs.existsSync(file)) fs.unlinkSync(file);
+                                            if (fs.existsSync(file)) fs.unlinkSync(`tmp/${token}`);
                                             exercise.addPupil(decoded.id, { through: { status: 1 }});
                                             return resolve({ output: 'accepted' });
                                         }
                                         else {
                                             if (tests.length - (i + 1) == 0) {
-                                                fs.unlinkSync(file);
-                                                fs.unlinkSync(`tmp/${token}`);
+                                                if (fs.existsSync(file)) fs.unlinkSync(file);
+                                                if (fs.existsSync(file)) fs.unlinkSync(`tmp/${token}`);
                                             }
                                             return resolve({ error: 'Ошибка в тесте № ' + (i + 1) });
                                         }

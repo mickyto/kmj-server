@@ -43,9 +43,8 @@ const DayOutputType = new GraphQLObjectType({
 const GroupType = new GraphQLObjectType({
     name: 'Groups',
     fields: {
-        groupId: {
-            type: GraphQLInt,
-            resolve: ({ id }) => id
+        id: {
+            type: GraphQLInt
         },
         title: {
             type: GraphQLString,

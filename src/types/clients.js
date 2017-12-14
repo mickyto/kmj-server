@@ -17,9 +17,8 @@ import { PupilType } from './pupils';
 const ClientType = new GraphQLObjectType({
     name: 'Clients',
     fields: () => ({
-        clientId: {
-            type: GraphQLInt,
-            resolve: ({ id }) => id
+        id: {
+            type: GraphQLInt
         },
         fio: {
             type: GraphQLString,
