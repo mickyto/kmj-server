@@ -1,7 +1,8 @@
 import jwt from 'jsonwebtoken';
+import Sequelize from 'sequelize';
 
 import config from "../../config";
-import { Works, Pupils } from '../sequelize';
+import { Works, Pupils, WorkContents } from '../sequelize';
 
 const getWorks = (token) => {
     return new Promise((resolve, reject) => {
@@ -37,7 +38,11 @@ const getWork = (id) => {
 const getWorkExercises = (id) => {
     return new Promise((resolve, reject) => {
         Works.findById(id)
-            .then(work => resolve(work.getExercises()))
+            .then(work => resolve(
+                work.getExercises(
+                    { order: [[Sequelize.literal('work_contents.sort'), 'ASC']]})
+                )
+            )
             .catch(error => reject(error))
     })
 };
@@ -83,4 +88,14 @@ const removeWork = (id) => {
     })
 };
 
-export { getWorks, getWork, getWorkExercises, getWorkPupils,  addOrEditWork, removeWork };
+const sortExercises = (args) => {
+
+    return new Promise((resolve, reject) => {
+        args.sort.forEach(item => {
+            WorkContents.update({ sort: item.order }, { where: { work_id: args.id, exercise_id: item.id }})
+        });
+        resolve(1)
+    })
+};
+
+export { getWorks, getWork, getWorkExercises, getWorkPupils,  addOrEditWork, removeWork, sortExercises };

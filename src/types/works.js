@@ -3,21 +3,32 @@ import {
     GraphQLString,
     GraphQLInt,
     GraphQLList,
-    GraphQLNonNull
+    GraphQLNonNull,
+    GraphQLInputObjectType
 } from 'graphql';
-import { getWorks, addOrEditWork, removeWork, getWork, getWorkExercises, getWorkPupils } from '../data/works';
+import { getWorks, addOrEditWork, removeWork, getWork, getWorkExercises, getWorkPupils, sortExercises } from '../data/works';
 import { OperationType } from './common';
 import { ExerciseType } from './exercises';
 import { PupilType } from './pupils';
 
+const WorkContentType = new GraphQLObjectType({
+    name: 'WorkContent',
+    fields: {
+        id: {
+            type: GraphQLInt
+        },
+        sort: {
+            type: GraphQLString
+        }
+    }
+});
 
 
 const WorkType = new GraphQLObjectType({
     name: 'Works',
-    fields: {
-        workId: {
-            type: GraphQLInt,
-            resolve: ({ id }) => id
+    fields: () => ({
+        id: {
+            type: GraphQLInt
         },
         title: {
             type: GraphQLString
@@ -33,7 +44,7 @@ const WorkType = new GraphQLObjectType({
         error: {
             type: GraphQLString,
         }
-    }
+    })
 });
 
 const QueryWork = {
@@ -73,10 +84,7 @@ const MutationAddOrEditWork = {
         },
         pupils: {
             type: new GraphQLList(GraphQLInt),
-        }/*,
-        sort: {
-            type: GraphQLInt
-        }*/
+        }
     },
     resolve: (root, args) => addOrEditWork(args)
 };
@@ -92,4 +100,30 @@ const MutationRemoveWork = {
     resolve: (root, { id }) => removeWork(id)
 };
 
-export { WorkType, QueryWorks, QueryWork, MutationAddOrEditWork, MutationRemoveWork };
+const SortType = new GraphQLInputObjectType({
+    name: 'Sort',
+    fields: {
+        id: {
+            type: GraphQLInt
+        },
+        order: {
+            type: GraphQLInt
+        }
+    }
+});
+
+const MutationSortExercises = {
+    type: OperationType,
+    description: 'Sort exercises of work',
+    args: {
+        id: {
+            type: new GraphQLNonNull(GraphQLInt)
+        },
+        sort: {
+            type: new GraphQLList(SortType)
+        }
+    },
+    resolve: (root, args) => sortExercises(args)
+};
+
+export { WorkType, WorkContentType, QueryWorks, QueryWork, MutationAddOrEditWork, MutationRemoveWork, MutationSortExercises };

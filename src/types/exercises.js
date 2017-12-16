@@ -9,6 +9,7 @@ import {
 
 import { ThemeType } from './themes';
 import { WorkExecutionsType } from './workExecutions';
+import { WorkContentType } from './works';
 import { OperationType } from './common';
 import { getExercises, getExercise, getTestsByExerciseId, addOrEditExercise, removeExercise } from '../data/exercises';
 import { getTheme } from '../data/themes';
@@ -55,9 +56,8 @@ const TestOutputType = new GraphQLObjectType({
 const ExerciseType = new GraphQLObjectType({
     name: 'Exercises',
     fields: () => ({
-        exerciseId: {
-            type: GraphQLInt,
-            resolve: ({ id }) => id
+        id: {
+            type: GraphQLInt
         },
         text: {
             type: GraphQLString,
@@ -72,6 +72,9 @@ const ExerciseType = new GraphQLObjectType({
         },
         work_executions: {
             type: WorkExecutionsType
+        },
+        work_contents: {
+            type: WorkContentType
         },
         pupilExecution: {
             type: WorkExecutionsType,
