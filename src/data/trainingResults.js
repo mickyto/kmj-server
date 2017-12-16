@@ -14,13 +14,14 @@ const getPupilResults = (id) => {
 const getPupilTrainingResults = (args) => {
     return new Promise((resolve, reject) => {
 
-        if (!args.token) {
-            resolve();
-            return;
+        let pupilId;
+        if (args.token) {
+            const pupilData = jwt.verify(args.token, config.secret);
+            pupilId = pupilData.id;
         }
-        const pupilData = jwt.verify(args.token, config.secret);
-        const pupilId = pupilData ? pupilData.id : '';
-
+        else if (args.pupilId) {
+            pupilId = args.pupilId;
+        }
         PupilTrainings.findAll({ where: { pupil_id : pupilId, training_id: args.trainingId }})
             .then(results => resolve(results))
             .catch(error => reject(error));

@@ -8,6 +8,7 @@ import {
 
 import { getPupils, getPupil, addOrEditPupil, movePupil, getPupilGroups, getPupilExercises } from '../data/pupils';
 import { getClient } from '../data/clients';
+import { getPupilTrainingResults } from '../data/trainingResults';
 import { OperationType } from './common';
 import { GroupType } from './groups';
 import { ClientType } from './clients';
@@ -36,9 +37,20 @@ const PupilType = new GraphQLObjectType({
         school: {
             type: GraphQLString
         },
-        pupilTrainings: {
-            type: TrainingResultsType,
-            resolve: ({ pupil_trainings }) => pupil_trainings
+        trainingResults: {
+            type: new GraphQLList(TrainingResultsType),
+            args: {
+                trainingId: {
+                    type: GraphQLInt
+                },
+                pupilId: {
+                    type: GraphQLInt
+                }
+            },
+            resolve: ({ id }, { trainingId, pupilId }) => {
+                if (pupilId == id)
+                    return getPupilTrainingResults({ pupilId: id, trainingId })
+            }
         },
         exercises: {
             type: new GraphQLList(ExerciseType),

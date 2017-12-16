@@ -1,7 +1,8 @@
 import jwt from 'jsonwebtoken';
+import Sequelize from 'sequelize';
 
 import config from "../../config";
-import { Trainings } from '../sequelize';
+import { Trainings, PupilTrainings, Pupils } from '../sequelize';
 
 const getTrainings = ({ token, subject }) => {
     return new Promise((resolve, reject) => {
@@ -32,9 +33,14 @@ const getTraining = (id) => {
 };
 
 const getTrainingPupils = (id) => {
+    const Op = Sequelize.Op;
     return new Promise((resolve, reject) => {
-        Trainings.findById(id)
-            .then(training => resolve(training.getPupils({ order: [['fio', 'ASC']] })))
+        PupilTrainings.aggregate('pupil_id', 'DISTINCT', { plain: false, where: { training_id: id } })
+            .then(ids => {
+                ids = ids.map(item => item.DISTINCT);
+                Pupils.findAll({ where: { id: { [Op.in]: ids } }})
+                    .then(pupils => resolve(pupils))
+            })
             .catch(error => reject(error))
     })
 };
