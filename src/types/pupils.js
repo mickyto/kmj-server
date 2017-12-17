@@ -8,12 +8,36 @@ import {
 
 import { getPupils, getPupil, addOrEditPupil, movePupil, getPupilGroups, getPupilExercises } from '../data/pupils';
 import { getClient } from '../data/clients';
-import { getPupilTrainingResults } from '../data/trainingResults';
+import { getPupilTrainingResults, getResultsCount } from '../data/trainingResults';
 import { OperationType } from './common';
 import { GroupType } from './groups';
 import { ClientType } from './clients';
 import { ExerciseType } from './exercises';
 import { TrainingResultsType } from './trainingResults';
+
+const PupilTrainingResultsType = new GraphQLObjectType({
+    name: 'PupilTrainingResults',
+    fields: () => ({
+        count: {
+            type: GraphQLInt
+        },
+        rows: {
+            type: new GraphQLList(TrainingResultsType)
+        },
+    })
+});
+
+const PupilTrainingResultsCountType = new GraphQLObjectType({
+    name: 'PupilTrainingResultsCount',
+    fields: () => ({
+        all: {
+            type: GraphQLInt
+        },
+        correct: {
+            type: GraphQLInt
+        },
+    })
+});
 
 
 const PupilType = new GraphQLObjectType({
@@ -37,19 +61,34 @@ const PupilType = new GraphQLObjectType({
         school: {
             type: GraphQLString
         },
+        resultsCount: {
+            type: PupilTrainingResultsCountType,
+            args: {
+                trainingId: {
+                    type: GraphQLInt
+                }
+            },
+            resolve: ({ id }, { trainingId }) => getResultsCount(id, trainingId)
+        },
         trainingResults: {
-            type: new GraphQLList(TrainingResultsType),
+            type: PupilTrainingResultsType,
             args: {
                 trainingId: {
                     type: GraphQLInt
                 },
                 pupilId: {
                     type: GraphQLInt
-                }
+                },
+                offset: {
+                    type: GraphQLInt
+                },
+                limit: {
+                    type: GraphQLInt
+                },
             },
-            resolve: ({ id }, { trainingId, pupilId }) => {
+            resolve: ({ id }, { trainingId, pupilId, offset, limit }) => {
                 if (pupilId == id)
-                    return getPupilTrainingResults({ pupilId: id, trainingId })
+                    return getPupilTrainingResults({ pupilId: id, trainingId, offset, limit })
             }
         },
         exercises: {
@@ -146,4 +185,4 @@ const MutationMovePupil = {
     resolve: (root, args) => movePupil(args)
 };
 
-export { QueryPupils, MutationAddOrEditPupil, MutationMovePupil, QueryPupil, PupilType };
+export { PupilTrainingResultsType, QueryPupils, MutationAddOrEditPupil, MutationMovePupil, QueryPupil, PupilType };

@@ -5,8 +5,18 @@ import { PupilTrainings } from '../sequelize';
 
 const getPupilResults = (id) => {
     return new Promise((resolve, reject) => {
-        PupilTrainings.findAll({ where: { pupil_id : id}})
+        PupilTrainings.findAll({ where: { pupil_id : id}, })
             .then(results => resolve(results))
+            .catch(error => reject(error));
+    })
+};
+
+const getResultsCount = (pupilId, trainingId) => {
+    return new Promise((resolve, reject) => {
+        PupilTrainings.count({ where: { pupil_id : pupilId, training_id: trainingId }})
+            .then(all =>  PupilTrainings.count({ where: { pupil_id : pupilId, training_id: trainingId, is_correct: 1 }})
+                .then(correct => resolve({ all, correct }))
+            )
             .catch(error => reject(error));
     })
 };
@@ -22,7 +32,13 @@ const getPupilTrainingResults = (args) => {
         else if (args.pupilId) {
             pupilId = args.pupilId;
         }
-        PupilTrainings.findAll({ where: { pupil_id : pupilId, training_id: args.trainingId }})
+
+        PupilTrainings.findAndCountAll({
+            where: { pupil_id : pupilId, training_id: args.trainingId },
+            order: [['date', 'DESC']],
+            offset: args.offset,
+            limit: args.limit
+        })
             .then(results => resolve(results))
             .catch(error => reject(error));
     })
@@ -59,9 +75,9 @@ const addResult = (args) => {
 const clearPupilResults = (id) => {
     return new Promise((resolve, reject) => {
         PupilTrainings.destroy({ where: { pupil_id: id }})
-            .then(result => resolve(result))  
+            .then(result => resolve(result))
             .catch(error => reject(error));
     })
 };
 
-export { getPupilResults, getPupilTrainingResults, addResult, clearPupilResults };
+export { getPupilResults, getPupilTrainingResults, addResult, clearPupilResults, getResultsCount };

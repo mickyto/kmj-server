@@ -12,7 +12,7 @@ import { getSubject } from '../data/subjects';
 import { OperationType } from './common';
 import { SubjectType } from './subjects';
 import { TrainingResultsType } from './trainingResults';
-import { PupilType } from './pupils';
+import { PupilType, PupilTrainingResultsType } from './pupils';
 
 
 const TrainingType = new GraphQLObjectType({
@@ -43,7 +43,7 @@ const TrainingType = new GraphQLObjectType({
             resolve: ({ id }) => getTrainingPupils(id)
         },
         pupilTraining: {
-            type: new GraphQLList(TrainingResultsType),
+            type: PupilTrainingResultsType,
             args: {
                 token: {
                     type: GraphQLString
