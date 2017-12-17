@@ -68,7 +68,7 @@ const PupilType = new GraphQLObjectType({
                     type: GraphQLInt
                 }
             },
-            resolve: ({ id }, { trainingId }) => getResultsCount(id, trainingId)
+            resolve: ({ id }, { trainingId }) => getResultsCount({ pupilId: id, trainingId })
         },
         trainingResults: {
             type: PupilTrainingResultsType,
@@ -185,4 +185,4 @@ const MutationMovePupil = {
     resolve: (root, args) => movePupil(args)
 };
 
-export { PupilTrainingResultsType, QueryPupils, MutationAddOrEditPupil, MutationMovePupil, QueryPupil, PupilType };
+export { PupilTrainingResultsType, PupilTrainingResultsCountType, QueryPupils, MutationAddOrEditPupil, MutationMovePupil, QueryPupil, PupilType };

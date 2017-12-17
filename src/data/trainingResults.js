@@ -11,10 +11,20 @@ const getPupilResults = (id) => {
     })
 };
 
-const getResultsCount = (pupilId, trainingId) => {
+const getResultsCount = (args) => {
     return new Promise((resolve, reject) => {
-        PupilTrainings.count({ where: { pupil_id : pupilId, training_id: trainingId }})
-            .then(all =>  PupilTrainings.count({ where: { pupil_id : pupilId, training_id: trainingId, is_correct: 1 }})
+
+        let pupilId;
+        if (args.token) {
+            const pupilData = jwt.verify(args.token, config.secret);
+            pupilId = pupilData.id;
+        }
+        else if (args.pupilId) {
+            pupilId = args.pupilId;
+        }
+
+        PupilTrainings.count({ where: { pupil_id : pupilId, training_id: args.trainingId }})
+            .then(all =>  PupilTrainings.count({ where: { pupil_id : pupilId, training_id: args.trainingId, is_correct: 1 }})
                 .then(correct => resolve({ all, correct }))
             )
             .catch(error => reject(error));

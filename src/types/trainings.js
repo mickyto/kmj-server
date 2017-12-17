@@ -7,12 +7,11 @@ import {
     GraphQLBoolean
 } from 'graphql';
 import { getTrainings, getTraining, addOrEditTraining, removeTraining, getTrainingPupils } from '../data/trainings';
-import { getPupilTrainingResults } from '../data/trainingResults';
+import { getPupilTrainingResults, getResultsCount } from '../data/trainingResults';
 import { getSubject } from '../data/subjects';
 import { OperationType } from './common';
 import { SubjectType } from './subjects';
-import { TrainingResultsType } from './trainingResults';
-import { PupilType, PupilTrainingResultsType } from './pupils';
+import { PupilType, PupilTrainingResultsType, PupilTrainingResultsCountType } from './pupils';
 
 
 const TrainingType = new GraphQLObjectType({
@@ -41,6 +40,15 @@ const TrainingType = new GraphQLObjectType({
         pupils: {
             type: new GraphQLList(PupilType),
             resolve: ({ id }) => getTrainingPupils(id)
+        },
+        resultsCount: {
+            type: PupilTrainingResultsCountType,
+            args: {
+                token: {
+                    type: GraphQLString
+                }
+            },
+            resolve: ({ id }, { token }) => getResultsCount({ trainingId: id, token })
         },
         pupilTraining: {
             type: PupilTrainingResultsType,
