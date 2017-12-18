@@ -169,10 +169,9 @@ const Subjects = sequelize.define('subjects', {
     id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
-        autoIncrement: true,
-        field: 'subject_id'
+        autoIncrement: true
     },
-    name: {
+    title: {
         type: Sequelize.STRING,
     }
 });
@@ -181,10 +180,9 @@ const Channels = sequelize.define('channels', {
     id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
-        autoIncrement: true,
-        field: 'channel_id'
+        autoIncrement: true
     },
-    name: {
+    title: {
         type: Sequelize.STRING,
     }
 });
@@ -218,8 +216,7 @@ const PupilTrainings = sequelize.define('pupil_trainings', {
     id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
-        autoIncrement: true,
-        field: 'id'
+        autoIncrement: true
     },
     tex: {
         type: Sequelize.STRING,
@@ -242,8 +239,18 @@ const Themes = sequelize.define('themes', {
     id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
-        autoIncrement: true,
-        field: 'theme_id'
+        autoIncrement: true
+    },
+    title: {
+        type: Sequelize.STRING,
+    }
+});
+
+const TrainingGroups = sequelize.define('training_groups', {
+    id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
     },
     title: {
         type: Sequelize.STRING,
@@ -325,8 +332,8 @@ const Exercises = sequelize.define('exercises', {
     }
 });
 
-Pupils.belongsTo(Clients, { foreignKey: 'client_id' });
-Clients.belongsTo(Channels, { foreignKey: 'channel_id' });
+Pupils.belongsTo(Clients);
+Clients.belongsTo(Channels);
 Groups.belongsTo(Teachers);
 Groups.belongsTo(Subjects);
 Groups.belongsTo(Formats);
@@ -350,5 +357,5 @@ Exercises.belongsToMany(Pupils, { through: 'work_executions' });
 Pupils.belongsToMany(Works, { through: 'pupil_works' });
 Works.belongsToMany(Pupils, { through: 'pupil_works' });
 
-export { Op, Users, Clients, Pupils, Teachers, Groups, Formats, Subjects, Channels,
+export { Op, Users, Clients, Pupils, Teachers, Groups, Formats, Subjects, Channels, TrainingGroups,
     Trainings, PupilTrainings, Themes, Tests, Exercises, Works, WorkContents, WorkExecutions };

@@ -8,13 +8,13 @@ import {
 } from 'graphql';
 
 import { TeacherType } from './teachers';
-import { SubjectType } from './subjects';
+import { ItemType } from './items';
 import { FormatType } from './formats';
 import { OperationType } from './common';
 import { getGroups, getGroup, addOrEditGroup, removeGroup } from '../data/groups';
-import { getSubject } from '../data/subjects';
 import { getTeacher } from '../data/teachers';
 import { getFormat } from '../data/formats';
+import { getItem } from '../data/items';
 
 const DayInputType = new GraphQLInputObjectType({
     name: 'DayInput',
@@ -47,11 +47,11 @@ const GroupType = new GraphQLObjectType({
             type: GraphQLInt
         },
         title: {
-            type: GraphQLString,
+            type: GraphQLString
         },
         subject: {
-            type: SubjectType,
-            resolve: ({ subject_id }) => getSubject(subject_id)
+            type: ItemType,
+            resolve: ({ subject_id }) => getItem({ id: subject_id, kind: 'subjects' })
         },
         daysOfWeek: {
             type: new GraphQLList(DayOutputType),

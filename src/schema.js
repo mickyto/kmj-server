@@ -7,12 +7,10 @@ import { QueryPupils, MutationAddOrEditPupil, MutationMovePupil, QueryPupil } fr
 import { QueryTeachers, QueryTeacher, MutationAddOrEditTeacher, MutationRemoveTeacher } from './types/teachers';
 import { QueryGroups, QueryGroup, MutationAddOrEditGroup, MutationRemoveGroup } from './types/groups';
 import { QueryFormats, MutationAddOrEditFormat, MutationRemoveFormat } from './types/formats';
-import { QuerySubjects, MutationAddOrEditSubject, MutationRemoveSubject } from './types/subjects';
-import { QueryChannels, MutationAddOrEditChannel, MutationRemoveChannel } from './types/channels';
 import { QueryTrainings, QueryTraining, MutationAddOrEditTraining, MutationRemoveTraining } from './types/trainings';
 import { QueryPupilResults, QueryPupilTrainingResults, MutationAddResult, MutationClearPupilResults } from './types/trainingResults';
 import { CompileProgramMutation } from './types/compilation';
-import { QueryThemes, QueryTheme, MutationAddOrEditTheme, MutationRemoveTheme } from './types/themes';
+import { QueryItems, QueryItem, MutationSetItem, MutationRemoveItem } from './types/items';
 import { QueryWorks, QueryWork, MutationAddOrEditWork, MutationRemoveWork, MutationSortExercises } from './types/works';
 import { QueryExercises, QueryExercise, MutationAddOrEditExercise, MutationRemoveExercise } from './types/exercises';
 
@@ -29,14 +27,12 @@ const queryType = new GraphQLObjectType({
         groups: QueryGroups,
         group: QueryGroup,
         formats: QueryFormats,
-        subjects: QuerySubjects,
-        channels: QueryChannels,
         trainings: QueryTrainings,
         training: QueryTraining,
         pupilResults: QueryPupilResults,
         pupilTrainingResults: QueryPupilTrainingResults,
-        themes: QueryThemes,
-        theme: QueryTheme,
+        items: QueryItems,
+        item: QueryItem,
         works: QueryWorks,
         work: QueryWork,
         exercises: QueryExercises,
@@ -58,17 +54,13 @@ const MutationType = new GraphQLObjectType({
         removeGroup: MutationRemoveGroup,
         addOrEditFormat: MutationAddOrEditFormat,
         removeFormat: MutationRemoveFormat,
-        addOrEditSubject: MutationAddOrEditSubject,
-        removeSubject: MutationRemoveSubject,
-        addOrEditChannel: MutationAddOrEditChannel,
-        removeChannel: MutationRemoveChannel,
         addOrEditTraining: MutationAddOrEditTraining,
         removeTraining: MutationRemoveTraining,
         addTrainingResult: MutationAddResult,
         clearTrainingResult: MutationClearPupilResults,
         compileProgram: CompileProgramMutation,
-        addOrEditTheme: MutationAddOrEditTheme,
-        removeTheme: MutationRemoveTheme,
+        setItem: MutationSetItem,
+        removeItem: MutationRemoveItem,
         addOrEditWork: MutationAddOrEditWork,
         removeWork: MutationRemoveWork,
         addOrEditExercise: MutationAddOrEditExercise,

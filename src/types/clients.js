@@ -8,9 +8,9 @@ import {
 
 import { getClients, getClient, addOrEditClient, moveClients } from '../data/clients';
 import { getPupilsByClientId } from '../data/pupils';
-import { getChannel } from '../data/channels';
+import { getItem } from '../data/items';
 import { OperationType } from './common';
-import { ChannelsType } from '../types/channels';
+import { ItemType } from '../types/items';
 import { PupilType } from './pupils';
 
 
@@ -30,8 +30,8 @@ const ClientType = new GraphQLObjectType({
             type: GraphQLString,
         },
         channel: {
-            type: ChannelsType,
-            resolve: ({ channel_id }) => getChannel(channel_id)
+            type: ItemType,
+            resolve: ({ channel_id }) => getItem({ id: channel_id, kind: 'channels' })
         },
         location: {
             type: GraphQLString,
