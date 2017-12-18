@@ -8,9 +8,9 @@ import {
 } from 'graphql';
 import { getTrainings, getTraining, addOrEditTraining, removeTraining, getTrainingPupils } from '../data/trainings';
 import { getPupilTrainingResults, getResultsCount } from '../data/trainingResults';
-import { getSubject } from '../data/subjects';
+import { getItem } from '../data/items';
 import { OperationType } from './common';
-import { SubjectType } from './subjects';
+import { ItemType } from './items';
 import { PupilType, PupilTrainingResultsType, PupilTrainingResultsCountType } from './pupils';
 
 
@@ -34,8 +34,8 @@ const TrainingType = new GraphQLObjectType({
             type: GraphQLInt,
         },
         subject: {
-            type: SubjectType,
-            resolve: ({ subject_id }) => getSubject(subject_id)
+            type: ItemType,
+            resolve: ({ subject_id }) => getItem({ id: subject_id, kind: 'subjects' })
         },
         pupils: {
             type: new GraphQLList(PupilType),

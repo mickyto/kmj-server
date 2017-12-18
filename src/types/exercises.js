@@ -7,12 +7,12 @@ import {
     GraphQLInputObjectType
 } from 'graphql';
 
-import { ThemeType } from './themes';
+import { ItemType } from './items';
 import { WorkExecutionsType } from './workExecutions';
 import { WorkContentType } from './works';
 import { OperationType } from './common';
 import { getExercises, getExercise, getTestsByExerciseId, addOrEditExercise, removeExercise } from '../data/exercises';
-import { getTheme } from '../data/themes';
+import { getItem } from '../data/items';
 import { getPupilExecution } from '../data/workExecutions';
 
 
@@ -63,8 +63,8 @@ const ExerciseType = new GraphQLObjectType({
             type: GraphQLString,
         },
         theme: {
-            type: ThemeType,
-            resolve: ({ theme_id }) => getTheme(theme_id)
+            type: ItemType,
+            resolve: ({ theme_id }) => getItem({ id: theme_id, kind: 'themes' })
         },
         tests: {
             type: new GraphQLList(TestOutputType),

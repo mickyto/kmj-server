@@ -7,7 +7,7 @@ const getEntity = (kind) => {
         return Channels;
     else if (kind == 'subjects')
         return Subjects;
-    else if (kind == 'trainingGroups')
+    else if (kind == 'training_groups')
         return TrainingGroups;
 };
 
