@@ -3,18 +3,15 @@ import {
     GraphQLString,
     GraphQLInt,
     GraphQLList,
-    GraphQLNonNull
 } from 'graphql';
-import { getFormats, addOrEditFormat, removeFormat } from '../data/formats';
-import { OperationType } from './common';
+import { getFormats, addOrEditFormat } from '../data/formats';
 
 
 const FormatType = new GraphQLObjectType({
     name: 'Formats',
     fields: {
-        formatId: {
-            type: GraphQLInt,
-            resolve: ({ id }) => id
+        id: {
+            type: GraphQLInt
         },
         title: {
             type: GraphQLString
@@ -63,15 +60,4 @@ const MutationAddOrEditFormat = {
     resolve: (root, args) => addOrEditFormat(args)
 };
 
-const MutationRemoveFormat = {
-    type: OperationType,
-    description: 'Remove one format',
-    args: {
-        id: {
-            type: new GraphQLNonNull(GraphQLInt)
-        }
-    },
-    resolve: (root, { id }) => removeFormat(id)
-};
-
-export { FormatType, QueryFormats, MutationAddOrEditFormat, MutationRemoveFormat };
+export { FormatType, QueryFormats, MutationAddOrEditFormat };

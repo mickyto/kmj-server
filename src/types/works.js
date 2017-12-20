@@ -6,7 +6,7 @@ import {
     GraphQLNonNull,
     GraphQLInputObjectType
 } from 'graphql';
-import { getWorks, addOrEditWork, removeWork, getWork, getWorkExercises, getWorkPupils, sortExercises } from '../data/works';
+import { getWorks, addOrEditWork, getWork, getWorkExercises, getWorkPupils, sortExercises } from '../data/works';
 import { OperationType } from './common';
 import { ExerciseType } from './exercises';
 import { PupilType } from './pupils';
@@ -89,17 +89,6 @@ const MutationAddOrEditWork = {
     resolve: (root, args) => addOrEditWork(args)
 };
 
-const MutationRemoveWork = {
-    type: OperationType,
-    description: 'Remove one work',
-    args: {
-        id: {
-            type: new GraphQLNonNull(GraphQLInt)
-        }
-    },
-    resolve: (root, { id }) => removeWork(id)
-};
-
 const SortType = new GraphQLInputObjectType({
     name: 'Sort',
     fields: {
@@ -126,4 +115,4 @@ const MutationSortExercises = {
     resolve: (root, args) => sortExercises(args)
 };
 
-export { WorkType, WorkContentType, QueryWorks, QueryWork, MutationAddOrEditWork, MutationRemoveWork, MutationSortExercises };
+export { WorkType, WorkContentType, QueryWorks, QueryWork, MutationAddOrEditWork, MutationSortExercises };

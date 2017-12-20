@@ -10,8 +10,7 @@ import {
 import { ItemType } from './items';
 import { WorkExecutionsType } from './workExecutions';
 import { WorkContentType } from './works';
-import { OperationType } from './common';
-import { getExercises, getExercise, getTestsByExerciseId, addOrEditExercise, removeExercise } from '../data/exercises';
+import { getExercises, getExercise, getTestsByExerciseId, addOrEditExercise } from '../data/exercises';
 import { getItem } from '../data/items';
 import { getPupilExecution } from '../data/workExecutions';
 
@@ -128,15 +127,4 @@ const MutationAddOrEditExercise = {
     resolve: (root, args) => addOrEditExercise(args)
 };
 
-const MutationRemoveExercise = {
-    type: OperationType,
-    description: 'Remove one programming exercise',
-    args: {
-        id: {
-            type: new GraphQLNonNull(GraphQLInt)
-        }
-    },
-    resolve: (root, { id }) => removeExercise(id)
-};
-
-export { ExerciseType, QueryExercises, QueryExercise, MutationAddOrEditExercise, MutationRemoveExercise };
+export { ExerciseType, QueryExercises, QueryExercise, MutationAddOrEditExercise };

@@ -10,14 +10,6 @@ const getFormats = (ids) => {
     })
 };
 
-const getFormat = (id) => {
-    return new Promise((resolve, reject) => {
-        Formats.findById(id)
-            .then(format => resolve(format))
-            .catch(error => reject(error))
-    })
-};
-
 const addOrEditFormat = (args) => {
     return new Promise((resolve, reject) => {
 
@@ -34,12 +26,4 @@ const addOrEditFormat = (args) => {
     });
 };
 
-const removeFormat = (id) => {
-    return new Promise((resolve, reject) => {
-        Formats.destroy({ where: { format_id: id }})
-            .then(result => resolve(result))
-            .catch(error => reject(error));
-    })
-};
-
-export { getFormats, getFormat, addOrEditFormat, removeFormat };
+export { getFormats, addOrEditFormat };

@@ -4,16 +4,16 @@ import { QueryUsers, MutationLogin } from './types/users';
 import { MutationMagic} from './types/common';
 import { QueryClients, QueryClient, MutationAddOrEditClient, MutationMoveClient } from './types/clients';
 import { QueryPupils, MutationAddOrEditPupil, MutationMovePupil, QueryPupil } from './types/pupils';
-import { QueryTeachers, QueryTeacher, MutationAddOrEditTeacher, MutationRemoveTeacher } from './types/teachers';
-import { QueryGroups, QueryGroup, MutationAddOrEditGroup, MutationRemoveGroup } from './types/groups';
-import { QueryFormats, MutationAddOrEditFormat, MutationRemoveFormat } from './types/formats';
-import { QueryTrainings, QueryTraining, MutationAddOrEditTraining, MutationRemoveTraining } from './types/trainings';
+import { QueryTeachers, QueryTeacher, MutationAddOrEditTeacher } from './types/teachers';
+import { QueryGroups, QueryGroup, MutationAddOrEditGroup } from './types/groups';
+import { QueryFormats, MutationAddOrEditFormat } from './types/formats';
+import { QueryTrainings, QueryTraining, MutationAddOrEditTraining } from './types/trainings';
 import { QueryPupilResults, QueryPupilTrainingResults, MutationAddResult, MutationClearPupilResults } from './types/trainingResults';
 import { CompileProgramMutation } from './types/compilation';
 import { QueryItems, QueryItem, MutationSetItem, MutationRemoveItem } from './types/items';
-import { QueryTrainingGroups, MutationSetTrainingGroup, MutationRemoveTrainingGroup } from './types/trainingGroups';
-import { QueryWorks, QueryWork, MutationAddOrEditWork, MutationRemoveWork, MutationSortExercises } from './types/works';
-import { QueryExercises, QueryExercise, MutationAddOrEditExercise, MutationRemoveExercise } from './types/exercises';
+import { QueryTrainingGroups, MutationSetTrainingGroup } from './types/trainingGroups';
+import { QueryWorks, QueryWork, MutationAddOrEditWork, MutationSortExercises } from './types/works';
+import { QueryExercises, QueryExercise, MutationAddOrEditExercise } from './types/exercises';
 
 const queryType = new GraphQLObjectType({
     name: 'Query',
@@ -51,24 +51,17 @@ const MutationType = new GraphQLObjectType({
         addOrEditPupil: MutationAddOrEditPupil,
         movePupil: MutationMovePupil,
         addOrEditTeacher: MutationAddOrEditTeacher,
-        removeTeacher: MutationRemoveTeacher,
         addOrEditGroup: MutationAddOrEditGroup,
-        removeGroup: MutationRemoveGroup,
         addOrEditFormat: MutationAddOrEditFormat,
-        removeFormat: MutationRemoveFormat,
         addOrEditTraining: MutationAddOrEditTraining,
-        removeTraining: MutationRemoveTraining,
         addTrainingResult: MutationAddResult,
         clearTrainingResult: MutationClearPupilResults,
         compileProgram: CompileProgramMutation,
         setItem: MutationSetItem,
         removeItem: MutationRemoveItem,
         setTrainingGroup: MutationSetTrainingGroup,
-        removeTrainingGroup: MutationRemoveTrainingGroup,
         addOrEditWork: MutationAddOrEditWork,
-        removeWork: MutationRemoveWork,
         addOrEditExercise: MutationAddOrEditExercise,
-        removeExercise: MutationRemoveExercise,
         sortExercises: MutationSortExercises,
         magic: MutationMagic
     }

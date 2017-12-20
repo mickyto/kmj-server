@@ -3,17 +3,14 @@ import {
     GraphQLString,
     GraphQLInt,
     GraphQLList,
-    GraphQLNonNull,
     GraphQLInputObjectType
 } from 'graphql';
 
 import { TeacherType } from './teachers';
 import { ItemType } from './items';
 import { FormatType } from './formats';
-import { OperationType } from './common';
-import { getGroups, getGroup, addOrEditGroup, removeGroup } from '../data/groups';
+import { getGroups, getGroup, addOrEditGroup } from '../data/groups';
 import { getTeacher } from '../data/teachers';
-import { getFormat } from '../data/formats';
 import { getItem } from '../data/items';
 
 const DayInputType = new GraphQLInputObjectType({
@@ -62,7 +59,7 @@ const GroupType = new GraphQLObjectType({
         },
         format: {
             type: FormatType,
-            resolve: ({ format_id }) => getFormat(format_id)
+            resolve: ({ format_id }) => getItem({ id: format_id, kind: 'formats' })
         },
         error: {
             type: GraphQLString,
@@ -113,15 +110,4 @@ const MutationAddOrEditGroup = {
     resolve: (root, args) => addOrEditGroup(args)
 };
 
-const MutationRemoveGroup = {
-    type: OperationType,
-    description: 'Remove one group',
-    args: {
-        id: {
-            type: new GraphQLNonNull(GraphQLInt)
-        }
-    },
-    resolve: (root, { id }) => removeGroup(id)
-};
-
-export { GroupType, QueryGroups, QueryGroup, MutationAddOrEditGroup, MutationRemoveGroup };
+export { GroupType, QueryGroups, QueryGroup, MutationAddOrEditGroup };

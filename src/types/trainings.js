@@ -6,10 +6,9 @@ import {
     GraphQLNonNull,
     GraphQLBoolean
 } from 'graphql';
-import { getTrainings, getTraining, addOrEditTraining, removeTraining, getTrainingPupils } from '../data/trainings';
+import { getTrainings, getTraining, addOrEditTraining, getTrainingPupils } from '../data/trainings';
 import { getPupilTrainingResults, getResultsCount } from '../data/trainingResults';
 import { getItem } from '../data/items';
-import { OperationType } from './common';
 import { TrainingGroupType } from './trainingGroups';
 import { PupilType, PupilTrainingResultsType, PupilTrainingResultsCountType } from './pupils';
 
@@ -122,15 +121,4 @@ const MutationAddOrEditTraining = {
     resolve: (root, args) => addOrEditTraining(args)
 };
 
-const MutationRemoveTraining = {
-    type: OperationType,
-    description: 'Remove one training',
-    args: {
-        id: {
-            type: new GraphQLNonNull(GraphQLInt)
-        }
-    },
-    resolve: (root, { id }) => removeTraining(id)
-};
-
-export { TrainingType, QueryTrainings, QueryTraining, MutationAddOrEditTraining, MutationRemoveTraining };
+export { TrainingType, QueryTrainings, QueryTraining, MutationAddOrEditTraining };

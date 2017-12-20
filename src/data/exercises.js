@@ -59,12 +59,4 @@ const addOrEditExercise = (args) => {
     })
 };
 
-const removeExercise = (id) => {
-    return new Promise((resolve, reject) => {
-        Exercises.destroy({ where: { exercise_id: id }})
-            .then(result => resolve(result))
-            .catch(error => reject(error));
-    })
-};
-
-export { getExercises, getExercise, getExercisesByTheme, getTestsByExerciseId, addOrEditExercise, removeExercise };
+export { getExercises, getExercise, getExercisesByTheme, getTestsByExerciseId, addOrEditExercise };

@@ -80,14 +80,6 @@ const addOrEditWork = (args) => {
     });
 };
 
-const removeWork = (id) => {
-    return new Promise((resolve, reject) => {
-        Works.destroy({ where: { work_id: id }})
-            .then(result => resolve(result))
-            .catch(error => reject(error));
-    })
-};
-
 const sortExercises = (args) => {
 
     return new Promise((resolve, reject) => {
@@ -98,4 +90,4 @@ const sortExercises = (args) => {
     })
 };
 
-export { getWorks, getWork, getWorkExercises, getWorkPupils,  addOrEditWork, removeWork, sortExercises };
+export { getWorks, getWork, getWorkExercises, getWorkPupils,  addOrEditWork, sortExercises };

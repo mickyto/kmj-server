@@ -5,8 +5,7 @@ import {
     GraphQLList,
     GraphQLNonNull
 } from 'graphql';
-import { getTrainingGroups, setTrainingGroup, removeTrainingGroup } from '../data/trainingGroups';
-import { OperationType } from './common';
+import { getTrainingGroups, setTrainingGroup } from '../data/trainingGroups';
 import { getItem } from '../data/items';
 import { ItemType } from './items';
 
@@ -55,15 +54,4 @@ const MutationSetTrainingGroup = {
     resolve: (root, args) => setTrainingGroup(args)
 };
 
-const MutationRemoveTrainingGroup = {
-    type: OperationType,
-    description: 'Remove one TrainingGroup',
-    args: {
-        id: {
-            type: new GraphQLNonNull(GraphQLInt)
-        }
-    },
-    resolve: (root, { id }) => removeTrainingGroup(id)
-};
-
-export { TrainingGroupType, QueryTrainingGroups, MutationSetTrainingGroup, MutationRemoveTrainingGroup };
+export { TrainingGroupType, QueryTrainingGroups, MutationSetTrainingGroup };

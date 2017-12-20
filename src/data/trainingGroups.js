@@ -2,7 +2,6 @@ import { TrainingGroups } from '../sequelize';
 
 const getTrainingGroups = (subject) => {
 
-
     const query = subject ? { where: { subject_id: subject }} : {};
 
     return new Promise((resolve, reject) => {
@@ -28,12 +27,4 @@ const setTrainingGroup = (args) => {
     });
 };
 
-const removeTrainingGroup = (id) => {
-    return new Promise((resolve, reject) => {
-        TrainingGroups.destroy({ where: { id }})
-            .then(result => resolve(result))
-            .catch(error => reject(error));
-    })
-};
-
-export { getTrainingGroups, setTrainingGroup, removeTrainingGroup };
+export { getTrainingGroups, setTrainingGroup };

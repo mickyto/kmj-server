@@ -5,16 +5,14 @@ import {
     GraphQLList,
     GraphQLNonNull
 } from 'graphql';
-import { getTeachers, getTeacher, addOrEditTeacher, removeTeacher } from '../data/teachers';
-import { OperationType } from './common';
+import { getTeachers, getTeacher, addOrEditTeacher } from '../data/teachers';
 
 
 const TeacherType = new GraphQLObjectType({
     name: 'Teachers',
     fields: {
-        teacherId: {
-            type: GraphQLInt,
-            resolve: ({ id }) => id
+        id: {
+            type: GraphQLInt
         },
         fio: {
             type: GraphQLString,
@@ -86,15 +84,4 @@ const MutationAddOrEditTeacher = {
     resolve: (root, args) => addOrEditTeacher(args)
 };
 
-const MutationRemoveTeacher = {
-    type: OperationType,
-    description: 'Remove teacher',
-    args: {
-        id: {
-            type: new GraphQLNonNull(GraphQLInt)
-        }
-    },
-    resolve: (root, { id }) => removeTeacher(id)
-};
-
-export { TeacherType, QueryTeachers, QueryTeacher, MutationAddOrEditTeacher, MutationRemoveTeacher };
+export { TeacherType, QueryTeachers, QueryTeacher, MutationAddOrEditTeacher };

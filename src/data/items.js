@@ -1,4 +1,5 @@
-import { Themes, Channels, Subjects, TrainingGroups } from '../sequelize';
+import { Themes, Channels, Subjects, TrainingGroups, Groups, Exercises,
+    Formats, Teachers, Trainings, Works } from '../sequelize';
 
 const getEntity = (kind) => {
     if (kind == 'themes')
@@ -7,6 +8,18 @@ const getEntity = (kind) => {
         return Channels;
     else if (kind == 'subjects')
         return Subjects;
+    else if (kind == 'formats')
+        return Formats;
+    else if (kind == 'teachers')
+        return Teachers;
+    else if (kind == 'groups')
+        return Groups;
+    else if (kind == 'works')
+        return Works;
+    else if (kind == 'exercises')
+        return Exercises;
+    else if (kind == 'trainings')
+        return Trainings;
     else if (kind == 'training_groups')
         return TrainingGroups;
 };

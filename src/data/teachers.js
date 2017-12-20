@@ -34,12 +34,4 @@ const addOrEditTeacher = (args) => {
     });
 };
 
-const removeTeacher = (id) => {
-    return new Promise((resolve, reject) => {
-        Teachers.destroy({ where: { teacher_id: id }})
-            .then(result => resolve(result))
-            .catch(error => reject(error));
-    });
-};
-
-export { getTeachers, getTeacher, addOrEditTeacher, removeTeacher };
+export { getTeachers, getTeacher, addOrEditTeacher };

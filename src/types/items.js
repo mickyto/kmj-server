@@ -5,7 +5,7 @@ import {
     GraphQLList,
     GraphQLNonNull
 } from 'graphql';
-import { getItems, getItem, setItem, removeItem } from '../data/Items';
+import { getItems, getItem, setItem, removeItem } from '../data/items';
 import { OperationType } from './common';
 
 

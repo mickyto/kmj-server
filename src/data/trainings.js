@@ -61,12 +61,4 @@ const addOrEditTraining = (args) => {
     });
 };
 
-const removeTraining = (id) => {
-    return new Promise((resolve, reject) => {
-        Trainings.destroy({ where: { training_id: id }})
-            .then(result => resolve(result))
-            .catch(error => reject(error));
-    });
-};
-
-export { getTrainings, getTraining, addOrEditTraining, removeTraining, getTrainingPupils };
+export { getTrainings, getTraining, addOrEditTraining, getTrainingPupils };

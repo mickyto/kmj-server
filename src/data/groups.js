@@ -32,12 +32,4 @@ const addOrEditGroup = (args) => {
     });
 };
 
-const removeGroup = (id) => {
-    return new Promise((resolve, reject) => {
-        Groups.destroy({ where: { group_id: id }})
-            .then(result => resolve(result))
-            .catch(error => reject(error));
-    })
-};
-
-export { getGroups, getGroup, addOrEditGroup, removeGroup };
+export { getGroups, getGroup, addOrEditGroup };
