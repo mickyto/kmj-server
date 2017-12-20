@@ -4,12 +4,12 @@ import Sequelize from 'sequelize';
 import config from "../../config";
 import { Trainings, PupilTrainings, Pupils } from '../sequelize';
 
-const getTrainings = ({ token, subject }) => {
+const getTrainings = ({ token, training_group }) => {
     return new Promise((resolve, reject) => {
 
         const query = { where: { is_active: 1 }};
-        if (subject) {
-            query.where.subject_id = subject
+        if (training_group) {
+            query.where.training_group_id = training_group
         }
         if (token) {
             const decoded = jwt.verify(token, config.secret);

@@ -10,7 +10,7 @@ import { getTrainings, getTraining, addOrEditTraining, removeTraining, getTraini
 import { getPupilTrainingResults, getResultsCount } from '../data/trainingResults';
 import { getItem } from '../data/items';
 import { OperationType } from './common';
-import { ItemType } from './items';
+import { TrainingGroupType } from './trainingGroups';
 import { PupilType, PupilTrainingResultsType, PupilTrainingResultsCountType } from './pupils';
 
 
@@ -33,9 +33,9 @@ const TrainingType = new GraphQLObjectType({
         speed: {
             type: GraphQLInt,
         },
-        subject: {
-            type: ItemType,
-            resolve: ({ subject_id }) => getItem({ id: subject_id, kind: 'subjects' })
+        trainingGroup: {
+            type: TrainingGroupType,
+            resolve: ({ training_group_id }) => getItem({ id: training_group_id, kind: 'training_groups' })
         },
         pupils: {
             type: new GraphQLList(PupilType),
@@ -72,7 +72,7 @@ const QueryTrainings = {
     type: new GraphQLList(TrainingType),
     description: 'Get all trainings',
     args: {
-        subject: {
+        training_group: {
             type: GraphQLInt
         },
         token: {
@@ -112,7 +112,7 @@ const MutationAddOrEditTraining = {
         speed: {
             type: GraphQLInt,
         },
-        subject_id: {
+        training_group_id: {
             type: new GraphQLNonNull(GraphQLInt),
         },
         isActive: {

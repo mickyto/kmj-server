@@ -16,7 +16,7 @@ const ItemType = new GraphQLObjectType({
             type: GraphQLInt
         },
         title: {
-            type: GraphQLString,
+            type: GraphQLString
         }
     })
 });

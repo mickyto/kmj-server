@@ -337,7 +337,9 @@ Clients.belongsTo(Channels);
 Groups.belongsTo(Teachers);
 Groups.belongsTo(Subjects);
 Groups.belongsTo(Formats);
-Trainings.belongsTo(Subjects);
+
+Trainings.belongsTo(TrainingGroups);
+TrainingGroups.belongsTo(Subjects);
 
 Groups.belongsToMany(Pupils, { through: 'pupil_groups' });
 Pupils.belongsToMany(Groups, { through: 'pupil_groups' });
