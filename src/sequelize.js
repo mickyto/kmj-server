@@ -200,7 +200,7 @@ const Trainings = sequelize.define('trainings', {
     action: {
         type: Sequelize.STRING,
     },
-    url: {
+    controller: {
         type: Sequelize.STRING,
     },
     isActive: {

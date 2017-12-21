@@ -16,9 +16,8 @@ import { PupilType, PupilTrainingResultsType, PupilTrainingResultsCountType } fr
 const TrainingType = new GraphQLObjectType({
     name: 'Trainings',
     fields: () => ({
-        trainingId: {
-            type: GraphQLInt,
-            resolve: ({ id }) => id
+        id: {
+            type: GraphQLInt
         },
         title: {
             type: GraphQLString,
@@ -26,7 +25,7 @@ const TrainingType = new GraphQLObjectType({
         action: {
             type: GraphQLString,
         },
-        url: {
+        controller: {
             type: GraphQLString,
         },
         speed: {
@@ -105,7 +104,7 @@ const MutationAddOrEditTraining = {
         action: {
             type: GraphQLString,
         },
-        url: {
+        controller: {
             type: GraphQLString,
         },
         speed: {

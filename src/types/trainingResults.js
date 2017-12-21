@@ -5,7 +5,7 @@ import {
     GraphQLList,
     GraphQLNonNull
 } from 'graphql';
-import { getPupilResults, getResultsCount, addResult, clearPupilResults } from '../data/trainingResults';
+import { getPupilResults, addResult, clearPupilResults } from '../data/trainingResults';
 import { getPupil } from '../data/pupils';
 import { getTraining } from '../data/trainings';
 
@@ -64,32 +64,6 @@ const QueryPupilResults = {
     resolve: (root, { id }) => getPupilResults(id)
 };
 
-const PupilTrainingResultsCountType = new GraphQLObjectType({
-    name: 'TrainingResultsCount',
-    fields: () => ({
-        all: {
-            type: GraphQLInt
-        },
-        correct: {
-            type: GraphQLInt
-        },
-    })
-});
-
-const QueryPupilTrainingResults = {
-    type: PupilTrainingResultsCountType,
-    description: 'Get all results for pupil',
-    args: {
-        token: {
-            type: GraphQLString
-        },
-        trainingId: {
-            type: new GraphQLNonNull(GraphQLInt)
-        }
-    },
-    resolve: (root, args) => getResultsCount(args)
-};
-
 const MutationAddResult = {
     type: TrainingResultsType,
     description: 'Add training result',
@@ -127,4 +101,4 @@ const MutationClearPupilResults = {
     resolve: (root, args) => clearPupilResults(args)
 };
 
-export { TrainingResultsType, PupilTrainingResultsCountType, QueryPupilResults, QueryPupilTrainingResults, MutationAddResult, MutationClearPupilResults };
+export { TrainingResultsType, QueryPupilResults, MutationAddResult, MutationClearPupilResults };

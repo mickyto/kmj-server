@@ -8,7 +8,7 @@ import { QueryTeachers, QueryTeacher, MutationAddOrEditTeacher } from './types/t
 import { QueryGroups, QueryGroup, MutationAddOrEditGroup } from './types/groups';
 import { QueryFormats, MutationAddOrEditFormat } from './types/formats';
 import { QueryTrainings, QueryTraining, MutationAddOrEditTraining } from './types/trainings';
-import { QueryPupilResults, QueryPupilTrainingResults, MutationAddResult, MutationClearPupilResults } from './types/trainingResults';
+import { QueryPupilResults, MutationAddResult, MutationClearPupilResults } from './types/trainingResults';
 import { CompileProgramMutation } from './types/compilation';
 import { QueryItems, QueryItem, MutationSetItem, MutationRemoveItem } from './types/items';
 import { QueryTrainingGroups, MutationSetTrainingGroup } from './types/trainingGroups';
@@ -31,7 +31,6 @@ const queryType = new GraphQLObjectType({
         trainings: QueryTrainings,
         training: QueryTraining,
         pupilResults: QueryPupilResults,
-        pupilTrainingResults: QueryPupilTrainingResults,
         items: QueryItems,
         item: QueryItem,
         trainingGroups: QueryTrainingGroups,
