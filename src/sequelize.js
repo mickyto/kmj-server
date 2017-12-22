@@ -209,6 +209,9 @@ const Trainings = sequelize.define('trainings', {
     },
     speed: {
         type: Sequelize.INTEGER
+    },
+    sort: {
+        type: Sequelize.INTEGER
     }
 });
 
@@ -291,8 +294,18 @@ const WorkContents = sequelize.define('work_contents', {
     id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
-        autoIncrement: true,
-        field: 'id'
+        autoIncrement: true
+    },
+    sort: {
+        type: Sequelize.INTEGER,
+    }
+});
+
+const WorkTrainings = sequelize.define('work_trainings', {
+    id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
     },
     sort: {
         type: Sequelize.INTEGER,
@@ -303,8 +316,7 @@ const WorkExecutions = sequelize.define('work_executions', {
     id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
-        autoIncrement: true,
-        field: 'id'
+        autoIncrement: true
     },
     program: {
         type: Sequelize.STRING,
@@ -350,8 +362,11 @@ Pupils.belongsToMany(Trainings, { through: 'pupil_trainings' });
 Exercises.hasMany(Tests);
 Exercises.belongsTo(Themes);
 
-Works.belongsToMany(Exercises, {  through: 'work_contents' });
-Exercises.belongsToMany(Works, {  through: 'work_contents' });
+Works.belongsToMany(Exercises, { through: 'work_contents' });
+Exercises.belongsToMany(Works, { through: 'work_contents' });
+
+Works.belongsToMany(Trainings, { through: 'work_trainings' });
+Trainings.belongsToMany(Works, { through: 'work_trainings' });
 
 Pupils.belongsToMany(Exercises, { through: 'work_executions' });
 Exercises.belongsToMany(Pupils, { through: 'work_executions' });
@@ -360,4 +375,5 @@ Pupils.belongsToMany(Works, { through: 'pupil_works' });
 Works.belongsToMany(Pupils, { through: 'pupil_works' });
 
 export { Op, Users, Clients, Pupils, Teachers, Groups, Formats, Subjects, Channels, TrainingGroups,
-    Trainings, PupilTrainings, Themes, Tests, Exercises, Works, WorkContents, WorkExecutions };
+    Trainings, PupilTrainings, Themes, Tests, Exercises, Works, WorkContents, WorkExecutions,
+    WorkTrainings };

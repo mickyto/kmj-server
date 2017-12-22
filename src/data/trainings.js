@@ -1,13 +1,11 @@
 import jwt from 'jsonwebtoken';
-import Sequelize from 'sequelize';
-
 import config from "../../config";
-import { Trainings, PupilTrainings, Pupils } from '../sequelize';
+import { Trainings, PupilTrainings, Pupils, Op } from '../sequelize';
 
 const getTrainings = ({ token, training_group }) => {
     return new Promise((resolve, reject) => {
 
-        const query = { where: { is_active: 1 }};
+        const query = { where: { is_active: 1 }, order: [[ 'sort', 'ASC']] };
         if (training_group) {
             query.where.training_group_id = training_group
         }
@@ -33,7 +31,6 @@ const getTraining = (id) => {
 };
 
 const getTrainingPupils = (id) => {
-    const Op = Sequelize.Op;
     return new Promise((resolve, reject) => {
         PupilTrainings.aggregate('pupil_id', 'DISTINCT', { plain: false, where: { training_id: id } })
             .then(ids => {

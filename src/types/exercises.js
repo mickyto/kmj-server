@@ -3,7 +3,6 @@ import {
     GraphQLString,
     GraphQLInt,
     GraphQLList,
-    GraphQLNonNull,
     GraphQLInputObjectType
 } from 'graphql';
 
@@ -92,8 +91,13 @@ const ExerciseType = new GraphQLObjectType({
 
 const QueryExercises = {
     type: new GraphQLList(ExerciseType),
-    description: 'Get all programming exercises',
-    resolve: () => getExercises()
+    description: 'Get programming exercises',
+    args: {
+        theme: {
+            type: GraphQLInt
+        }
+    },
+    resolve: (root, { theme }) => getExercises(theme)
 };
 
 const QueryExercise= {

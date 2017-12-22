@@ -1,8 +1,10 @@
 import { Exercises, Tests } from '../sequelize';
 
-const getExercises = () => {
+const getExercises = (theme) => {
+
+    const query = theme ? { where: { theme_id: theme }} : {};
     return new Promise((resolve, reject) => {
-        Exercises.findAll()
+        Exercises.findAll(query)
             .then(exercises => resolve(exercises))
             .catch(error => reject(error))
     })
@@ -12,14 +14,6 @@ const getExercise = (id) => {
     return new Promise((resolve, reject) => {
         Exercises.findById(id)
             .then(exercise => resolve(exercise))
-            .catch(error => reject(error))
-    })
-};
-
-const getExercisesByTheme = (id) => {
-    return new Promise((resolve, reject) => {
-        Exercises.findAll({ where: { theme_id: id }})
-            .then(exercises => resolve(exercises))
             .catch(error => reject(error))
     })
 };
@@ -59,4 +53,4 @@ const addOrEditExercise = (args) => {
     })
 };
 
-export { getExercises, getExercise, getExercisesByTheme, getTestsByExerciseId, addOrEditExercise };
+export { getExercises, getExercise, getTestsByExerciseId, addOrEditExercise };

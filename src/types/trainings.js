@@ -9,6 +9,7 @@ import {
 import { getTrainings, getTraining, addOrEditTraining, getTrainingPupils } from '../data/trainings';
 import { getPupilTrainingResults, getResultsCount } from '../data/trainingResults';
 import { getItem } from '../data/items';
+import { WorkContentType } from './works';
 import { TrainingGroupType } from './trainingGroups';
 import { PupilType, PupilTrainingResultsType, PupilTrainingResultsCountType } from './pupils';
 
@@ -30,6 +31,9 @@ const TrainingType = new GraphQLObjectType({
         },
         speed: {
             type: GraphQLInt,
+        },
+        work_trainings: {
+            type: WorkContentType
         },
         trainingGroup: {
             type: TrainingGroupType,
