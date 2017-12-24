@@ -5,6 +5,25 @@ import fs from 'fs';
 import config from "../../config";
 import { Exercises } from '../sequelize';
 
+function asyncLoop(iterations, func) {
+    var index = 0;
+    var done = false;
+    var loop = {
+        next: () => {
+            if (done) return;
+            if (index < iterations) {
+                index++;
+                func(loop);
+            }
+            else
+                done = true;
+        },
+        iteration: () => index - 1,
+        break: () => done = true
+    };
+    loop.next();
+    return loop;
+}
 
 const compileProgram = ({ code, token, attempt, exercise_id }) => {
     return new Promise((resolve, reject) => {
@@ -16,7 +35,6 @@ const compileProgram = ({ code, token, attempt, exercise_id }) => {
                 .then(exercise => {
 
                     const decoded = jwt.verify(token, config.secret);
-
                     const d = new Date();
                     const utc = d.getTime() + (d.getTimezoneOffset() * 60000);
 
@@ -37,32 +55,36 @@ const compileProgram = ({ code, token, attempt, exercise_id }) => {
                                     if (fs.existsSync(file)) fs.unlinkSync(file);
                                     return resolve({ error: 'Ваш код не компилируется, проверьте синтаксис' });
                                 }
-                                for (let i = 0; i < tests.length; i++) {
 
+                                asyncLoop(tests.length, function(loop) {
+
+                                    const i = loop.iteration();
                                     const testFile = `tmp/test${exercise_id}${i}.txt`;
 
                                     fs.writeFileSync(testFile, tests[i].cin);
                                     cmd.get(`tmp/${token} < tmp/test${exercise_id}${i}.txt`, (err, data) => {
 
-                                        fs.unlinkSync(testFile);
+                                        if (fs.existsSync(testFile)) fs.unlinkSync(testFile);
 
-                                        if(data && data == tests[i].cout) {
-                                            if (tests.length - (i + 1) !== 0) return;
-
+                                        if (data && data == tests[i].cout) {
+                                            if (tests.length - (i + 1) !== 0) loop.next();
                                             if (fs.existsSync(file)) fs.unlinkSync(file);
-                                            if (fs.existsSync(file)) fs.unlinkSync(`tmp/${token}`);
+                                            if (fs.existsSync(`tmp/${token}`)) fs.unlinkSync(`tmp/${token}`);
+
                                             exercise.addPupil(decoded.id, { through: { status: 1 }});
-                                            return resolve({ output: 'accepted' });
+                                            resolve({ output: 'accepted' });
+                                            loop.break();
                                         }
                                         else {
                                             if (tests.length - (i + 1) == 0) {
                                                 if (fs.existsSync(file)) fs.unlinkSync(file);
-                                                if (fs.existsSync(file)) fs.unlinkSync(`tmp/${token}`);
+                                                if (fs.existsSync(`tmp/${token}`)) fs.unlinkSync(`tmp/${token}`);
                                             }
-                                            return resolve({ error: 'Ошибка в тесте № ' + (i + 1) });
+                                            resolve({error: 'Ошибка в тесте № ' + (i + 1)});
+                                            loop.break();
                                         }
                                     });
-                                }
+                                });
                             });
                         });
                 })
