@@ -66,7 +66,11 @@ const compileProgram = ({ code, token, attempt, exercise_id }) => {
 
                                         if (fs.existsSync(testFile)) fs.unlinkSync(testFile);
 
-                                        if (data && data == tests[i].cout) {
+                                        const testOut = tests[i].cout;
+
+                                        if (data == testOut || testOut.length > 0 &&
+                                            ((testOut.substr(testOut.length - 1) == ' ' || testOut.substr(testOut.length - 1) == '↵') && data == testOut.slice(0, -1))
+                                        ) {
                                             if (tests.length - (i + 1) !== 0) loop.next();
                                             if (fs.existsSync(file)) fs.unlinkSync(file);
                                             if (fs.existsSync(`tmp/${token}`)) fs.unlinkSync(`tmp/${token}`);
@@ -76,10 +80,10 @@ const compileProgram = ({ code, token, attempt, exercise_id }) => {
                                             loop.break();
                                         }
                                         else {
-                                            if (tests.length - (i + 1) == 0) {
-                                                if (fs.existsSync(file)) fs.unlinkSync(file);
-                                                if (fs.existsSync(`tmp/${token}`)) fs.unlinkSync(`tmp/${token}`);
-                                            }
+
+                                            if (fs.existsSync(file)) fs.unlinkSync(file);
+                                            if (fs.existsSync(`tmp/${token}`)) fs.unlinkSync(`tmp/${token}`);
+
                                             resolve({error: 'Ошибка в тесте № ' + (i + 1)});
                                             loop.break();
                                         }
