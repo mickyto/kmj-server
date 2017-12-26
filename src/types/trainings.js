@@ -48,18 +48,36 @@ const TrainingType = new GraphQLObjectType({
             args: {
                 token: {
                     type: GraphQLString
+                },
+                pupilId: {
+                    type: GraphQLInt
                 }
             },
-            resolve: ({ id }, { token }) => getResultsCount({ trainingId: id, token })
+            resolve: ({ id }, { token, pupilId }) => getResultsCount({ trainingId: id, token, pupilId })
         },
         pupilTraining: {
             type: PupilTrainingResultsType,
             args: {
                 token: {
                     type: GraphQLString
-                }
+                },
+                pupilId: {
+                    type: GraphQLInt
+                },
+                trainingId: {
+                    type: GraphQLInt
+                },
+                offset: {
+                    type: GraphQLInt
+                },
+                limit: {
+                    type: GraphQLInt
+                },
             },
-            resolve: ({ id }, { token }) => getPupilTrainingResults({ trainingId: id, token })
+            resolve: ({ id }, { token, pupilId, trainingId, offset, limit }) => {
+                if (trainingId == id)
+                    return getPupilTrainingResults({ trainingId: id, token, pupilId, offset, limit })
+            }
         },
         isActive: {
             type: GraphQLBoolean,
