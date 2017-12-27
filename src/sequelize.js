@@ -341,6 +341,9 @@ const Exercises = sequelize.define('exercises', {
     },
     text: {
         type: Sequelize.STRING,
+    },
+    code: {
+        type: Sequelize.STRING,
     }
 });
 

@@ -40,6 +40,7 @@ const addOrEditExercise = (args) => {
 
             Exercises.update({
                 text: args.text,
+                code: args.code,
                 theme_id: args.theme_id
             }, { where: { exercise_id: args.id }})
                 .then(res => resolve(res))
