@@ -4,7 +4,8 @@ import {
     GraphQLInt,
     GraphQLList,
     GraphQLNonNull,
-    GraphQLBoolean
+    GraphQLBoolean,
+    GraphQLFloat
 } from 'graphql';
 import { getTrainings, getTraining, addOrEditTraining, getTrainingPupils } from '../data/trainings';
 import { getPupilTrainingResults, getResultsCount } from '../data/trainingResults';
@@ -30,7 +31,7 @@ const TrainingType = new GraphQLObjectType({
             type: GraphQLString,
         },
         speed: {
-            type: GraphQLInt,
+            type: GraphQLFloat,
         },
         work_trainings: {
             type: WorkContentType
@@ -130,7 +131,7 @@ const MutationAddOrEditTraining = {
             type: GraphQLString,
         },
         speed: {
-            type: GraphQLInt,
+            type: GraphQLFloat,
         },
         training_group_id: {
             type: new GraphQLNonNull(GraphQLInt),

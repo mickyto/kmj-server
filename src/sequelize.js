@@ -208,7 +208,7 @@ const Trainings = sequelize.define('trainings', {
         field: 'is_active'
     },
     speed: {
-        type: Sequelize.INTEGER
+        type: Sequelize.FLOAT
     },
     sort: {
         type: Sequelize.INTEGER
