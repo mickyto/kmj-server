@@ -31,12 +31,13 @@ const addOrEditExercise = (args) => {
 
         if (args.id) {
 
-            Tests.destroy({ where: { exercise_id: args.id }});
-
-            args.tests.forEach(test => {
-                test.exercise_id = args.id;
-                Tests.create(test)
-            });
+            Tests.destroy({ where: { exercise_id: args.id }})
+                .then(() => {
+                    args.tests.forEach(test => {
+                        test.exercise_id = args.id;
+                        Tests.create(test);
+                    });
+                });
 
             Exercises.update({
                 text: args.text,
