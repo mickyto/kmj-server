@@ -55,7 +55,6 @@ const compileProgram = ({ code, token, attempt, exercise_id }) => {
                                     if (fs.existsSync(file)) fs.unlinkSync(file);
                                     return resolve({ error: 'Ваш код не компилируется, проверьте синтаксис' });
                                 }
-
                                 asyncLoop(tests.length, function(loop) {
 
                                     const i = loop.iteration();
@@ -71,7 +70,10 @@ const compileProgram = ({ code, token, attempt, exercise_id }) => {
                                         if (data == testOut || testOut.length > 0 &&
                                             ((testOut.substr(testOut.length - 1) == ' ' || testOut.substr(testOut.length - 1) == '↵') && data == testOut.slice(0, -1))
                                         ) {
-                                            if (tests.length - (i + 1) !== 0) loop.next();
+                                            if (tests.length - (i + 1) !== 0) {
+                                                loop.next();
+                                                return;
+                                            }
                                             if (fs.existsSync(file)) fs.unlinkSync(file);
                                             if (fs.existsSync(`tmp/${token}`)) fs.unlinkSync(`tmp/${token}`);
 
@@ -80,7 +82,6 @@ const compileProgram = ({ code, token, attempt, exercise_id }) => {
                                             loop.break();
                                         }
                                         else {
-
                                             if (fs.existsSync(file)) fs.unlinkSync(file);
                                             if (fs.existsSync(`tmp/${token}`)) fs.unlinkSync(`tmp/${token}`);
 
