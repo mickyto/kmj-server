@@ -9,7 +9,8 @@ import {
 import { TeacherType } from './teachers';
 import { ItemType } from './items';
 import { FormatType } from './formats';
-import { getGroups, getGroup, addOrEditGroup } from '../data/groups';
+import { PupilType } from './pupils';
+import { getGroups, getGroup, getGroupPupils, addOrEditGroup } from '../data/groups';
 import { getTeacher } from '../data/teachers';
 import { getItem } from '../data/items';
 
@@ -39,7 +40,7 @@ const DayOutputType = new GraphQLObjectType({
 
 const GroupType = new GraphQLObjectType({
     name: 'Groups',
-    fields: {
+    fields: () => ({
         id: {
             type: GraphQLInt
         },
@@ -61,10 +62,14 @@ const GroupType = new GraphQLObjectType({
             type: FormatType,
             resolve: ({ format_id }) => getItem({ id: format_id, kind: 'formats' })
         },
+        pupils: {
+            type: new GraphQLList(PupilType),
+            resolve: ({ id }) => getGroupPupils(id)
+        },
         error: {
             type: GraphQLString,
         }
-    }
+    })
 });
 
 const QueryGroups = {

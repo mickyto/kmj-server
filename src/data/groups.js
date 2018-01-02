@@ -16,6 +16,14 @@ const getGroup = (id) => {
     })
 };
 
+const getGroupPupils = (id) => {
+    return new Promise((resolve, reject) => {
+        Groups.findById(id)
+            .then(group => resolve(group.getPupils()))
+            .catch(error => reject(error))
+    })
+};
+
 const addOrEditGroup = (args) => {
     return new Promise((resolve, reject) => {
 
@@ -32,4 +40,4 @@ const addOrEditGroup = (args) => {
     });
 };
 
-export { getGroups, getGroup, addOrEditGroup };
+export { getGroups, getGroup, getGroupPupils, addOrEditGroup };

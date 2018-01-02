@@ -6,11 +6,13 @@ import {
     GraphQLNonNull,
     GraphQLInputObjectType
 } from 'graphql';
-import { getWorks, addOrEditWork, getWork, getWorkExercises, getWorkPupils, sortExercises, getWorkTrainings } from '../data/works';
+import { getWorks, addOrEditWork, getWork, getWorkExercises, getWorkPupils,
+    getWorkGroups, sortExercises, getWorkTrainings } from '../data/works';
 import { OperationType } from './common';
 import { ExerciseType } from './exercises';
 import { TrainingType } from './trainings';
 import { PupilType } from './pupils';
+import { GroupType } from './groups';
 
 const WorkContentType = new GraphQLObjectType({
     name: 'WorkContent',
@@ -44,6 +46,10 @@ const WorkType = new GraphQLObjectType({
         pupils: {
             type: new GraphQLList(PupilType),
             resolve: ({ id }) => getWorkPupils(id)
+        },
+        groups: {
+            type: new GraphQLList(GroupType),
+            resolve: ({ id }) => getWorkGroups(id)
         },
         error: {
             type: GraphQLString,
@@ -90,6 +96,9 @@ const MutationAddOrEditWork = {
             type: new GraphQLList(GraphQLInt),
         },
         pupils: {
+            type: new GraphQLList(GraphQLInt),
+        },
+        groups: {
             type: new GraphQLList(GraphQLInt),
         }
     },

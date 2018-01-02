@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import Sequelize from 'sequelize';
 
 import config from "../../config";
-import { Works, Pupils, WorkContents, WorkTrainings } from '../sequelize';
+import { Works, Pupils, WorkContents, WorkTrainings, Groups } from '../sequelize';
 
 const getWorks = (token) => {
     return new Promise((resolve, reject) => {
@@ -14,8 +14,18 @@ const getWorks = (token) => {
                     resolve();
                     return;
                 }
-                Pupils.findById(decoded.id)
-                    .then(pupil => resolve(pupil.getWorks()))
+                Pupils.findById(decoded.id, { include: [Groups] })
+                    .then(pupil => {
+
+                        const promises = [pupil.getWorks()];
+                        pupil.groups.forEach(group => promises.push(group.getWorks()));
+                        Promise.all(promises).then(values => {
+
+                            const works = [];
+                            values.forEach(values => values.forEach(value => works.push(value)));
+                            return resolve(works);
+                        });
+                    })
                     .catch(error => reject(error));
             });
             return;
@@ -67,6 +77,14 @@ const getWorkPupils = (id) => {
     })
 };
 
+const getWorkGroups = (id) => {
+    return new Promise((resolve, reject) => {
+        Works.findById(id)
+            .then(work => resolve(work.getGroups()))
+            .catch(error => reject(error))
+    })
+};
+
 const addOrEditWork = (args) => {
     return new Promise((resolve, reject) => {
 
@@ -75,6 +93,7 @@ const addOrEditWork = (args) => {
                 .then(work => {
                     work.update({ title: args.title });
                     work.setPupils(args.pupils);
+                    work.setGroups(args.groups);
 
                     if (args.exercises)
                         work.setExercises(args.exercises);
@@ -90,6 +109,7 @@ const addOrEditWork = (args) => {
         Works.create({ title: args.title })
             .then(work => {
                 work.addPupils(args.pupils);
+                work.addGroups(args.groups);
 
                 if (args.exercises)
                     work.setExercises(args.exercises);
@@ -124,4 +144,4 @@ const sortExercises = (args) => {
     })
 };
 
-export { getWorks, getWork, getWorkExercises, getWorkPupils,  addOrEditWork, sortExercises, getWorkTrainings };
+export { getWorks, getWork, getWorkExercises, getWorkPupils, getWorkGroups, addOrEditWork, sortExercises, getWorkTrainings };

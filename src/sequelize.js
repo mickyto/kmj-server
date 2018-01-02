@@ -377,6 +377,9 @@ Exercises.belongsToMany(Pupils, { through: 'work_executions' });
 Pupils.belongsToMany(Works, { through: 'pupil_works' });
 Works.belongsToMany(Pupils, { through: 'pupil_works' });
 
+Groups.belongsToMany(Works, { through: 'group_works' });
+Works.belongsToMany(Groups, { through: 'group_works' });
+
 export { Op, Users, Clients, Pupils, Teachers, Groups, Formats, Subjects, Channels, TrainingGroups,
     Trainings, PupilTrainings, Themes, Tests, Exercises, Works, WorkContents, WorkExecutions,
     WorkTrainings };
