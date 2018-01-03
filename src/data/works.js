@@ -22,7 +22,15 @@ const getWorks = (token) => {
                         Promise.all(promises).then(values => {
 
                             const works = [];
-                            values.forEach(values => values.forEach(value => works.push(value)));
+                            values.forEach(values => values.forEach(value => {
+                                let flag = true;
+                                works.forEach(work => {
+                                    if (work.id == value.id)
+                                        flag = false;
+                                });
+                                if (flag)
+                                    works.push(value)
+                            }));
                             return resolve(works);
                         });
                     })

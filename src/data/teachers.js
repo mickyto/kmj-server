@@ -1,10 +1,8 @@
-import { Teachers, Op } from '../sequelize';
+import { Teachers } from '../sequelize';
 
-const getTeachers = (ids) => {
-
-    const query = ids ? { where: { teacher_id: { [Op.in]: ids }}} : {};
+const getTeachers = () => {
     return new Promise((resolve, reject) => {
-        Teachers.findAll(query)
+        Teachers.findAll()
             .then(teachers => resolve(teachers))
             .catch(error => reject(error))
     })
