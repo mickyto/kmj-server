@@ -287,6 +287,15 @@ const Works = sequelize.define('works', {
     },
     title: {
         type: Sequelize.STRING,
+    },
+    three: {
+        type: Sequelize.INTEGER
+    },
+    four: {
+        type: Sequelize.INTEGER
+    },
+    five: {
+        type: Sequelize.INTEGER
     }
 });
 

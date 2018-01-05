@@ -51,6 +51,10 @@ const WorkType = new GraphQLObjectType({
             type: new GraphQLList(GroupType),
             resolve: ({ id }) => getWorkGroups(id)
         },
+        counts: {
+            type: CountsType,
+            resolve: ({ three, four, five }) => ({ three, four, five })
+        },
         error: {
             type: GraphQLString,
         }
@@ -79,6 +83,36 @@ const QueryWorks = {
     resolve: (root, { token }) => getWorks(token)
 };
 
+const CountsType = new GraphQLObjectType({
+    name: 'Counts',
+    fields: {
+        three: {
+            type: GraphQLInt
+        },
+        four: {
+            type: GraphQLInt
+        },
+        five: {
+            type: GraphQLInt
+        },
+    }
+});
+
+const CountsInputType = new GraphQLInputObjectType({
+    name: 'CountsInput',
+    fields: {
+        three: {
+            type: GraphQLInt
+        },
+        four: {
+            type: GraphQLInt
+        },
+        five: {
+            type: GraphQLInt
+        },
+    }
+});
+
 const MutationAddOrEditWork = {
     type: WorkType,
     description: 'Add or remove work',
@@ -100,6 +134,9 @@ const MutationAddOrEditWork = {
         },
         groups: {
             type: new GraphQLList(GraphQLInt),
+        },
+        counts: {
+            type: CountsInputType
         }
     },
     resolve: (root, args) => addOrEditWork(args)

@@ -99,7 +99,10 @@ const addOrEditWork = (args) => {
         if (args.id) {
             Works.findById(args.id)
                 .then(work => {
-                    work.update({ title: args.title });
+                    work.update({
+                        title: args.title,
+                        ...args.counts
+                    });
                     work.setPupils(args.pupils);
                     work.setGroups(args.groups);
 
@@ -114,7 +117,10 @@ const addOrEditWork = (args) => {
             return;
         }
 
-        Works.create({ title: args.title })
+        Works.create({
+            title: args.title,
+            ...args.counts
+        })
             .then(work => {
                 work.addPupils(args.pupils);
                 work.addGroups(args.groups);
