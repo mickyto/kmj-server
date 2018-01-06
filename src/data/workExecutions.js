@@ -13,7 +13,7 @@ const getPupilExecution = (exerciseId, token) => {
                 return;
             }
 
-            WorkExecutions.findOne({where: { pupil_id: decoded.id, exercise_id: exerciseId }})
+            WorkExecutions.findOne({ where: { pupil_id: decoded.id, exercise_id: exerciseId }})
                 .then(executions => resolve(executions))
                 .catch(error => reject(error))
         });

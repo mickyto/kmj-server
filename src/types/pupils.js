@@ -39,7 +39,6 @@ const PupilTrainingResultsCountType = new GraphQLObjectType({
     })
 });
 
-
 const PupilType = new GraphQLObjectType({
     name: 'Pupils',
     fields: () => ({
@@ -99,6 +98,11 @@ const PupilType = new GraphQLObjectType({
                 }
             },
             resolve: ({ id }, { workId }) => getPupilExercises(id, workId)
+        },
+
+        workExercises: {
+            type: new GraphQLList(ExerciseType),
+            resolve: ({ id, pupil_works }) => getPupilExercises(id, pupil_works.work_id)
         },
         groups: {
             type: new GraphQLList(GroupType),

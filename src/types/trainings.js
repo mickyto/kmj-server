@@ -36,7 +36,7 @@ const TrainingType = new GraphQLObjectType({
         work_trainings: {
             type: WorkContentType
         },
-        trainingGroup: {
+        theme: {
             type: TrainingGroupType,
             resolve: ({ training_group_id }) => getItem({ id: training_group_id, kind: 'training_groups' })
         },

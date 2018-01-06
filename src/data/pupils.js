@@ -50,10 +50,13 @@ const getPupilExercises = (id, workId) => {
         Pupils.findById(id)
             .then(pupil => pupil.getExercises({ include: [ Works ] })
                 .then(exercises => {
-                    const filtered = exercises.filter(exercise => {
-                        return exercise.works.filter(work => work.id == workId).length > 0
-                    });
-                    return resolve(filtered)
+                    if (workId) {
+                        const filtered = exercises.filter(exercise => {
+                            return exercise.works.filter(work => work.id == workId).length > 0
+                        });
+                        return resolve(filtered)
+                    }
+                    return resolve(exercises)
                 }))
             .catch(error => reject(error));
     })
