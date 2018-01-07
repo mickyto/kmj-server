@@ -7,7 +7,7 @@ import {
     GraphQLInputObjectType
 } from 'graphql';
 import { getWorks, addOrEditWork, getWork, getWorkExercises, getWorkPupils,
-    getWorkGroups, sortExercises, getWorkTrainings } from '../data/works';
+    getWorkGroups, sortExercises, getWorkTrainings, getGroupPupils } from '../data/works';
 import { OperationType } from './common';
 import { ExerciseType } from './exercises';
 import { TrainingType } from './trainings';
@@ -51,6 +51,15 @@ const WorkType = new GraphQLObjectType({
                 }
             },
             resolve: ({ id }, { group }) => getWorkPupils(id, group)
+        },
+        groupPupils: {
+            type: new GraphQLList(PupilType),
+            args: {
+                group: {
+                    type: GraphQLInt
+                }
+            },
+            resolve: ({ id }, { group }) => getGroupPupils(id, group)
         },
         groups: {
             type: new GraphQLList(GroupType),
