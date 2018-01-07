@@ -45,7 +45,12 @@ const WorkType = new GraphQLObjectType({
         },
         pupils: {
             type: new GraphQLList(PupilType),
-            resolve: ({ id }) => getWorkPupils(id)
+            args: {
+                group: {
+                    type: GraphQLInt
+                }
+            },
+            resolve: ({ id }, { group }) => getWorkPupils(id, group)
         },
         groups: {
             type: new GraphQLList(GroupType),

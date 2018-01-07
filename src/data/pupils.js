@@ -1,19 +1,22 @@
-import { Pupils, Works } from '../sequelize';
+import { Pupils, Works, Groups } from '../sequelize';
 
-const getPupils = (args) => {
+const getPupils = (show, group) => {
     return new Promise((resolve, reject) => {
 
-        let query;
+        if (group) {
+            Groups.findById(group)
+                .then(group => resolve(group.getPupils()))
+                .catch(error => reject(error));
+            return;
+        }
 
-        if (args && args === 'trashed') {
-            query = { where: { status : "trashed" }}
-        }
-        else if (args === 'active') {
-            query = { where: { status : null }}
-        }
-        else {
-            query = {}
-        }
+        let query;
+        if (show && show === 'trashed')
+            query = { where: { status : 'trashed' }};
+        else if (show === 'active')
+            query = { where: { status : null }};
+        else
+            query = {};
 
         Pupils.findAll(query)
             .then(pupils => resolve(pupils))
@@ -21,7 +24,7 @@ const getPupils = (args) => {
     })
 };
 
-const getPupil = (id) => {
+const getPupil = id => {
     return new Promise((resolve, reject) => {
         Pupils.findById(id)
             .then(pupil => resolve(pupil))
@@ -29,7 +32,7 @@ const getPupil = (id) => {
     })
 };
 
-const getPupilGroups = (id) => {
+const getPupilGroups = id => {
     return new Promise((resolve, reject) => {
         Pupils.findById(id)
             .then(pupil => resolve(pupil.getGroups()))
@@ -37,7 +40,7 @@ const getPupilGroups = (id) => {
     })
 };
 
-const getPupilsByClientId = (id) => {
+const getPupilsByClientId = id => {
     return new Promise((resolve, reject) => {
         Pupils.findAll({ where: { client_id: id }})
             .then(pupils => resolve(pupils))
@@ -62,7 +65,7 @@ const getPupilExercises = (id, workId) => {
     })
 };
 
-const addOrEditPupil = (args) => {
+const addOrEditPupil = args => {
     return new Promise((resolve, reject) => {
 
         if (args.id) {

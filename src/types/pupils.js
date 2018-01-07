@@ -97,12 +97,7 @@ const PupilType = new GraphQLObjectType({
                     type: GraphQLInt
                 }
             },
-            resolve: ({ id }, { workId }) => getPupilExercises(id, workId)
-        },
-
-        workExercises: {
-            type: new GraphQLList(ExerciseType),
-            resolve: ({ id, pupil_works }) => getPupilExercises(id, pupil_works.work_id)
+            resolve: ({ id, pupil_works }, { workId }) => getPupilExercises(id, workId || pupil_works.work_id)
         },
         groups: {
             type: new GraphQLList(GroupType),
@@ -127,9 +122,12 @@ const QueryPupils = {
     args: {
         show: {
             type: GraphQLString
+        },
+        group: {
+            type: GraphQLInt
         }
     },
-    resolve: (root, { show }) => getPupils(show)
+    resolve: (root, { show, group }) => getPupils(show, group)
 };
 
 const QueryPupil = {
