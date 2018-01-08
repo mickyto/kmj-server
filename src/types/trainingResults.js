@@ -5,7 +5,7 @@ import {
     GraphQLList,
     GraphQLNonNull
 } from 'graphql';
-import { getPupilResults, addResult, clearPupilResults } from '../data/trainingResults';
+import { getPupilResults, addResult, resetLevel } from '../data/trainingResults';
 import { getPupil } from '../data/pupils';
 import { getTraining } from '../data/trainings';
 
@@ -34,7 +34,7 @@ const TrainingResultsType = new GraphQLObjectType({
         },
         isCorrect: {
             type: GraphQLString,
-            resolve: ({ is_correct }) => is_correct
+            resolve: ({ status }) => status
         },
         pupilAnswer: {
             type: GraphQLString,
@@ -87,18 +87,18 @@ const MutationAddResult = {
     resolve: (root, args) => addResult(args)
 };
 
-const MutationClearPupilResults = {
+const MutationResetLevel = {
     type: OperationType,
-    description: 'Remove teacher',
+    description: 'Reset training level of pupil',
     args: {
-        pupilId: {
-            type: new GraphQLNonNull(GraphQLInt)
+        token: {
+            type: new GraphQLNonNull(GraphQLString)
         },
         trainingId: {
             type: new GraphQLNonNull(GraphQLInt)
         }
     },
-    resolve: (root, args) => clearPupilResults(args)
+    resolve: (root, args) => resetLevel(args)
 };
 
-export { TrainingResultsType, QueryPupilResults, MutationAddResult, MutationClearPupilResults };
+export { TrainingResultsType, QueryPupilResults, MutationAddResult, MutationResetLevel };

@@ -230,7 +230,7 @@ const PupilTrainings = sequelize.define('pupil_trainings', {
     right_answer: {
         type: Sequelize.STRING,
     },
-    is_correct: {
+    status: {
         type: Sequelize.BOOLEAN,
     },
     date: {

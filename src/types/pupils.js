@@ -30,10 +30,22 @@ const PupilTrainingResultsType = new GraphQLObjectType({
 const PupilTrainingResultsCountType = new GraphQLObjectType({
     name: 'PupilTrainingResultsCount',
     fields: () => ({
-        all: {
+        incorrect: {
             type: GraphQLInt
         },
         correct: {
+            type: GraphQLInt
+        },
+        fixed: {
+            type: GraphQLInt
+        },
+        exIncorrect: {
+            type: GraphQLInt
+        },
+        exCorrect: {
+            type: GraphQLInt
+        },
+        exFixed: {
             type: GraphQLInt
         },
     })
