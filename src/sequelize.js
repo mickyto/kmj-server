@@ -19,11 +19,11 @@ const sequelize = new Sequelize(
             collate: 'utf8_general_ci',
             timestamps: false,
             underscored: true,
-        },
+        }/*,
         dialectOptions: {
             useUTC: false //for reading from database
         },
-        timezone: '+03:00'
+        timezone: '+03:00'*/
     }
 );
 
