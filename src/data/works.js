@@ -4,7 +4,7 @@ import Sequelize from 'sequelize';
 import config from "../../config";
 import { Works, Pupils, WorkContents, WorkTrainings, Groups, Op } from '../sequelize';
 
-const getWorks = (token) => {
+const getWorks = token => {
     return new Promise((resolve, reject) => {
 
         if (token) {
@@ -140,6 +140,11 @@ const addOrEditWork = (args) => {
                         work.setExercises(args.exercises);
                     if (args.trainings)
                         work.setTrainings(args.trainings);
+                    if (args.grades) {
+                        args.grades.forEach(item => {
+                            work.addExecutor(item.id, { through: { grade: item.grade }})
+                        })
+                    }
 
                     resolve(work)
                 })
@@ -156,9 +161,14 @@ const addOrEditWork = (args) => {
                 work.addGroups(args.groups);
 
                 if (args.exercises)
-                    work.setExercises(args.exercises);
+                    work.addExercises(args.exercises);
                 if (args.trainings)
-                    work.setTrainings(args.trainings);
+                    work.addTrainings(args.trainings);
+                if (args.grades) {
+                    args.grades.forEach(item => {
+                        work.addExecutor(item.id, { through: { grade: item.grade }})
+                    })
+                }
 
                 resolve(work)
             })

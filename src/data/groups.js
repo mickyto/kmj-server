@@ -1,4 +1,4 @@
-import { Groups } from '../sequelize';
+import { Groups, Works, PupilWorkGrades } from '../sequelize';
 
 const getGroups = () => {
     return new Promise((resolve, reject) => {
@@ -16,10 +16,14 @@ const getGroup = (id) => {
     })
 };
 
-const getGroupPupils = (id) => {
+const getGroupPupils = (id, work) => {
     return new Promise((resolve, reject) => {
         Groups.findById(id)
-            .then(group => resolve(group.getPupils()))
+            .then(group => {
+                if (work)
+                    return resolve(group.getPupils({ include: [{ model: Works, as: 'tasks', where: { id: work.work_id }}]}));
+                return resolve(group.getPupils())
+            })
             .catch(error => reject(error))
     })
 };

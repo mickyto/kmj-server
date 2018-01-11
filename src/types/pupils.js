@@ -55,7 +55,7 @@ const PupilType = new GraphQLObjectType({
     name: 'Pupils',
     fields: () => ({
         id: {
-            type: GraphQLInt
+            type: GraphQLInt,
         },
         fio: {
             type: GraphQLString
@@ -118,6 +118,10 @@ const PupilType = new GraphQLObjectType({
         parent: {
             type: ClientType,
             resolve: ({ client_id }) => getClient(client_id)
+        },
+        grade: {
+            type: GraphQLInt,
+            resolve: ({ tasks }) => tasks[0].pupil_work_grades.grade
         },
         status: {
             type: GraphQLString

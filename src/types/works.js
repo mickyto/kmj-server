@@ -97,6 +97,18 @@ const QueryWorks = {
     resolve: (root, { token }) => getWorks(token)
 };
 
+const PupilGradeInputType = new GraphQLInputObjectType({
+    name: 'PupilGradeInput',
+    fields: {
+        id: {
+            type: GraphQLInt
+        },
+        grade: {
+            type: GraphQLInt
+        }
+    }
+});
+
 const CountsType = new GraphQLObjectType({
     name: 'Counts',
     fields: {
@@ -151,7 +163,10 @@ const MutationAddOrEditWork = {
         },
         counts: {
             type: CountsInputType
-        }
+        },
+        grades: {
+            type: new GraphQLList(PupilGradeInputType),
+        },
     },
     resolve: (root, args) => addOrEditWork(args)
 };

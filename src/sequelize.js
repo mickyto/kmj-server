@@ -19,11 +19,10 @@ const sequelize = new Sequelize(
             collate: 'utf8_general_ci',
             timestamps: false,
             underscored: true,
-        }/*,
+        },
         dialectOptions: {
             useUTC: false //for reading from database
-        },
-        timezone: '+03:00'*/
+        }
     }
 );
 
@@ -321,6 +320,17 @@ const WorkTrainings = sequelize.define('work_trainings', {
     }
 });
 
+const PupilWorkGrades = sequelize.define('pupil_work_grades', {
+    id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
+    grade: {
+        type: Sequelize.INTEGER,
+    }
+});
+
 const WorkExecutions = sequelize.define('work_executions', {
     id: {
         type: Sequelize.INTEGER,
@@ -383,12 +393,15 @@ Trainings.belongsToMany(Works, { through: 'work_trainings' });
 Pupils.belongsToMany(Exercises, { through: 'work_executions' });
 Exercises.belongsToMany(Pupils, { through: 'work_executions' });
 
-Pupils.belongsToMany(Works, { through: 'pupil_works' });
-Works.belongsToMany(Pupils, { through: 'pupil_works' });
+Pupils.belongsToMany(Works, { through: 'pupil_works', as: 'works' });
+Works.belongsToMany(Pupils, { through: 'pupil_works', as: 'pupils' });
+
+Pupils.belongsToMany(Works, { through: 'pupil_work_grades', as: 'tasks' });
+Works.belongsToMany(Pupils, { through: 'pupil_work_grades', as: 'executors' });
 
 Groups.belongsToMany(Works, { through: 'group_works' });
 Works.belongsToMany(Groups, { through: 'group_works' });
 
 export { Op, Users, Clients, Pupils, Teachers, Groups, Formats, Subjects, Channels, TrainingGroups,
     Trainings, PupilTrainings, Themes, Tests, Exercises, Works, WorkContents, WorkExecutions,
-    WorkTrainings };
+    WorkTrainings, PupilWorkGrades };
