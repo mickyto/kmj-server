@@ -12,7 +12,7 @@ import { QueryPupilResults, MutationAddResult, MutationResetLevel } from './type
 import { CompileProgramMutation } from './types/compilation';
 import { QueryItems, QueryItem, MutationSetItem, MutationRemoveItem } from './types/items';
 import { QueryTrainingGroups, MutationSetTrainingGroup } from './types/trainingGroups';
-import { QueryWorks, QueryWork, MutationAddOrEditWork, MutationSortExercises } from './types/works';
+import { QueryWorks, QueryWork, MutationAddOrEditWork, MutationSortExercises, MutationSetGroupWorkDates } from './types/works';
 import { QueryExercises, QueryExercise, MutationAddOrEditExercise } from './types/exercises';
 
 const queryType = new GraphQLObjectType({
@@ -62,6 +62,7 @@ const MutationType = new GraphQLObjectType({
         addOrEditWork: MutationAddOrEditWork,
         addOrEditExercise: MutationAddOrEditExercise,
         sortExercises: MutationSortExercises,
+        setGroupWorkDates: MutationSetGroupWorkDates,
         magic: MutationMagic
     }
 });

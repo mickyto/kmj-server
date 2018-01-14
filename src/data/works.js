@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import Sequelize from 'sequelize';
 
 import config from "../../config";
-import { Works, Pupils, WorkContents, WorkTrainings, Groups, Op } from '../sequelize';
+import { Works, Pupils, WorkContents, WorkTrainings, Groups, GroupWorks } from '../sequelize';
 
 const getWorks = token => {
     return new Promise((resolve, reject) => {
@@ -178,20 +178,26 @@ const addOrEditWork = (args) => {
 
 const sortExercises = (args) => {
     return new Promise((resolve, reject) => {
+        WorkContents.findAll({ where: { work_id: args.id }})
+            .then(works => {
+                works.forEach(work => {
+                    const sort = args.sort.find(sort => sort.id == work.exercise_id);
+                    work.update({ sort: sort.order })
+                });
+            })
+            .catch(error => reject(error));
+        resolve(1)
+    })
+};
 
-        WorkContents.count({ where: { id: args.id }})
-            .then(count => {
-
-                if (count != 0) {
-                    args.sort.forEach(item => {
-                        WorkContents.update({ sort: item.order }, { where: { work_id: args.id, exercise_id: item.id }})
-                    });
-                }
-                else {
-                    args.sort.forEach(item => {
-                        WorkTrainings.update({ sort: item.order }, { where: { work_id: args.id, training_id: item.id }})
-                    });
-                }
+const setGroupWorkDates = (args) => {
+    return new Promise((resolve, reject) => {
+        GroupWorks.findAll({ where: { work_id: args.id }})
+            .then(groups => {
+                groups.forEach(group => {
+                    const date = args.dates.find(date => date.id == group.group_id);
+                    group.update({ date: new Date(date.date).toISOString() })
+                });
             })
             .catch(error => reject(error));
         resolve(1)
@@ -199,4 +205,4 @@ const sortExercises = (args) => {
 };
 
 export { getWorks, getWork, getWorkExercises, getWorkPupils, getWorkGroups,
-    getGroupPupils, addOrEditWork, sortExercises, getWorkTrainings };
+    getGroupPupils, addOrEditWork, sortExercises, getWorkTrainings, setGroupWorkDates };

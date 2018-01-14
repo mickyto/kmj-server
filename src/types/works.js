@@ -7,7 +7,7 @@ import {
     GraphQLInputObjectType
 } from 'graphql';
 import { getWorks, addOrEditWork, getWork, getWorkExercises, getWorkPupils,
-    getWorkGroups, sortExercises, getWorkTrainings, getGroupPupils } from '../data/works';
+    getWorkGroups, sortExercises, getWorkTrainings, getGroupPupils, setGroupWorkDates } from '../data/works';
 import { OperationType } from './common';
 import { ExerciseType } from './exercises';
 import { TrainingType } from './trainings';
@@ -68,6 +68,9 @@ const WorkType = new GraphQLObjectType({
         counts: {
             type: CountsType,
             resolve: ({ three, four, five }) => ({ three, four, five })
+        },
+        date: {
+            type: GraphQLString
         },
         error: {
             type: GraphQLString,
@@ -164,6 +167,9 @@ const MutationAddOrEditWork = {
         counts: {
             type: CountsInputType
         },
+        date: {
+            type: GraphQLString
+        },
         grades: {
             type: new GraphQLList(PupilGradeInputType),
         },
@@ -185,7 +191,7 @@ const SortType = new GraphQLInputObjectType({
 
 const MutationSortExercises = {
     type: OperationType,
-    description: 'Sort exercises of work',
+    description: 'Sort exercises or trainings of a work',
     args: {
         id: {
             type: new GraphQLNonNull(GraphQLInt)
@@ -197,4 +203,30 @@ const MutationSortExercises = {
     resolve: (root, args) => sortExercises(args)
 };
 
-export { WorkType, WorkContentType, QueryWorks, QueryWork, MutationAddOrEditWork, MutationSortExercises };
+const DateType = new GraphQLInputObjectType({
+    name: 'Date',
+    fields: {
+        id: {
+            type: GraphQLInt
+        },
+        date: {
+            type: GraphQLString
+        }
+    }
+});
+
+const MutationSetGroupWorkDates = {
+    type: OperationType,
+    description: 'Set dates when work has been given to groups',
+    args: {
+        id: {
+            type: new GraphQLNonNull(GraphQLInt)
+        },
+        dates: {
+            type: new GraphQLList(DateType)
+        }
+    },
+    resolve: (root, args) => setGroupWorkDates(args)
+};
+
+export { WorkType, WorkContentType, QueryWorks, QueryWork, MutationAddOrEditWork, MutationSortExercises, MutationSetGroupWorkDates };

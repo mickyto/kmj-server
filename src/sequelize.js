@@ -320,6 +320,18 @@ const WorkTrainings = sequelize.define('work_trainings', {
     }
 });
 
+const GroupWorks = sequelize.define('group_works', {
+    id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
+    date: {
+        type: Sequelize.DATE,
+        field: 'given_at'
+    }
+});
+
 const PupilWorkGrades = sequelize.define('pupil_work_grades', {
     id: {
         type: Sequelize.INTEGER,
@@ -404,4 +416,4 @@ Works.belongsToMany(Groups, { through: 'group_works' });
 
 export { Op, Users, Clients, Pupils, Teachers, Groups, Formats, Subjects, Channels, TrainingGroups,
     Trainings, PupilTrainings, Themes, Tests, Exercises, Works, WorkContents, WorkExecutions,
-    WorkTrainings, PupilWorkGrades };
+    WorkTrainings, PupilWorkGrades, GroupWorks };

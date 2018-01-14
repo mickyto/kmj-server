@@ -10,7 +10,7 @@ import { TeacherType } from './teachers';
 import { ItemType } from './items';
 import { FormatType } from './formats';
 import { PupilType } from './pupils';
-import { getGroups, getGroup, getGroupPupils, addOrEditGroup } from '../data/groups';
+import { getGroups, getGroup, getGroupPupils, addOrEditGroup, getGroupWorkDate } from '../data/groups';
 import { getTeacher } from '../data/teachers';
 import { getItem } from '../data/items';
 
@@ -61,6 +61,10 @@ const GroupType = new GraphQLObjectType({
         format: {
             type: FormatType,
             resolve: ({ format_id }) => getItem({ id: format_id, kind: 'formats' })
+        },
+        date: {
+            type: GraphQLString,
+            resolve: ({ id, group_works }) => getGroupWorkDate({ id, work: group_works.work_id })
         },
         pupils: {
             type: new GraphQLList(PupilType),

@@ -1,4 +1,4 @@
-import { Groups, Works, PupilWorkGrades } from '../sequelize';
+import { Groups, Works, GroupWorks } from '../sequelize';
 
 const getGroups = () => {
     return new Promise((resolve, reject) => {
@@ -28,6 +28,14 @@ const getGroupPupils = (id, work) => {
     })
 };
 
+const getGroupWorkDate = ({ id, work }) => {
+    return new Promise((resolve, reject) => {
+        GroupWorks.findOne({ where: { group_id: id, work_id: work }})
+            .then(item => resolve(item.date))
+            .catch(error => reject(error))
+    })
+};
+
 const addOrEditGroup = (args) => {
     return new Promise((resolve, reject) => {
 
@@ -44,4 +52,4 @@ const addOrEditGroup = (args) => {
     });
 };
 
-export { getGroups, getGroup, getGroupPupils, addOrEditGroup };
+export { getGroups, getGroup, getGroupPupils, addOrEditGroup, getGroupWorkDate };
