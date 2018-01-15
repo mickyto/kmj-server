@@ -16,12 +16,18 @@ const getGroup = (id) => {
     })
 };
 
-const getGroupPupils = (id, work) => {
+const getGroupPupils = (id, work, pupil) => {
     return new Promise((resolve, reject) => {
         Groups.findById(id)
             .then(group => {
-                if (work)
-                    return resolve(group.getPupils({ include: [{ model: Works, as: 'tasks', where: { id: work.work_id }}]}));
+                
+                if (work) {
+                    const query = { include: [{ model: Works, as: 'tasks', where: { id: work.work_id }}]};
+                    if (pupil)
+                        query.where = { id: pupil };
+
+                    return resolve(group.getPupils(query));
+                }
                 return resolve(group.getPupils())
             })
             .catch(error => reject(error))

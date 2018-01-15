@@ -63,7 +63,12 @@ const WorkType = new GraphQLObjectType({
         },
         groups: {
             type: new GraphQLList(GroupType),
-            resolve: ({ id }) => getWorkGroups(id)
+            args: {
+                pupil: {
+                    type: GraphQLInt
+                }
+            },
+            resolve: ({ id }, { pupil }) => getWorkGroups(id, pupil)
         },
         counts: {
             type: CountsType,

@@ -104,10 +104,19 @@ const getGroupPupils = (id, group) => {
     })
 };
 
-const getWorkGroups = (id) => {
+const getWorkGroups = (id, pupil) => {
     return new Promise((resolve, reject) => {
         Works.findById(id)
-            .then(work => resolve(work.getGroups()))
+            .then(work => work.getGroups({ include: [Pupils] })
+                .then(groups => {
+                    if (pupil){
+                        const exact = groups.find(group => group.pupils.find(item => item.id == pupil));
+                        if (exact)
+                            return resolve([exact])
+                    }
+                    return resolve(groups)
+                })
+            )
             .catch(error => reject(error))
     })
 };
