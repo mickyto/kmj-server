@@ -3,20 +3,19 @@ import jwt from 'jsonwebtoken';
 import config from "../../config";
 import { WorkExecutions } from '../sequelize';
 
-const getPupilExecution = (exerciseId, token) => {
+const getPupilExecution = (exerciseId, { pupil, token }) => {
     return new Promise((resolve, reject) => {
 
-        jwt.verify(token, config.secret, (err, decoded) => {
-            if (err) reject(err);
-            if (!decoded.id) {
-                resolve();
-                return;
-            }
+        let pupilId = pupil;
 
-            WorkExecutions.findOne({ where: { pupil_id: decoded.id, exercise_id: exerciseId }})
-                .then(executions => resolve(executions))
-                .catch(error => reject(error))
-        });
+        if (token) {
+            const decoded = jwt.verify(token, config.secret);
+            pupilId = decoded.id;
+        }
+
+        WorkExecutions.findOne({ where: { pupil_id: pupilId, exercise_id: exerciseId }})
+            .then(executions => resolve(executions))
+            .catch(error => reject(error))
     })
 };
 

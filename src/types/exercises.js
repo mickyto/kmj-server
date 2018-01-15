@@ -80,11 +80,14 @@ const ExerciseType = new GraphQLObjectType({
         pupilExecution: {
             type: WorkExecutionsType,
             args: {
+                pupil: {
+                    type: GraphQLInt
+                },
                 token: {
                     type: GraphQLString
                 }
             },
-            resolve: ({ id }, { token }) => getPupilExecution(id, token)
+            resolve: ({ id }, { pupil, token }) => getPupilExecution(id, { pupil, token })
         },
         error: {
             type: GraphQLString,

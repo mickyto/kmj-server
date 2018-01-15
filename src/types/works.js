@@ -69,9 +69,6 @@ const WorkType = new GraphQLObjectType({
             type: CountsType,
             resolve: ({ three, four, five }) => ({ three, four, five })
         },
-        date: {
-            type: GraphQLString
-        },
         error: {
             type: GraphQLString,
         }
@@ -93,11 +90,14 @@ const QueryWorks = {
     type: new GraphQLList(WorkType),
     description: 'Get all works or works of pupil',
     args: {
+        id: {
+            type: GraphQLInt
+        },
         token: {
             type: GraphQLString
         }
     },
-    resolve: (root, { token }) => getWorks(token)
+    resolve: (root, { id, token }) => getWorks({ id, token })
 };
 
 const PupilGradeInputType = new GraphQLInputObjectType({
@@ -166,9 +166,6 @@ const MutationAddOrEditWork = {
         },
         counts: {
             type: CountsInputType
-        },
-        date: {
-            type: GraphQLString
         },
         grades: {
             type: new GraphQLList(PupilGradeInputType),
