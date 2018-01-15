@@ -7,6 +7,13 @@ import { Works, Pupils, WorkContents, Groups, GroupWorks } from '../sequelize';
 const getWorks = ({ id, token }) => {
     return new Promise((resolve, reject) => {
 
+        if (!id && !token) {
+            Works.findAll()
+                .then(works => resolve(works))
+                .catch(error => reject(error));
+            return;
+        }
+
         let pupilId = id;
 
         if (token) {
