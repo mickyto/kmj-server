@@ -339,7 +339,7 @@ const PupilWorkGrades = sequelize.define('pupil_work_grades', {
         autoIncrement: true
     },
     grade: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
     }
 });
 

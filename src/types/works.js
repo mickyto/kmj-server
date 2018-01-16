@@ -112,7 +112,7 @@ const PupilGradeInputType = new GraphQLInputObjectType({
             type: GraphQLInt
         },
         grade: {
-            type: GraphQLInt
+            type: GraphQLString
         }
     }
 });

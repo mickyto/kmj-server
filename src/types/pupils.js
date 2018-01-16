@@ -120,7 +120,7 @@ const PupilType = new GraphQLObjectType({
             resolve: ({ client_id }) => getClient(client_id)
         },
         grade: {
-            type: GraphQLInt,
+            type: GraphQLString,
             resolve: ({ tasks }) => tasks[0].pupil_work_grades.grade
         },
         status: {
