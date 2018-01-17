@@ -4,24 +4,35 @@ import Sequelize from 'sequelize';
 import config from "../../config";
 import { Works, Pupils, WorkContents, Groups, GroupWorks } from '../sequelize';
 
-const getWorks = ({ id, token }) => {
+const getWorks = ({ id, token, group }) => {
     return new Promise((resolve, reject) => {
 
-        if (!id && !token) {
+        if (group == 0) {
+            Works.findAll({ include: [{ model: Pupils, as: 'pupils' }]})
+                .then(works => resolve(works.filter(work => work.pupils[0])))
+                .catch(error => reject(error));
+            return;
+        }
+
+        if (!id && !token && !group) {
             Works.findAll()
                 .then(works => resolve(works))
                 .catch(error => reject(error));
             return;
         }
 
-        let pupilId = id;
+        if (group) {
+            Groups.findById(group)
+                .then(group => resolve(group.getWorks()));
+            return;
+        }
 
         if (token) {
             const decoded = jwt.verify(token, config.secret);
-            pupilId = decoded.id;
+            id = decoded.id;
         }
 
-        Pupils.findById(pupilId, { include: [Groups] })
+        Pupils.findById(id, { include: [Groups] })
             .then(pupil => {
 
                 const promises = [pupil.getWorks()];

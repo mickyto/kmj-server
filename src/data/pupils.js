@@ -6,6 +6,13 @@ import { Pupils, Works, Groups } from '../sequelize';
 const getPupils = (show, group) => {
     return new Promise((resolve, reject) => {
 
+        if (group == 0) {
+            Pupils.findAll({ include: [{ model: Works, as: 'works' }]})
+                .then(pupils => resolve(pupils.filter(pupil => pupil.works[0])))
+                .catch(error => reject(error));
+            return;
+        }
+
         if (group) {
             Groups.findById(group)
                 .then(group => resolve(group.getPupils()))
