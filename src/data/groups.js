@@ -1,3 +1,6 @@
+import jwt from 'jsonwebtoken';
+
+import config from "../../config";
 import { Groups, Works, GroupWorks } from '../sequelize';
 
 const getGroups = () => {
@@ -16,15 +19,22 @@ const getGroup = (id) => {
     })
 };
 
-const getGroupPupils = (id, work, pupil) => {
+const getGroupPupils = (id, work, { pupil, token }) => {
     return new Promise((resolve, reject) => {
         Groups.findById(id)
             .then(group => {
-                
+
                 if (work) {
+
+                    let pupilId = pupil;
+                    if (token) {
+                        const decoded = jwt.verify(token, config.secret);
+                        pupilId = decoded.id;
+                    }
+
                     const query = { include: [{ model: Works, as: 'tasks', where: { id: work.work_id }}]};
-                    if (pupil)
-                        query.where = { id: pupil };
+                    if (pupilId)
+                        query.where = { id: pupilId };
 
                     return resolve(group.getPupils(query));
                 }

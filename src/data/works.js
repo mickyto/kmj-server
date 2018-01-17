@@ -111,13 +111,21 @@ const getGroupPupils = (id, group) => {
     })
 };
 
-const getWorkGroups = (id, pupil) => {
+const getWorkGroups = (id, { pupil, token }) => {
     return new Promise((resolve, reject) => {
+
+        let pupilId = pupil;
+
+        if (token) {
+            const decoded = jwt.verify(token, config.secret);
+            pupilId = decoded.id;
+        }
+
         Works.findById(id)
             .then(work => work.getGroups({ include: [Pupils] })
                 .then(groups => {
-                    if (pupil){
-                        const exact = groups.find(group => group.pupils.find(item => item.id == pupil));
+                    if (pupilId){
+                        const exact = groups.find(group => group.pupils.find(item => item.id == pupilId));
                         if (exact)
                             return resolve([exact])
                     }

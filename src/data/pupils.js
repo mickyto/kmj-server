@@ -1,3 +1,6 @@
+import jwt from 'jsonwebtoken';
+
+import config from "../../config";
 import { Pupils, Works, Groups } from '../sequelize';
 
 const getPupils = (show, group) => {
@@ -24,9 +27,17 @@ const getPupils = (show, group) => {
     })
 };
 
-const getPupil = id => {
+const getPupil = (id, token) => {
     return new Promise((resolve, reject) => {
-        Pupils.findById(id)
+
+        let pupilId = id;
+
+        if (token) {
+            const decoded = jwt.verify(token, config.secret);
+            pupilId = decoded.id;
+        }
+
+        Pupils.findById(pupilId)
             .then(pupil => resolve(pupil))
             .catch(error => reject(error));
     })

@@ -71,9 +71,12 @@ const GroupType = new GraphQLObjectType({
             args: {
                 pupil: {
                     type: GraphQLInt
+                },
+                token: {
+                    type: GraphQLString
                 }
             },
-            resolve: ({ id, group_works }, { pupil }) => getGroupPupils(id, group_works, pupil)
+            resolve: ({ id, group_works }, { pupil, token }) => getGroupPupils(id, group_works, { pupil, token })
         },
         error: {
             type: GraphQLString,

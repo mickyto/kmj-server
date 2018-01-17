@@ -152,9 +152,12 @@ const QueryPupil = {
     args: {
         id: {
             type: GraphQLInt
+        },
+        token: {
+            type: GraphQLString
         }
     },
-    resolve: (root, { id }) => getPupil(id)
+    resolve: (root, { id, token }) => getPupil(id, token)
 };
 
 const MutationAddOrEditPupil = {

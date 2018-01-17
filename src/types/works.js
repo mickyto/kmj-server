@@ -66,9 +66,12 @@ const WorkType = new GraphQLObjectType({
             args: {
                 pupil: {
                     type: GraphQLInt
+                },
+                token: {
+                    type: GraphQLString
                 }
             },
-            resolve: ({ id }, { pupil }) => getWorkGroups(id, pupil)
+            resolve: ({ id }, { pupil, token }) => getWorkGroups(id, { pupil, token })
         },
         counts: {
             type: CountsType,
