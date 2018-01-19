@@ -54,7 +54,8 @@ const TrainingType = new GraphQLObjectType({
                     type: GraphQLInt
                 }
             },
-            resolve: ({ id }, { token, pupilId }) => getResultsCount({ trainingId: id, token, pupilId })
+            resolve: ({ id, pupil_trainings }, { token, pupilId }) =>
+                getResultsCount({ trainingId: id, token, pupilId: pupil_trainings ? pupil_trainings.pupil_id : pupilId })
         },
         pupilTraining: {
             type: PupilTrainingResultsType,

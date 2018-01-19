@@ -72,12 +72,6 @@ const ExerciseType = new GraphQLObjectType({
             resolve: ({ id }) => getTestsByExerciseId(id)
         },
         work_executions: {
-            type: WorkExecutionsType
-        },
-        work_contents: {
-            type: WorkContentType
-        },
-        pupilExecution: {
             type: WorkExecutionsType,
             args: {
                 pupil: {
@@ -87,7 +81,11 @@ const ExerciseType = new GraphQLObjectType({
                     type: GraphQLString
                 }
             },
-            resolve: ({ id }, { pupil, token }) => getPupilExecution(id, { pupil, token })
+            resolve: ({ id, work_executions }, { pupil, token }) =>
+                work_executions ? work_executions : getPupilExecution(id, { pupil, token })
+        },
+        work_contents: {
+            type: WorkContentType
         },
         error: {
             type: GraphQLString,

@@ -6,7 +6,7 @@ import {
     GraphQLNonNull,
 } from 'graphql';
 
-import { getPupils, getPupil, addOrEditPupil, movePupil, getPupilGroups, getPupilExercises } from '../data/pupils';
+import { getPupils, getPupil, addOrEditPupil, movePupil, getPupilGroups, getPupilExercises, getPupilTrainings } from '../data/pupils';
 import { getClient } from '../data/clients';
 import { getPupilTrainingResults, getResultsCount } from '../data/trainingResults';
 import { OperationType } from './common';
@@ -14,6 +14,7 @@ import { GroupType } from './groups';
 import { ClientType } from './clients';
 import { ExerciseType } from './exercises';
 import { TrainingResultsType } from './trainingResults';
+import { TrainingType } from './trainings';
 
 const PupilTrainingResultsType = new GraphQLObjectType({
     name: 'PupilTrainingResults',
@@ -101,6 +102,15 @@ const PupilType = new GraphQLObjectType({
                 if (pupilId == id)
                     return getPupilTrainingResults({ pupilId: id, trainingId, offset, limit })
             }
+        },
+        trainings: {
+            type: new GraphQLList(TrainingType),
+            args: {
+                workId: {
+                    type: GraphQLInt
+                }
+            },
+            resolve: ({ id, pupil_works }, { workId }) => getPupilTrainings(id, workId || pupil_works.work_id)
         },
         exercises: {
             type: new GraphQLList(ExerciseType),

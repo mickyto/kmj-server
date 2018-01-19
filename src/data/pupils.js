@@ -83,6 +83,23 @@ const getPupilExercises = (id, workId) => {
     })
 };
 
+const getPupilTrainings = (id, workId) => {
+    return new Promise((resolve, reject) => {
+        Pupils.findById(id)
+            .then(pupil => pupil.getTrainings({ include: [ Works ] })
+                .then(trainings => {
+                    if (workId) {
+                        const filtered = trainings.filter(exercise => {
+                            return exercise.works.filter(work => work.id == workId).length > 0
+                        });
+                        return resolve(filtered)
+                    }
+                    return resolve(trainings)
+                }))
+            .catch(error => reject(error));
+    })
+};
+
 const addOrEditPupil = args => {
     return new Promise((resolve, reject) => {
 
@@ -133,4 +150,4 @@ const movePupil = ({ id, operation }) => {
     });
 };
 
-export { getPupils, getPupil, addOrEditPupil, movePupil, getPupilGroups, getPupilsByClientId, getPupilExercises };
+export { getPupils, getPupil, addOrEditPupil, movePupil, getPupilGroups, getPupilsByClientId, getPupilExercises, getPupilTrainings };
