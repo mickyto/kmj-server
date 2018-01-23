@@ -206,6 +206,9 @@ const Trainings = sequelize.define('trainings', {
         type: Sequelize.BOOLEAN,
         field: 'is_active'
     },
+    changeable: {
+        type: Sequelize.BOOLEAN
+    },
     speed: {
         type: Sequelize.FLOAT
     },

@@ -84,8 +84,8 @@ const TrainingType = new GraphQLObjectType({
         isActive: {
             type: GraphQLBoolean,
         },
-        error: {
-            type: GraphQLString,
+        changeable: {
+            type: GraphQLBoolean,
         }
     })
 });
@@ -138,6 +138,9 @@ const MutationAddOrEditTraining = {
             type: new GraphQLNonNull(GraphQLInt),
         },
         isActive: {
+            type: GraphQLBoolean,
+        },
+        changeable: {
             type: GraphQLBoolean,
         }
     },

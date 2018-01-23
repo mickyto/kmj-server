@@ -5,7 +5,7 @@ import {
     GraphQLList,
     GraphQLNonNull
 } from 'graphql';
-import { getPupilResults, addResult, resetLevel } from '../data/trainingResults';
+import { getPupilResults, addResult, changeStatus, resetLevel } from '../data/trainingResults';
 import { getPupil } from '../data/pupils';
 import { getTraining } from '../data/trainings';
 
@@ -87,6 +87,17 @@ const MutationAddResult = {
     resolve: (root, args) => addResult(args)
 };
 
+const MutationChangeStatus = {
+    type: OperationType,
+    description: 'Change training result status',
+    args: {
+        id: {
+            type: new GraphQLNonNull(GraphQLInt)
+        }
+    },
+    resolve: (root, { id }) => changeStatus(id)
+};
+
 const MutationResetLevel = {
     type: OperationType,
     description: 'Reset training level of pupil',
@@ -101,4 +112,4 @@ const MutationResetLevel = {
     resolve: (root, args) => resetLevel(args)
 };
 
-export { TrainingResultsType, QueryPupilResults, MutationAddResult, MutationResetLevel };
+export { TrainingResultsType, QueryPupilResults, MutationAddResult, MutationChangeStatus, MutationResetLevel };
