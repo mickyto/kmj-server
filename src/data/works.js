@@ -106,15 +106,15 @@ const getGroupPupils = (id, group) => {
     return new Promise((resolve, reject) => {
         Works.findById(id)
             .then(work => {
-                work.getGroups({ include: [Pupils], where: { id: group }}).then(groups => {
+                work.getGroups({ include: [{
+                    model: Pupils,
+                    attributes: ['id', 'fio']
+                }], where: { id: group }}).then(groups => {
 
-                    let pupils = [];
-                    if (groups[0]) {
-                        pupils = groups[0].pupils.map(pupil => {
+                    const pupils = groups[0] ? groups[0].pupils.map(pupil => {
                             pupil.pupil_works = groups[0].group_works;
                             return pupil
-                        });
-                    }
+                        }) : [];
                     return resolve(pupils)
                 })
             })

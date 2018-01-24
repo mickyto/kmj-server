@@ -28,7 +28,7 @@ const getResultsCount = ({ trainingId, pupilId, token }) => {
             attributes: ['status']
         })
             .then(results => {
-                let incorrect = 0, correct = 0, fixed = 0, exIncorrect = 0, exCorrect = 0, exFixed = 0, changed = 0;
+                let incorrect = 0, correct = 0, fixed = 0, exIncorrect = 0, exCorrect = 0, exFixed = 0, changed = 0, exChanged = 0;
                 for (let i = 0; i < results.length; i++) {
                     if (results[i].status == 0) incorrect++;
                     else if (results[i].status == 1) correct++;
@@ -37,8 +37,9 @@ const getResultsCount = ({ trainingId, pupilId, token }) => {
                     else if (results[i].status == 4) exCorrect++;
                     else if (results[i].status == 5) exFixed++;
                     else if (results[i].status == 6) changed++;
+                    else if (results[i].status == 9) exChanged++;
                 }
-                return resolve({ incorrect, correct, fixed, exIncorrect, exCorrect, exFixed, changed })
+                return resolve({ incorrect, correct, fixed, exIncorrect, exCorrect, exFixed, changed, exChanged })
             })
             .catch(error => reject(error));
     })
@@ -103,12 +104,12 @@ const resetLevel = args => {
         PupilTrainings.findAll({ where: {
             pupil_id: decoded.id,
             training_id: args.trainingId,
-            status: { [Op.lte]: 2 }
+            status: { [Op.or]: [{ [Op.lte]: 2 }, { [Op.eq]: 6 } ]}
         }})
             .then(results => {
                 results.forEach(result => {
-                    result.update({ status: Sequelize.literal('status +3') })
-                    resolve(1)
+                    result.update({ status: Sequelize.literal('status +3') });
+                    resolve(1);
                 })
             })
             .catch(error => reject(error));

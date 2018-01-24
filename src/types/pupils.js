@@ -52,6 +52,9 @@ const PupilTrainingResultsCountType = new GraphQLObjectType({
         changed: {
             type: GraphQLInt
         },
+        exChanged: {
+            type: GraphQLInt
+        },
     })
 });
 
