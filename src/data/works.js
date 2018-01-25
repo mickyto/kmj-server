@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import Sequelize from 'sequelize';
 
 import config from "../../config";
-import { Works, Pupils, WorkContents, Groups, GroupWorks } from '../sequelize';
+import { Works, Pupils, WorkContents, Groups, GroupWorks, Trainings, Exercises } from '../sequelize';
 
 const getWorks = ({ id, token, group }) => {
     return new Promise((resolve, reject) => {
@@ -23,7 +23,8 @@ const getWorks = ({ id, token, group }) => {
 
         if (group) {
             Groups.findById(group)
-                .then(group => resolve(group.getWorks()));
+                .then(group => group.getWorks({ include: [Exercises, Trainings], attribute: ['exercises', 'trainings'] })
+                    .then(works => resolve(works.filter(work => work.exercises[0] || work.trainings[0]))));
             return;
         }
 

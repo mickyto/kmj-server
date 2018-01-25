@@ -69,7 +69,10 @@ const getPupilsByClientId = id => {
 const getPupilExercises = (id, workId) => {
     return new Promise((resolve, reject) => {
         Pupils.findById(id)
-            .then(pupil => pupil.getExercises({ include: [ Works ] })
+            .then(pupil => pupil.getExercises({ include: [{
+                model: Works,
+                attributes: ['id']
+            }]})
                 .then(exercises => {
                     if (workId) {
                         const filtered = exercises.filter(exercise => {
@@ -86,7 +89,10 @@ const getPupilExercises = (id, workId) => {
 const getPupilTrainings = (id, workId) => {
     return new Promise((resolve, reject) => {
         Pupils.findById(id)
-            .then(pupil => pupil.getTrainings({ include: [ Works ] })
+            .then(pupil => pupil.getTrainings({ include: [{
+                model: Works,
+                attributes: ['id']
+            }]})
                 .then(trainings => {
                     if (workId) {
                         const filtered = trainings.filter(exercise => {
