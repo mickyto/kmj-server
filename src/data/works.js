@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import Sequelize from 'sequelize';
 
 import config from "../../config";
-import { Works, Pupils, WorkContents, Groups, GroupWorks, Trainings, Exercises } from '../sequelize';
+import { Works, Pupils, WorkContents, WorkTrainings, Groups, GroupWorks, Trainings, Exercises } from '../sequelize';
 
 const getWorks = ({ id, token, group }) => {
     return new Promise((resolve, reject) => {
@@ -199,12 +199,24 @@ const addOrEditWork = (args) => {
 
 const sortExercises = (args) => {
     return new Promise((resolve, reject) => {
-        WorkContents.findAll({ where: { work_id: args.id }})
-            .then(works => {
-                works.forEach(work => {
-                    const sort = args.sort.find(sort => sort.id == work.exercise_id);
-                    work.update({ sort: sort.order })
-                });
+        Works.findById(args.id)
+            .then(work => {
+                work.hasExercises(args.sort[0].id)
+                    .then(res => {
+                        if (res) {
+                            args.sort.forEach(sort => {
+                                WorkContents.update({ sort: sort.order }, { where: { work_id: args.id, exercise_id: sort.id }})
+                            })
+                        }
+                    });
+                work.hasTrainings(args.sort[0].id)
+                    .then(res => {
+                        if (res) {
+                            args.sort.forEach(sort => {
+                                WorkTrainings.update({ sort: sort.order }, { where: { work_id: args.id, training_id: sort.id }})
+                            })
+                        }
+                    });
             })
             .catch(error => reject(error));
         resolve(1)
