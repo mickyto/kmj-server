@@ -49,7 +49,7 @@ const getWorks = ({ id, token, group }) => {
     })
 };
 
-const getWork = (id) => {
+const getWork = id => {
     return new Promise((resolve, reject) => {
         Works.findById(id)
             .then(work => resolve(work))
@@ -57,7 +57,7 @@ const getWork = (id) => {
     })
 };
 
-const getWorkExercises = (id) => {
+const getWorkExercises = id => {
     return new Promise((resolve, reject) => {
         Works.findById(id)
             .then(work => resolve(
@@ -69,7 +69,7 @@ const getWorkExercises = (id) => {
     })
 };
 
-const getWorkTrainings = (id) => {
+const getWorkTrainings = id => {
     return new Promise((resolve, reject) => {
         Works.findById(id)
             .then(work => resolve(
@@ -144,7 +144,7 @@ const getWorkGroups = (id, { pupil, token }) => {
     })
 };
 
-const addOrEditWork = (args) => {
+const addOrEditWork = args => {
     return new Promise((resolve, reject) => {
 
         if (args.id) {
@@ -197,7 +197,7 @@ const addOrEditWork = (args) => {
     });
 };
 
-const sortExercises = (args) => {
+const sortExercises = args => {
     return new Promise((resolve, reject) => {
         Works.findById(args.id)
             .then(work => {
@@ -223,13 +223,13 @@ const sortExercises = (args) => {
     })
 };
 
-const setGroupWorkDates = (args) => {
+const setGroupWorkDates = args => {
     return new Promise((resolve, reject) => {
         GroupWorks.findAll({ where: { work_id: args.id }})
             .then(groups => {
                 groups.forEach(group => {
                     const date = args.dates.find(date => date.id == group.group_id);
-                    group.update({ date: new Date(date.date).toISOString() })
+                    group.update({ date: new Date(date.date) })
                 });
             })
             .catch(error => reject(error));
