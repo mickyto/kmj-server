@@ -7,13 +7,6 @@ import { Works, Pupils, WorkContents, Groups, GroupWorks, Trainings, Exercises }
 const getWorks = ({ id, token, group }) => {
     return new Promise((resolve, reject) => {
 
-        if (group == 0) {
-            Works.findAll({ include: [{ model: Pupils, as: 'pupils' }]})
-                .then(works => resolve(works.filter(work => work.pupils[0])))
-                .catch(error => reject(error));
-            return;
-        }
-
         if (!id && !token && !group) {
             Works.findAll()
                 .then(works => resolve(works))
@@ -23,8 +16,11 @@ const getWorks = ({ id, token, group }) => {
 
         if (group) {
             Groups.findById(group)
-                .then(group => group.getWorks({ include: [Exercises, Trainings], attribute: ['exercises', 'trainings'] })
-                    .then(works => resolve(works.filter(work => work.exercises[0] || work.trainings[0]))));
+                .then(group => group.getWorks({
+                        include: [Exercises, Trainings],
+                        order: [[Sequelize.literal('group_works.given_at'), 'ASC']]
+                    }).then(works => resolve(works.filter(work => work.exercises[0] || work.trainings[0])))
+                );
             return;
         }
 
@@ -113,9 +109,9 @@ const getGroupPupils = (id, group) => {
                 }], where: { id: group }}).then(groups => {
 
                     const pupils = groups[0] ? groups[0].pupils.map(pupil => {
-                            pupil.pupil_works = groups[0].group_works;
-                            return pupil
-                        }) : [];
+                        pupil.pupil_works = groups[0].group_works;
+                        return pupil
+                    }) : [];
                     return resolve(pupils)
                 })
             })
