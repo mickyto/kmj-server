@@ -2,15 +2,64 @@ import jwt from 'jsonwebtoken';
 import Sequelize from 'sequelize';
 
 import config from "../../config";
-import { Works, Pupils, WorkContents, WorkTrainings, Groups, GroupWorks, Trainings, Exercises } from '../sequelize';
+import { Works, Pupils, WorkContents, TrainingGroups, Groups, GroupWorks, Subjects, Trainings, Exercises, WorkTrainings } from '../sequelize';
 
-const getWorks = ({ id, token, group }) => {
+const getWorks = ({ id, token, group, type }) => {
     return new Promise((resolve, reject) => {
 
         if (!id && !token && !group) {
-            Works.findAll()
-                .then(works => resolve(works))
-                .catch(error => reject(error));
+
+            if (type === 'math')
+                Works.findAll({
+                    include: [{
+                        model: Trainings,
+                        required: true,
+                        include: [{
+                            model: TrainingGroups,
+                            required: true,
+                            include: [{
+                                model: Subjects,
+                                where: {
+                                    title: 'Математика'
+                                },
+                            }]
+                        }]
+                    }],
+                }).then(works => resolve(works))
+                    .catch(error => reject(error));
+            else if (type === 'inf')
+                Works.findAll({
+                    include: [{
+                        model: Exercises,
+                        required: true,
+                    }],
+                }).then(exerciseWorks => {
+                    Works.findAll({
+                        include: [{
+                            model: Trainings,
+                            required: true,
+                            include: [{
+                                model: TrainingGroups,
+                                required: true,
+                                include: [{
+                                    model: Subjects,
+                                    where: {
+                                        title: 'Информатика'
+                                    },
+                                }]
+                            }]
+                        }],
+                    }).then(trainingWorks => resolve([...exerciseWorks, ...trainingWorks]))
+                }).catch(error => reject(error));
+            else if (type === 'foreign')
+                Works.findAll({
+                    include: [{
+                        model: Pupils,
+                        as: 'executors',
+                        required: true
+                    }]
+                }).then(works => resolve(works))
+                    .catch(error => reject(error));
             return;
         }
 

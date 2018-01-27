@@ -106,9 +106,12 @@ const QueryWorks = {
         },
         group: {
             type: GraphQLInt
+        },
+        type: {
+            type: GraphQLString
         }
     },
-    resolve: (root, { id, token, group }) => getWorks({ id, token, group })
+    resolve: (root, args) => getWorks(args)
 };
 
 const PupilGradeInputType = new GraphQLInputObjectType({
