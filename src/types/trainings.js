@@ -8,9 +8,10 @@ import {
     GraphQLFloat
 } from 'graphql';
 import { getTrainings, getTraining, addOrEditTraining, getTrainingPupils } from '../data/trainings';
-import { getPupilTrainingResults, getResultsCount } from '../data/trainingResults';
+import { getPupilTrainingResults, getResultsCount, makeFavorite, checkFavorite } from '../data/trainingResults';
 import { getItem } from '../data/items';
 import { WorkContentType } from './works';
+import { OperationType } from './common';
 import { TrainingGroupType } from './trainingGroups';
 import { PupilType, PupilTrainingResultsType, PupilTrainingResultsCountType } from './pupils';
 
@@ -86,6 +87,15 @@ const TrainingType = new GraphQLObjectType({
         },
         changeable: {
             type: GraphQLBoolean,
+        },
+        favorite: {
+            type: GraphQLBoolean,
+            args: {
+                token: {
+                    type: GraphQLString
+                }
+            },
+            resolve: ({ id }, { token }) => checkFavorite(id, token)
         }
     })
 });
@@ -147,4 +157,18 @@ const MutationAddOrEditTraining = {
     resolve: (root, args) => addOrEditTraining(args)
 };
 
-export { TrainingType, QueryTrainings, QueryTraining, MutationAddOrEditTraining };
+const MutationMakeFavorite = {
+    type: OperationType,
+    description: 'Mark training as favorite',
+    args: {
+        token: {
+            type: new GraphQLNonNull(GraphQLString)
+        },
+        trainingId: {
+            type: new GraphQLNonNull(GraphQLInt)
+        }
+    },
+    resolve: (root, args) => makeFavorite(args)
+};
+
+export { TrainingType, QueryTrainings, QueryTraining, MutationMakeFavorite, MutationAddOrEditTraining };

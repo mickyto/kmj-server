@@ -69,19 +69,14 @@ const getPupilsByClientId = id => {
 const getPupilExercises = (id, workId) => {
     return new Promise((resolve, reject) => {
         Pupils.findById(id)
-            .then(pupil => pupil.getExercises({ include: [{
-                model: Works,
-                attributes: ['id']
-            }]})
-                .then(exercises => {
-                    if (workId) {
-                        const filtered = exercises.filter(exercise => {
-                            return exercise.works.filter(work => work.id == workId).length > 0
-                        });
-                        return resolve(filtered)
-                    }
-                    return resolve(exercises)
-                }))
+            .then(pupil => pupil.getExercises({
+                include: [{
+                    model: Works,
+                    where: { work_id: workId },
+                    attributes: [],
+                    required: true
+                }],
+            }).then(exercises => resolve(exercises)))
             .catch(error => reject(error));
     })
 };
@@ -89,19 +84,14 @@ const getPupilExercises = (id, workId) => {
 const getPupilTrainings = (id, workId) => {
     return new Promise((resolve, reject) => {
         Pupils.findById(id)
-            .then(pupil => pupil.getTrainings({ include: [{
-                model: Works,
-                attributes: ['id']
-            }]})
-                .then(trainings => {
-                    if (workId) {
-                        const filtered = trainings.filter(exercise => {
-                            return exercise.works.filter(work => work.id == workId).length > 0
-                        });
-                        return resolve(filtered)
-                    }
-                    return resolve(trainings)
-                }))
+            .then(pupil => pupil.getTrainings({
+                include: [{
+                    model: Works,
+                    where: { work_id: workId },
+                    attributes: [],
+                    required: true
+                }]
+            }).then(trainings => resolve(trainings)))
             .catch(error => reject(error));
     })
 };

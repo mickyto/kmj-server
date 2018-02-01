@@ -240,6 +240,14 @@ const PupilTrainings = sequelize.define('pupil_trainings', {
     }
 });
 
+const FavoriteTrainings = sequelize.define('favorite_trainings', {
+    id: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    }
+});
+
 const Themes = sequelize.define('themes', {
     id: {
         type: Sequelize.INTEGER,
@@ -393,8 +401,11 @@ TrainingGroups.belongsTo(Subjects);
 Groups.belongsToMany(Pupils, { through: 'pupil_groups' });
 Pupils.belongsToMany(Groups, { through: 'pupil_groups' });
 
-Trainings.belongsToMany(Pupils, { through: 'pupil_trainings' });
-Pupils.belongsToMany(Trainings, { through: 'pupil_trainings' });
+Trainings.belongsToMany(Pupils, { through: 'pupil_trainings', as: 'pupils' });
+Pupils.belongsToMany(Trainings, { through: 'pupil_trainings', as: 'trainings' });
+
+Trainings.belongsToMany(Pupils, { through: 'favorite_trainings', as: 'admirer' });
+Pupils.belongsToMany(Trainings, { through: 'favorite_trainings', as: 'favorites' });
 
 Exercises.hasMany(Tests);
 Exercises.belongsTo(Themes);
@@ -419,4 +430,4 @@ Works.belongsToMany(Groups, { through: 'group_works' });
 
 export { Op, Users, Clients, Pupils, Teachers, Groups, Formats, Subjects, Channels, TrainingGroups,
     Trainings, PupilTrainings, Themes, Tests, Exercises, Works, WorkContents, WorkExecutions,
-    WorkTrainings, PupilWorkGrades, GroupWorks };
+    WorkTrainings, PupilWorkGrades, GroupWorks, FavoriteTrainings };

@@ -13,6 +13,7 @@ const getWorks = ({ id, token, group, type }) => {
                 Works.findAll({
                     include: [{
                         model: Trainings,
+                        attributes: [],
                         required: true,
                         include: [{
                             model: TrainingGroups,
@@ -25,18 +26,24 @@ const getWorks = ({ id, token, group, type }) => {
                             }]
                         }]
                     }],
+                    attributes: ['id', 'title', [Sequelize.fn('COUNT', Sequelize.col('trainings.training_id')), 'trainingsCount']],
+                    group: ['works.work_id']
                 }).then(works => resolve(works))
                     .catch(error => reject(error));
             else if (type === 'inf')
                 Works.findAll({
                     include: [{
                         model: Exercises,
+                        attributes: [],
                         required: true,
                     }],
+                    attributes: ['id', 'title', [Sequelize.fn('COUNT', Sequelize.col('exercises.exercise_id')), 'exercisesCount']],
+                    group: ['works.work_id']
                 }).then(exerciseWorks => {
                     Works.findAll({
                         include: [{
                             model: Trainings,
+                            attributes: [],
                             required: true,
                             include: [{
                                 model: TrainingGroups,
@@ -49,12 +56,15 @@ const getWorks = ({ id, token, group, type }) => {
                                 }]
                             }]
                         }],
+                        attributes: ['id', 'title', [Sequelize.fn('COUNT', Sequelize.col('trainings.training_id')), 'trainingsCount']],
+                        group: ['works.work_id']
                     }).then(trainingWorks => resolve([...exerciseWorks, ...trainingWorks]))
                 }).catch(error => reject(error));
             else if (type === 'foreign')
                 Works.findAll({
                     include: [{
                         model: Pupils,
+                        attributes: [],
                         as: 'executors',
                         required: true
                     }]
@@ -64,12 +74,23 @@ const getWorks = ({ id, token, group, type }) => {
         }
 
         if (group) {
-            Groups.findById(group)
-                .then(group => group.getWorks({
-                        include: [Exercises, Trainings],
-                        order: [[Sequelize.literal('group_works.given_at'), 'ASC']]
-                    }).then(works => resolve(works.filter(work => work.exercises[0] || work.trainings[0])))
-                );
+            Works.findAll({
+                include: [
+                    { model: Trainings, attributes: [], as: 'trainings' },
+                    { model: Exercises, attributes: [] },
+                    { model: Groups, where: { id: group }, attributes: ['id']}
+                ],
+                attributes: { include: [
+                    [Sequelize.fn('COUNT', Sequelize.col('exercises.exercise_id')), 'exercisesCount'],
+                    [Sequelize.fn('COUNT', Sequelize.col('trainings.training_id')), 'trainingsCount']
+                ]},
+                group: ['works.work_id'],
+                order: [[Groups, GroupWorks, 'given_at', 'ASC']]
+            })
+                .then(works => resolve(
+                    works.filter(({ dataValues }) => dataValues.exercisesCount || dataValues.trainingsCount))
+                )
+                .catch(error => reject(error));
             return;
         }
 
@@ -81,8 +102,8 @@ const getWorks = ({ id, token, group, type }) => {
         Pupils.findById(id, { include: [Groups] })
             .then(pupil => {
 
-                const promises = [pupil.getWorks()];
-                pupil.groups.forEach(group => promises.push(group.getWorks()));
+                const promises = [pupil.getWorks({ include: [Exercises, Trainings] })];
+                pupil.groups.forEach(group => promises.push(group.getWorks({ include: [Exercises, Trainings] })));
                 Promise.all(promises).then(values => {
 
                     const works = [];
@@ -100,48 +121,17 @@ const getWorks = ({ id, token, group, type }) => {
 
 const getWork = id => {
     return new Promise((resolve, reject) => {
-        Works.findById(id)
+        Works.findById(id, {
+            include: [Exercises, Trainings],
+            order: [[Exercises, WorkContents, 'sort'], [Trainings, WorkTrainings, 'sort']]
+        })
             .then(work => resolve(work))
             .catch(error => reject(error))
     })
 };
 
-const getWorkExercises = id => {
+const getWorkPupils = id => {
     return new Promise((resolve, reject) => {
-        Works.findById(id)
-            .then(work => resolve(
-                work.getExercises(
-                    { order: [[ Sequelize.literal('work_contents.sort'), 'ASC' ]]})
-                )
-            )
-            .catch(error => reject(error))
-    })
-};
-
-const getWorkTrainings = id => {
-    return new Promise((resolve, reject) => {
-        Works.findById(id)
-            .then(work => resolve(
-                work.getTrainings(
-                    { order: [[ Sequelize.literal('work_trainings.sort'), 'ASC' ]]})
-                )
-            )
-            .catch(error => reject(error))
-    })
-};
-
-const getWorkPupils = (id, group) => {
-    return new Promise((resolve, reject) => {
-
-        if (group) {
-            Works.findById(id)
-                .then(work => resolve(work.getPupils({
-                    include: [{ model: Groups, where: { id: group }}]
-                })))
-                .catch(error => reject(error));
-            return;
-        }
-
         Works.findById(id)
             .then(work => resolve(work.getPupils()))
             .catch(error => reject(error))
@@ -150,20 +140,33 @@ const getWorkPupils = (id, group) => {
 
 const getGroupPupils = (id, group) => {
     return new Promise((resolve, reject) => {
-        Works.findById(id)
-            .then(work => {
-                work.getGroups({ include: [{
-                    model: Pupils,
-                    attributes: ['id', 'fio']
-                }], where: { id: group }}).then(groups => {
-
-                    const pupils = groups[0] ? groups[0].pupils.map(pupil => {
-                        pupil.pupil_works = groups[0].group_works;
-                        return pupil
-                    }) : [];
-                    return resolve(pupils)
-                })
-            })
+        Pupils.findAll({
+            attributes: ['id', 'fio', [Sequelize.fn('SUM', Sequelize.col('exercises->work_executions.status')), 'solvedCount']],
+            include: [{
+                model: Groups,
+                attributes: [],
+                where: { group_id: group }
+            },{
+                model: Exercises,
+                attributes: ['id'],
+                include: [{
+                    model: Works,
+                    attributes: [],
+                    where: { work_id: id }
+                }]
+            },{
+                model: Trainings,
+                as: 'trainings',
+                attributes: ['id'],
+                include: [{
+                    model: Works,
+                    attributes: [],
+                    where: { work_id: id }
+                }]
+            }],
+            group: ['pupils.pupil_id'],
+            required: true,
+        }).then(pupils => resolve(pupils))
             .catch(error => reject(error))
     })
 };
@@ -239,7 +242,6 @@ const addOrEditWork = args => {
                         work.addExecutor(item.id, { through: { grade: item.grade }})
                     })
                 }
-
                 resolve(work)
             })
             .catch(error => reject(error));
@@ -286,5 +288,9 @@ const setGroupWorkDates = args => {
     })
 };
 
-export { getWorks, getWork, getWorkExercises, getWorkPupils, getWorkGroups,
-    getGroupPupils, addOrEditWork, sortExercises, getWorkTrainings, setGroupWorkDates };
+export { getWorks, getWork, getWorkPupils, getWorkGroups,
+    getGroupPupils, addOrEditWork, sortExercises, setGroupWorkDates };
+
+
+
+

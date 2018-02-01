@@ -116,7 +116,7 @@ const PupilType = new GraphQLObjectType({
                     type: GraphQLInt
                 }
             },
-            resolve: ({ id, pupil_works }, { workId }) => getPupilTrainings(id, workId || pupil_works.work_id)
+            resolve: ({ id, pupil_works, trainings }, { workId }) => trainings || getPupilTrainings(id, workId || pupil_works.work_id)
         },
         exercises: {
             type: new GraphQLList(ExerciseType),
@@ -126,6 +126,10 @@ const PupilType = new GraphQLObjectType({
                 }
             },
             resolve: ({ id, pupil_works }, { workId }) => getPupilExercises(id, workId || pupil_works.work_id)
+        },
+        solvedCount: {
+            type: GraphQLInt,
+            resolve: ({ dataValues: { solvedCount }}) => solvedCount
         },
         groups: {
             type: new GraphQLList(GroupType),

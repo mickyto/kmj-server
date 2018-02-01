@@ -7,7 +7,7 @@ import { QueryPupils, MutationAddOrEditPupil, MutationMovePupil, QueryPupil } fr
 import { QueryTeachers, QueryTeacher, MutationAddOrEditTeacher } from './types/teachers';
 import { QueryGroups, QueryGroup, MutationAddOrEditGroup } from './types/groups';
 import { QueryFormats, MutationAddOrEditFormat } from './types/formats';
-import { QueryTrainings, QueryTraining, MutationAddOrEditTraining } from './types/trainings';
+import { QueryTrainings, QueryTraining, MutationAddOrEditTraining, MutationMakeFavorite } from './types/trainings';
 import { QueryPupilResults, MutationAddResult, MutationChangeStatus, MutationResetLevel } from './types/trainingResults';
 import { CompileProgramMutation } from './types/compilation';
 import { QueryItems, QueryItem, MutationSetItem, MutationRemoveItem } from './types/items';
@@ -54,6 +54,7 @@ const MutationType = new GraphQLObjectType({
         addOrEditFormat: MutationAddOrEditFormat,
         addOrEditTraining: MutationAddOrEditTraining,
         addTrainingResult: MutationAddResult,
+        makeFavorite: MutationMakeFavorite,
         changeStatus: MutationChangeStatus,
         resetLevel: MutationResetLevel,
         compileProgram: CompileProgramMutation,
