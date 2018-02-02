@@ -33,18 +33,10 @@ const Users = sequelize.define('users', {
         primaryKey: true,
         field: 'user_id'
     },
-    login: {
-        type: Sequelize.STRING
-    },
-    email: {
-        type: Sequelize.STRING,
-    },
-    password: {
-        type: Sequelize.STRING,
-    },
-    role: {
-        type: Sequelize.STRING
-    }
+    login: { type: Sequelize.STRING },
+    email: { type: Sequelize.STRING },
+    password: { type: Sequelize.STRING },
+    role: { type: Sequelize.STRING }
 });
 
 const Clients = sequelize.define('clients', {
@@ -54,24 +46,12 @@ const Clients = sequelize.define('clients', {
         autoIncrement: true,
         field: 'client_id'
     },
-    fio: {
-        type: Sequelize.STRING,
-    },
-    phone: {
-        type: Sequelize.STRING
-    },
-    email: {
-        type: Sequelize.STRING
-    },
-    location: {
-        type: Sequelize.STRING
-    },
-    description: {
-        type: Sequelize.INTEGER
-    },
-    status: {
-        type: Sequelize.STRING
-    }
+    fio: { type: Sequelize.STRING },
+    phone: { type: Sequelize.STRING },
+    email: { type: Sequelize.STRING },
+    location: { type: Sequelize.STRING },
+    description: { type: Sequelize.INTEGER },
+    status: { type: Sequelize.STRING }
 });
 
 const Pupils = sequelize.define('pupils', {
@@ -81,24 +61,12 @@ const Pupils = sequelize.define('pupils', {
         autoIncrement: true,
         field: 'pupil_id'
     },
-    fio: {
-        type: Sequelize.STRING,
-    },
-    phone: {
-        type: Sequelize.STRING
-    },
-    email: {
-        type: Sequelize.STRING
-    },
-    class: {
-        type: Sequelize.STRING
-    },
-    school: {
-        type: Sequelize.STRING
-    },
-    status: {
-        type: Sequelize.STRING
-    }
+    fio: { type: Sequelize.STRING },
+    phone: { type: Sequelize.STRING },
+    email: { type: Sequelize.STRING },
+    class: { type: Sequelize.STRING },
+    school: { type: Sequelize.STRING },
+    status: { type: Sequelize.STRING }
 });
 
 const Teachers = sequelize.define('teachers', {
@@ -108,24 +76,12 @@ const Teachers = sequelize.define('teachers', {
         autoIncrement: true,
         field: 'teacher_id'
     },
-    fio: {
-        type: Sequelize.STRING,
-    },
-    phone: {
-        type: Sequelize.STRING
-    },
-    email: {
-        type: Sequelize.STRING
-    },
-    age: {
-        type: Sequelize.STRING
-    },
-    education: {
-        type: Sequelize.STRING(1234)
-    },
-    description: {
-        type: Sequelize.STRING(1234)
-    }
+    fio: { type: Sequelize.STRING },
+    phone: { type: Sequelize.STRING },
+    email: { type: Sequelize.STRING },
+    age: { type: Sequelize.STRING },
+    education: { type: Sequelize.STRING },
+    description: { type: Sequelize.STRING }
 });
 
 const Groups = sequelize.define('groups', {
@@ -135,12 +91,8 @@ const Groups = sequelize.define('groups', {
         autoIncrement: true,
         field: 'group_id'
     },
-    title: {
-        type: Sequelize.STRING,
-    },
-    daysOfWeek: {
-        type: Sequelize.JSON ,
-    }
+    title: { type: Sequelize.STRING },
+    daysOfWeek: { type: Sequelize.JSON }
 });
 
 const Formats = sequelize.define('formats', {
@@ -150,18 +102,10 @@ const Formats = sequelize.define('formats', {
         autoIncrement: true,
         field: 'format_id'
     },
-    title: {
-        type: Sequelize.STRING,
-    },
-    priceForCycle: {
-        type: Sequelize.STRING,
-    },
-    countOfLessons: {
-        type: Sequelize.STRING,
-    },
-    duration: {
-        type: Sequelize.STRING,
-    }
+    title: { type: Sequelize.STRING },
+    priceForCycle: { type: Sequelize.STRING },
+    countOfLessons: { type: Sequelize.STRING },
+    duration: { type: Sequelize.STRING }
 });
 
 const Subjects = sequelize.define('subjects', {
@@ -170,9 +114,7 @@ const Subjects = sequelize.define('subjects', {
         primaryKey: true,
         autoIncrement: true
     },
-    title: {
-        type: Sequelize.STRING,
-    }
+    title: { type: Sequelize.STRING }
 });
 
 const Channels = sequelize.define('channels', {
@@ -181,9 +123,7 @@ const Channels = sequelize.define('channels', {
         primaryKey: true,
         autoIncrement: true
     },
-    title: {
-        type: Sequelize.STRING,
-    }
+    title: { type: Sequelize.STRING }
 });
 
 const Trainings = sequelize.define('trainings', {
@@ -193,28 +133,16 @@ const Trainings = sequelize.define('trainings', {
         autoIncrement: true,
         field: 'training_id'
     },
-    title: {
-        type: Sequelize.STRING,
-    },
-    action: {
-        type: Sequelize.STRING,
-    },
-    controller: {
-        type: Sequelize.STRING,
-    },
+    title: { type: Sequelize.STRING },
+    action: { type: Sequelize.STRING },
+    controller: { type: Sequelize.STRING },
     isActive: {
         type: Sequelize.BOOLEAN,
         field: 'is_active'
     },
-    changeable: {
-        type: Sequelize.BOOLEAN
-    },
-    speed: {
-        type: Sequelize.FLOAT
-    },
-    sort: {
-        type: Sequelize.INTEGER
-    }
+    changeable: { type: Sequelize.BOOLEAN },
+    speed: { type: Sequelize.FLOAT },
+    sort: { type: Sequelize.INTEGER }
 });
 
 const PupilTrainings = sequelize.define('pupil_trainings', {
@@ -223,21 +151,11 @@ const PupilTrainings = sequelize.define('pupil_trainings', {
         primaryKey: true,
         autoIncrement: true
     },
-    tex: {
-        type: Sequelize.STRING,
-    },
-    pupil_answer: {
-        type: Sequelize.STRING,
-    },
-    right_answer: {
-        type: Sequelize.STRING,
-    },
-    status: {
-        type: Sequelize.BOOLEAN,
-    },
-    date: {
-        type: Sequelize.STRING,
-    }
+    tex: { type: Sequelize.STRING },
+    pupil_answer: { type: Sequelize.STRING },
+    right_answer: { type: Sequelize.STRING },
+    status: { type: Sequelize.BOOLEAN },
+    date: { type: Sequelize.STRING }
 });
 
 const FavoriteTrainings = sequelize.define('favorite_trainings', {
@@ -254,9 +172,7 @@ const Themes = sequelize.define('themes', {
         primaryKey: true,
         autoIncrement: true
     },
-    title: {
-        type: Sequelize.STRING,
-    }
+    title: { type: Sequelize.STRING }
 });
 
 const TrainingGroups = sequelize.define('training_groups', {
@@ -265,9 +181,7 @@ const TrainingGroups = sequelize.define('training_groups', {
         primaryKey: true,
         autoIncrement: true
     },
-    title: {
-        type: Sequelize.STRING,
-    }
+    title: { type: Sequelize.STRING }
 });
 
 const Tests = sequelize.define('tests', {
@@ -277,15 +191,9 @@ const Tests = sequelize.define('tests', {
         autoIncrement: true,
         field: 'test_id'
     },
-    cin: {
-        type: Sequelize.STRING,
-    },
-    cout: {
-        type: Sequelize.STRING,
-    },
-    sort: {
-        type: Sequelize.INTEGER
-    }
+    cin: { type: Sequelize.STRING },
+    cout: { type: Sequelize.STRING },
+    sort: { type: Sequelize.INTEGER }
 });
 
 const Works = sequelize.define('works', {
@@ -295,18 +203,10 @@ const Works = sequelize.define('works', {
         autoIncrement: true,
         field: 'work_id'
     },
-    title: {
-        type: Sequelize.STRING,
-    },
-    three: {
-        type: Sequelize.INTEGER
-    },
-    four: {
-        type: Sequelize.INTEGER
-    },
-    five: {
-        type: Sequelize.INTEGER
-    }
+    title: { type: Sequelize.STRING },
+    three: { type: Sequelize.INTEGER },
+    four: { type: Sequelize.INTEGER },
+    five: { type: Sequelize.INTEGER }
 });
 
 const WorkContents = sequelize.define('work_contents', {
@@ -315,9 +215,7 @@ const WorkContents = sequelize.define('work_contents', {
         primaryKey: true,
         autoIncrement: true
     },
-    sort: {
-        type: Sequelize.INTEGER,
-    }
+    sort: { type: Sequelize.INTEGER }
 });
 
 const WorkTrainings = sequelize.define('work_trainings', {
@@ -326,9 +224,7 @@ const WorkTrainings = sequelize.define('work_trainings', {
         primaryKey: true,
         autoIncrement: true
     },
-    sort: {
-        type: Sequelize.INTEGER,
-    }
+    sort: { type: Sequelize.INTEGER }
 });
 
 const GroupWorks = sequelize.define('group_works', {
@@ -349,9 +245,7 @@ const PupilWorkGrades = sequelize.define('pupil_work_grades', {
         primaryKey: true,
         autoIncrement: true
     },
-    grade: {
-        type: Sequelize.STRING,
-    }
+    grade: { type: Sequelize.STRING }
 });
 
 const WorkExecutions = sequelize.define('work_executions', {
@@ -360,18 +254,10 @@ const WorkExecutions = sequelize.define('work_executions', {
         primaryKey: true,
         autoIncrement: true
     },
-    program: {
-        type: Sequelize.STRING,
-    },
-    attempt: {
-        type: Sequelize.INTEGER,
-    },
-    status: {
-        type: Sequelize.BOOLEAN,
-    },
-    date: {
-        type: Sequelize.DATE,
-    }
+    program: { type: Sequelize.STRING },
+    attempt: { type: Sequelize.INTEGER },
+    status: { type: Sequelize.BOOLEAN },
+    date: { type: Sequelize.DATE }
 });
 
 const Exercises = sequelize.define('exercises', {
@@ -381,12 +267,10 @@ const Exercises = sequelize.define('exercises', {
         autoIncrement: true,
         field: 'exercise_id'
     },
-    text: {
-        type: Sequelize.STRING,
-    },
-    code: {
-        type: Sequelize.STRING,
-    }
+    text: { type: Sequelize.STRING },
+    code: { type: Sequelize.STRING },
+    start: { type: Sequelize.STRING },
+    end: { type: Sequelize.STRING }
 });
 
 Pupils.belongsTo(Clients);

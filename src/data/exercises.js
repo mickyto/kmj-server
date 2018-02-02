@@ -30,7 +30,6 @@ const addOrEditExercise = (args) => {
     return new Promise((resolve, reject) => {
 
         if (args.id) {
-
             Tests.destroy({ where: { exercise_id: args.id }})
                 .then(() => {
                     args.tests.forEach(test => {
@@ -42,6 +41,8 @@ const addOrEditExercise = (args) => {
             Exercises.update({
                 text: args.text,
                 code: args.code,
+                start: args.start,
+                end: args.end,
                 theme_id: args.theme_id
             }, { where: { exercise_id: args.id }})
                 .then(res => resolve(res))
@@ -50,7 +51,7 @@ const addOrEditExercise = (args) => {
         }
 
         return resolve(Exercises.create(args, {
-            include: [ Tests ]
+            include: [Tests]
         }));
     })
 };

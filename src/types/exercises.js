@@ -63,6 +63,12 @@ const ExerciseType = new GraphQLObjectType({
         code: {
             type: GraphQLString,
         },
+        start: {
+            type: GraphQLString,
+        },
+        end: {
+            type: GraphQLString,
+        },
         theme: {
             type: ItemType,
             resolve: ({ theme_id }) => getItem({ id: theme_id, kind: 'themes' })
@@ -126,6 +132,12 @@ const MutationAddOrEditExercise = {
             type: GraphQLString,
         },
         code: {
+            type: GraphQLString,
+        },
+        start: {
+            type: GraphQLString,
+        },
+        end: {
             type: GraphQLString,
         },
         theme_id: {
