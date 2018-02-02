@@ -30,22 +30,32 @@ const compileProgram = ({ code, token, attempt, exercise_id }) => {
 
         const file = `tmp/${token}.cpp`;
 
-        fs.writeFile(file, code, () => {
-            Exercises.findById(exercise_id)
-                .then(exercise => {
+        Exercises.findById(exercise_id)
+            .then(exercise => {
 
-                    const decoded = jwt.verify(token, config.secret);
-                    const d = new Date();
-                    const utc = d.getTime() + (d.getTimezoneOffset() * 60000);
+                const decoded = jwt.verify(token, config.secret);
+                const d = new Date();
+                const utc = d.getTime() + (d.getTimezoneOffset() * 60000);
 
-                    exercise.addPupil(decoded.id, {
-                        through: {
-                            program: code,
-                            attempt,
-                            status: 0,
-                            date: new Date(utc + (3600000 * 3)).toISOString()
-                        }
-                    });
+                exercise.addPupil(decoded.id, {
+                    through: {
+                        program: code,
+                        attempt,
+                        status: 0,
+                        date: new Date(utc + (3600000 * 3)).toISOString()
+                    }
+                });
+
+                if (exercise.start) {
+                    if ((/float\s/).test(code) || (/int\s/).test(code)) {
+                        resolve({ error: 'Вы не можете объявлять новые переменные' });
+                        return;
+                    }
+                    else
+                        code = exercise.start + code + exercise.end;
+                }
+
+                fs.writeFile(file, code, () => {
 
                     exercise.getTests()
                         .then(tests => {
@@ -93,8 +103,8 @@ const compileProgram = ({ code, token, attempt, exercise_id }) => {
                             });
                         });
                 })
-                .catch(error => reject(error))
-        });
+            })
+            .catch(error => reject(error))
     })
 };
 
