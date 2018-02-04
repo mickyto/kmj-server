@@ -157,14 +157,14 @@ const getGroupPupils = (id, group) => {
             },{
                 model: Trainings,
                 as: 'trainings',
-                attributes: ['id'],
+                attributes: ['id', 'speed'],
                 include: [{
                     model: Works,
                     attributes: [],
                     where: { work_id: id }
                 }]
             }],
-            group: ['pupils.pupil_id'],
+            group: ['pupils.pupil_id', 'trainings.training_id'],
             required: true,
         }).then(pupils => resolve(pupils))
             .catch(error => reject(error))

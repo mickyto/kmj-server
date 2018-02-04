@@ -15,6 +15,7 @@ const getPupilResults = (id) => {
 const getResultsCount = ({ trainingId, pupilId, token }) => {
     return new Promise((resolve, reject) => {
 
+        if (!token && !pupilId) return resolve();
         if (token) {
             const pupilData = jwt.verify(token, config.secret);
             pupilId = pupilData.id;
@@ -64,7 +65,7 @@ const getPupilTrainingResults = ({ trainingId, pupilId, token, offset, limit }) 
     })
 };
 
-const addResult = (args) => {
+const addResult = args => {
     return new Promise((resolve, reject) => {
 
         if (!args.token)
@@ -118,6 +119,8 @@ const resetLevel = args => {
 
 const checkFavorite = (id, token) => {
     return new Promise((resolve, reject) => {
+
+        if (!token) return resolve();
 
         const decoded = jwt.verify(token, config.secret);
 
