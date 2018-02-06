@@ -7,7 +7,7 @@ import {
     GraphQLInputObjectType
 } from 'graphql';
 import { getWorks, addOrEditWork, getWork, getWorkPupils,
-    getWorkGroups, sortExercises, getGroupPupils, setGroupWorkDates } from '../data/works';
+    sortExercises, getGroupPupils, setGroupWorkDates } from '../data/works';
 import { OperationType } from './common';
 import { ExerciseType } from './exercises';
 import { TrainingType } from './trainings';
@@ -59,16 +59,7 @@ const WorkType = new GraphQLObjectType({
             resolve: ({ id }, { group }) => getGroupPupils(id, group)
         },
         groups: {
-            type: new GraphQLList(GroupType),
-            args: {
-                pupil: {
-                    type: GraphQLInt
-                },
-                token: {
-                    type: GraphQLString
-                }
-            },
-            resolve: ({ id }, { pupil, token }) => getWorkGroups(id, { pupil, token })
+            type: new GraphQLList(GroupType)
         },
         counts: {
             type: CountsType,

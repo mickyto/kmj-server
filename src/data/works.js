@@ -25,6 +25,9 @@ const getWorks = ({ id, token, group, type }) => {
                                 },
                             }]
                         }]
+                    }, {
+                        model: Groups,
+                        attributes: ['id', 'title'],
                     }],
                     attributes: ['id', 'title', [Sequelize.fn('COUNT', Sequelize.col('trainings.training_id')), 'trainingsCount']],
                     group: ['works.work_id']
@@ -76,7 +79,7 @@ const getWorks = ({ id, token, group, type }) => {
         if (group) {
             Works.findAll({
                 include: [
-                    { model: Trainings, attributes: [], as: 'trainings' },
+                    { model: Trainings, attributes: [] },
                     { model: Exercises, attributes: [] },
                     { model: Groups, where: { id: group }, attributes: ['id']}
                 ],
@@ -99,21 +102,24 @@ const getWorks = ({ id, token, group, type }) => {
             id = decoded.id;
         }
 
-        Pupils.findById(id, { include: [Groups] })
-            .then(pupil => {
-
-                const promises = [pupil.getWorks({ include: [Exercises, Trainings] })];
-                pupil.groups.forEach(group => promises.push(group.getWorks({ include: [Exercises, Trainings] })));
-                Promise.all(promises).then(values => {
-
-                    const works = [];
-                    values.forEach(values => values.forEach(value => {
-                        const flag = works.find(work => work.id == value.id);
-                        if (!flag)
-                            works.push(value)
-                    }));
-                    return resolve(works);
-                });
+        Works.findAll({
+            include: [
+                { model: Trainings },
+                { model: Exercises },
+                { model: Groups, include: [{
+                    model: Pupils, attributes: [], where: { id: id }
+                }], required: true}
+            ]
+        })
+            .then(groupWorks => {
+                Works.findAll({
+                    include: [
+                        { model: Trainings },
+                        { model: Exercises },
+                        { model: Pupils, attributes: [], as: 'pupils', where: { id }}
+                    ]
+                })
+                    .then(pupilWorks => resolve([...groupWorks, ...pupilWorks]))
             })
             .catch(error => reject(error));
     })
@@ -122,7 +128,7 @@ const getWorks = ({ id, token, group, type }) => {
 const getWork = id => {
     return new Promise((resolve, reject) => {
         Works.findById(id, {
-            include: [Exercises, Trainings],
+            include: [Exercises, Trainings, Groups],
             order: [[Exercises, WorkContents, 'sort'], [Trainings, WorkTrainings, 'sort']]
         })
             .then(work => resolve(work))
@@ -146,7 +152,7 @@ const getGroupPupils = (id, group) => {
                 model: Groups,
                 attributes: [],
                 where: { group_id: group }
-            },{
+            }, {
                 model: Exercises,
                 attributes: ['id'],
                 include: [{
@@ -154,7 +160,7 @@ const getGroupPupils = (id, group) => {
                     attributes: [],
                     where: { work_id: id }
                 }]
-            },{
+            }, {
                 model: Trainings,
                 as: 'trainings',
                 attributes: ['id', 'speed'],
@@ -167,31 +173,6 @@ const getGroupPupils = (id, group) => {
             group: ['pupils.pupil_id', 'trainings.training_id'],
             required: true,
         }).then(pupils => resolve(pupils))
-            .catch(error => reject(error))
-    })
-};
-
-const getWorkGroups = (id, { pupil, token }) => {
-    return new Promise((resolve, reject) => {
-
-        let pupilId = pupil;
-
-        if (token) {
-            const decoded = jwt.verify(token, config.secret);
-            pupilId = decoded.id;
-        }
-
-        Works.findById(id)
-            .then(work => work.getGroups({ include: [Pupils] })
-                .then(groups => {
-                    if (pupilId){
-                        const exact = groups.find(group => group.pupils.find(item => item.id == pupilId));
-                        if (exact)
-                            return resolve([exact])
-                    }
-                    return resolve(groups)
-                })
-            )
             .catch(error => reject(error))
     })
 };
@@ -288,8 +269,7 @@ const setGroupWorkDates = args => {
     })
 };
 
-export { getWorks, getWork, getWorkPupils, getWorkGroups,
-    getGroupPupils, addOrEditWork, sortExercises, setGroupWorkDates };
+export { getWorks, getWork, getWorkPupils, getGroupPupils, addOrEditWork, sortExercises, setGroupWorkDates };
 
 
 
