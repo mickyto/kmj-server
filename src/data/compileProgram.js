@@ -47,10 +47,10 @@ const compileProgram = ({ code, token, attempt, exercise_id }) => {
                 });
 
                 if (exercise.start) {
-                    if ((/float\s/).test(code) || (/int\s/).test(code)) {
-                        resolve({ error: 'Вы не можете объявлять новые переменные' });
-                        return;
-                    }
+                    if ((/float\s/).test(code) || (/int\s/).test(code))
+                        return resolve({ error: 'Вы не можете объявлять новые переменные' });
+                    else if ((/include/).test(code))
+                        return resolve({ error: 'В этом задании вам нужно составить лишь фрагмент кода, а не весь блок' });
                     else
                         code = exercise.start + code + exercise.end;
                 }

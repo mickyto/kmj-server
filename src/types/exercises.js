@@ -50,7 +50,6 @@ const TestOutputType = new GraphQLObjectType({
     }
 });
 
-
 const ExerciseType = new GraphQLObjectType({
     name: 'Exercises',
     fields: () => ({

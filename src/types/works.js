@@ -4,7 +4,8 @@ import {
     GraphQLInt,
     GraphQLList,
     GraphQLNonNull,
-    GraphQLInputObjectType
+    GraphQLInputObjectType,
+    GraphQLUnionType
 } from 'graphql';
 import { getWorks, addOrEditWork, getWork, getWorkPupils,
     sortExercises, getGroupPupils, setGroupWorkDates } from '../data/works';
@@ -15,7 +16,7 @@ import { PupilType } from './pupils';
 import { GroupType } from './groups';
 
 const WorkContentType = new GraphQLObjectType({
-    name: 'WorkContent',
+    name: 'WorkExercises',
     fields: {
         id: {
             type: GraphQLInt
@@ -23,6 +24,17 @@ const WorkContentType = new GraphQLObjectType({
         sort: {
             type: GraphQLString
         }
+    }
+});
+
+const WorkContentUnionType = new GraphQLUnionType({
+    name: 'WorkContent',
+    types: () => [ExerciseType, TrainingType],
+    resolveType: content => {
+        if ('code' in content)
+            return ExerciseType;
+        else if ('action' in content)
+            return TrainingType;
     }
 });
 
@@ -35,11 +47,9 @@ const WorkType = new GraphQLObjectType({
         title: {
             type: GraphQLString
         },
-        exercises: {
-            type: new GraphQLList(ExerciseType),
-        },
-        trainings: {
-            type: new GraphQLList(TrainingType),
+        content: {
+            type: new GraphQLList(WorkContentUnionType),
+            resolve: ({ exercises, trainings }) => exercises[0] ? exercises : trainings
         },
         contentCount: {
             type: GraphQLInt,
