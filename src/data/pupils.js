@@ -66,36 +66,6 @@ const getPupilsByClientId = id => {
     })
 };
 
-const getPupilExercises = (id, workId) => {
-    return new Promise((resolve, reject) => {
-        Pupils.findById(id)
-            .then(pupil => pupil.getExercises({
-                include: [{
-                    model: Works,
-                    where: { work_id: workId },
-                    attributes: [],
-                    required: true
-                }],
-            }).then(exercises => resolve(exercises)))
-            .catch(error => reject(error));
-    })
-};
-
-const getPupilTrainings = (id, workId) => {
-    return new Promise((resolve, reject) => {
-        Pupils.findById(id)
-            .then(pupil => pupil.getTrainings({
-                include: [{
-                    model: Works,
-                    where: { work_id: workId },
-                    attributes: [],
-                    required: true
-                }]
-            }).then(trainings => resolve(trainings)))
-            .catch(error => reject(error));
-    })
-};
-
 const addOrEditPupil = args => {
     return new Promise((resolve, reject) => {
 
@@ -146,4 +116,4 @@ const movePupil = ({ id, operation }) => {
     });
 };
 
-export { getPupils, getPupil, addOrEditPupil, movePupil, getPupilGroups, getPupilsByClientId, getPupilExercises, getPupilTrainings };
+export { getPupils, getPupil, addOrEditPupil, movePupil, getPupilGroups, getPupilsByClientId };

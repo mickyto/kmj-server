@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import Sequelize from 'sequelize';
 
 import config from "../../config";
-import { Works, Pupils, WorkContents, TrainingGroups, Groups, GroupWorks, Subjects, Trainings, Exercises, WorkTrainings } from '../sequelize';
+import { Op, Works, Pupils, WorkContents, TrainingGroups, Groups, GroupWorks, Subjects, Trainings, Exercises, WorkTrainings } from '../sequelize';
 
 const getWorks = ({ id, token, group, type }) => {
     return new Promise((resolve, reject) => {
@@ -108,7 +108,7 @@ const getWorks = ({ id, token, group, type }) => {
                 { model: Exercises },
                 { model: Groups, include: [{
                     model: Pupils, attributes: [], where: { id: id }
-                }], required: true}
+                }], required: true }
             ]
         })
             .then(groupWorks => {
@@ -146,34 +146,47 @@ const getWorkPupils = id => {
 
 const getGroupPupils = (id, group) => {
     return new Promise((resolve, reject) => {
-        Pupils.findAll({
-            attributes: ['id', 'fio', [Sequelize.fn('SUM', Sequelize.col('exercises->work_executions.status')), 'solvedCount']],
-            include: [{
-                model: Groups,
-                attributes: [],
-                where: { group_id: group }
-            }, {
-                model: Exercises,
-                attributes: ['id'],
-                include: [{
-                    model: Works,
-                    attributes: [],
-                    where: { work_id: id }
-                }]
-            }, {
-                model: Trainings,
-                as: 'trainings',
-                attributes: ['id', 'speed'],
-                include: [{
-                    model: Works,
-                    attributes: [],
-                    where: { work_id: id }
-                }]
-            }],
-            group: ['pupils.pupil_id', 'trainings.training_id'],
-            required: true,
-        }).then(pupils => resolve(pupils))
-            .catch(error => reject(error))
+
+        Works.count({ where: { id }, include: [{
+            model: Exercises, where: { start: { [Op.not]: '' }}, required: true
+        }]})
+            .then(count => {
+                const query = {
+                    attributes: ['id', 'fio',
+                        [Sequelize.fn('SUM', Sequelize.col('exercises->work_executions.status')), 'solvedCount']
+                    ],
+                    include: [{
+                        model: Groups,
+                        attributes: [],
+                        where: { group_id: group }
+                    }, {
+                        model: Exercises,
+                        attributes: ['id'],
+                        include: [{
+                            model: Works,
+                            attributes: [],
+                            where: { work_id: id }
+                        }]
+                    }, {
+                        model: Trainings,
+                        as: 'trainings',
+                        attributes: ['id', 'speed'],
+                        include: [{
+                            model: Works,
+                            attributes: [],
+                            where: { work_id: id }
+                        }]
+                    }],
+                    group: ['pupils.pupil_id', 'trainings.training_id'],
+                    required: true,
+                };
+
+                if (count != 0)
+                    query.attributes.push([Sequelize.fn('SUM', Sequelize.col('exercises->work_executions.attempt')), 'attemptCount']);
+
+                Pupils.findAll(query).then(pupils => resolve(pupils))
+                    .catch(error => reject(error))
+            });
     })
 };
 

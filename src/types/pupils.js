@@ -6,13 +6,12 @@ import {
     GraphQLNonNull,
 } from 'graphql';
 
-import { getPupils, getPupil, addOrEditPupil, movePupil, getPupilGroups, getPupilExercises, getPupilTrainings } from '../data/pupils';
+import { getPupils, getPupil, addOrEditPupil, movePupil, getPupilGroups } from '../data/pupils';
 import { getClient } from '../data/clients';
 import { getPupilTrainingResults, getResultsCount } from '../data/trainingResults';
 import { OperationType } from './common';
 import { GroupType } from './groups';
 import { ClientType } from './clients';
-import { ExerciseType } from './exercises';
 import { TrainingResultsType } from './trainingResults';
 import { TrainingType } from './trainings';
 
@@ -110,26 +109,15 @@ const PupilType = new GraphQLObjectType({
             }
         },
         trainings: {
-            type: new GraphQLList(TrainingType),
-            args: {
-                workId: {
-                    type: GraphQLInt
-                }
-            },
-            resolve: ({ id, pupil_works, trainings }, { workId }) => trainings || getPupilTrainings(id, workId || pupil_works.work_id)
-        },
-        exercises: {
-            type: new GraphQLList(ExerciseType),
-            args: {
-                workId: {
-                    type: GraphQLInt
-                }
-            },
-            resolve: ({ id, pupil_works }, { workId }) => getPupilExercises(id, workId || pupil_works.work_id)
+            type: new GraphQLList(TrainingType)
         },
         solvedCount: {
             type: GraphQLInt,
             resolve: ({ dataValues: { solvedCount }}) => solvedCount
+        },
+        attemptCount: {
+            type: GraphQLInt,
+            resolve: ({ dataValues: { attemptCount }}) => attemptCount
         },
         groups: {
             type: new GraphQLList(GroupType),
