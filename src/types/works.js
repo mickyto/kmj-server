@@ -47,6 +47,10 @@ const WorkType = new GraphQLObjectType({
         title: {
             type: GraphQLString
         },
+        subject: {
+            type: GraphQLInt,
+            resolve: ({ subject }) => subject && subject.id
+        },
         content: {
             type: new GraphQLList(WorkContentUnionType),
             resolve: ({ exercises, trainings }) => exercises[0] ? exercises : trainings
@@ -163,6 +167,9 @@ const MutationAddOrEditWork = {
         },
         title: {
             type: GraphQLString
+        },
+        subject: {
+            type: GraphQLInt
         },
         exercises: {
             type: new GraphQLList(GraphQLInt),

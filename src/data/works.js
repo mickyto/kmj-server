@@ -128,7 +128,7 @@ const getWorks = ({ id, token, group, type }) => {
 const getWork = id => {
     return new Promise((resolve, reject) => {
         Works.findById(id, {
-            include: [Exercises, Trainings, Groups],
+            include: [Exercises, Trainings, Subjects],
             order: [[Exercises, WorkContents, 'sort'], [Trainings, WorkTrainings, 'sort']]
         })
             .then(work => resolve(work))
@@ -202,6 +202,7 @@ const addOrEditWork = args => {
                     });
                     work.setPupils(args.pupils);
                     work.setGroups(args.groups);
+                    work.setSubject(args.subject);
 
                     if (args.exercises)
                         work.setExercises(args.exercises);
@@ -226,6 +227,7 @@ const addOrEditWork = args => {
             .then(work => {
                 work.addPupils(args.pupils);
                 work.addGroups(args.groups);
+                work.setSubject(args.subject);
 
                 if (args.exercises)
                     work.addExercises(args.exercises);
