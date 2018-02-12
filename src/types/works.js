@@ -73,6 +73,11 @@ const WorkType = new GraphQLObjectType({
             type: GraphQLInt,
             resolve: ({ executors }) => executors && executors[0] && executors[0].pupil_work_grades.grade
         },
+        type: {
+            type: GraphQLString,
+            resolve: ({ exercises, trainings, executors }) => exercises[0] ? 'exercises'
+                : trainings[0] ? 'trainings' : 'foreign'
+        },
         counts: {
             type: CountsType,
             resolve: ({ three, four, five }) => ({ three, four, five })
