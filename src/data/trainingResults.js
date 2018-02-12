@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import Sequelize from 'sequelize';
 
 import config from "../../config";
-import { PupilTrainings, Trainings, FavoriteTrainings, Op } from '../sequelize';
+import { PupilTrainings, FavoriteTrainings, Op } from '../sequelize';
 
 const getPupilResults = (id) => {
     return new Promise((resolve, reject) => {
@@ -22,26 +22,19 @@ const getResultsCount = ({ trainingId, pupilId, token }) => {
         }
 
         PupilTrainings.findAll({
-            where: {
-                pupil_id : pupilId,
-                training_id: trainingId
-            },
-            attributes: ['status']
+            where: { pupil_id : pupilId, training_id: trainingId },
+            attributes: [
+                [Sequelize.fn('SUM', Sequelize.literal('case when status=0 then 1 end')), 'incorrect'],
+                [Sequelize.fn('SUM', Sequelize.literal('case when status=1 then 1 end')), 'correct'],
+                [Sequelize.fn('SUM', Sequelize.literal('case when status=2 then 1 end')), 'fixed'],
+                [Sequelize.fn('SUM', Sequelize.literal('case when status=3 then 1 end')), 'exIncorrect'],
+                [Sequelize.fn('SUM', Sequelize.literal('case when status=4 then 1 end')), 'exCorrect'],
+                [Sequelize.fn('SUM', Sequelize.literal('case when status=5 then 1 end')), 'exFixed'],
+                [Sequelize.fn('SUM', Sequelize.literal('case when status=6 then 1 end')), 'changed'],
+                [Sequelize.fn('SUM', Sequelize.literal('case when status=9 then 1 end')), 'exChanged']
+            ]
         })
-            .then(results => {
-                let incorrect = 0, correct = 0, fixed = 0, exIncorrect = 0, exCorrect = 0, exFixed = 0, changed = 0, exChanged = 0;
-                for (let i = 0; i < results.length; i++) {
-                    if (results[i].status == 0) incorrect++;
-                    else if (results[i].status == 1) correct++;
-                    else if (results[i].status == 2) fixed++;
-                    else if (results[i].status == 3) exIncorrect++;
-                    else if (results[i].status == 4) exCorrect++;
-                    else if (results[i].status == 5) exFixed++;
-                    else if (results[i].status == 6) changed++;
-                    else if (results[i].status == 9) exChanged++;
-                }
-                return resolve({ incorrect, correct, fixed, exIncorrect, exCorrect, exFixed, changed, exChanged })
-            })
+            .then(results => resolve(results[0].dataValues))
             .catch(error => reject(error));
     })
 };

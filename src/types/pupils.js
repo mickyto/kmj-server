@@ -2,18 +2,19 @@ import {
     GraphQLObjectType,
     GraphQLString,
     GraphQLInt,
+    GraphQLFloat,
     GraphQLList,
     GraphQLNonNull,
 } from 'graphql';
 
-import { getPupils, getPupil, addOrEditPupil, movePupil, getPupilGroups } from '../data/pupils';
+import { getPupils, getPupil, addOrEditPupil, movePupil, getPupilGroups, getTrainingWorkResults } from '../data/pupils';
 import { getClient } from '../data/clients';
 import { getPupilTrainingResults, getResultsCount } from '../data/trainingResults';
 import { OperationType } from './common';
 import { GroupType } from './groups';
 import { ClientType } from './clients';
 import { TrainingResultsType } from './trainingResults';
-import { TrainingType } from './trainings';
+
 
 const PupilTrainingResultsType = new GraphQLObjectType({
     name: 'PupilTrainingResults',
@@ -29,7 +30,7 @@ const PupilTrainingResultsType = new GraphQLObjectType({
 
 const PupilTrainingResultsCountType = new GraphQLObjectType({
     name: 'PupilTrainingResultsCount',
-    fields: () => ({
+    fields: {
         incorrect: {
             type: GraphQLInt
         },
@@ -54,7 +55,22 @@ const PupilTrainingResultsCountType = new GraphQLObjectType({
         exChanged: {
             type: GraphQLInt
         },
-    })
+    }
+});
+
+const TrainingWorkType = new GraphQLObjectType({
+    name: 'TrainingWork',
+    fields: {
+        levelCount: {
+            type: GraphQLInt
+        },
+        solved: {
+            type: GraphQLInt
+        },
+        plusLevel: {
+            type: GraphQLInt
+        }
+    }
 });
 
 const PupilType = new GraphQLObjectType({
@@ -108,16 +124,17 @@ const PupilType = new GraphQLObjectType({
                     return getPupilTrainingResults({ pupilId: id, trainingId, offset, limit })
             }
         },
-        trainings: {
-            type: new GraphQLList(TrainingType)
+        trainingWork: {
+            type: TrainingWorkType,
+            resolve: ({ trainings }) => getTrainingWorkResults(trainings)
         },
         solvedCount: {
             type: GraphQLInt,
             resolve: ({ dataValues: { solvedCount }}) => solvedCount
         },
-        attemptCount: {
-            type: GraphQLInt,
-            resolve: ({ dataValues: { attemptCount }}) => attemptCount
+        points: {
+            type: GraphQLFloat,
+            resolve: ({ dataValues: { points }}) => points
         },
         groups: {
             type: new GraphQLList(GroupType),

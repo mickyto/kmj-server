@@ -2,18 +2,20 @@ import {
     GraphQLObjectType,
     GraphQLString,
     GraphQLInt,
+    GraphQLBoolean,
     GraphQLList,
     GraphQLNonNull,
     GraphQLInputObjectType,
     GraphQLUnionType
 } from 'graphql';
-import { getWorks, addOrEditWork, getWork, getWorkPupils,
-    sortExercises, getGroupPupils, setGroupWorkDates } from '../data/works';
+import { getItem } from '../data/items';
+import { getWorks, addOrEditWork, getWork, getWorkPupils, sortExercises, setGroupWorkDates } from '../data/works';
 import { OperationType } from './common';
 import { ExerciseType } from './exercises';
 import { TrainingType } from './trainings';
 import { PupilType } from './pupils';
 import { GroupType } from './groups';
+import { ItemType } from './items';
 
 const WorkContentType = new GraphQLObjectType({
     name: 'WorkExercises',
@@ -48,8 +50,8 @@ const WorkType = new GraphQLObjectType({
             type: GraphQLString
         },
         subject: {
-            type: GraphQLInt,
-            resolve: ({ subject }) => subject && subject.id
+            type: ItemType,
+            resolve: ({ subject_id }) => getItem({ id: subject_id, kind: 'subjects' })
         },
         content: {
             type: new GraphQLList(WorkContentUnionType),
@@ -61,19 +63,15 @@ const WorkType = new GraphQLObjectType({
         },
         pupils: {
             type: new GraphQLList(PupilType),
-            resolve: ({ id }) => getWorkPupils(id)
-        },
-        groupPupils: {
-            type: new GraphQLList(PupilType),
-            args: {
-                group: {
-                    type: GraphQLInt
-                }
-            },
-            resolve: ({ id }, { group }) => getGroupPupils(id, group)
+            resolve: ({ id, groups, pupils = [] }) =>
+                getWorkPupils({ id, group: groups && groups[0].id, pupil: groups && groups[0].pupils ? groups[0].pupils[0].id : pupils[0] && pupils[0].id })
         },
         groups: {
             type: new GraphQLList(GroupType)
+        },
+        grade: {
+            type: GraphQLInt,
+            resolve: ({ executors }) => executors && executors[0] && executors[0].pupil_work_grades.grade
         },
         counts: {
             type: CountsType,
@@ -111,6 +109,9 @@ const QueryWorks = {
         },
         type: {
             type: GraphQLString
+        },
+        withForeign: {
+            type: GraphQLBoolean,
         }
     },
     resolve: (root, args) => getWorks(args)

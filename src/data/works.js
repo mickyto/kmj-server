@@ -4,7 +4,7 @@ import Sequelize from 'sequelize';
 import config from "../../config";
 import { Op, Works, Pupils, WorkContents, TrainingGroups, Groups, GroupWorks, Subjects, Trainings, Exercises, WorkTrainings } from '../sequelize';
 
-const getWorks = ({ id, token, group, type }) => {
+const getWorks = ({ id, token, group, type, withForeign }) => {
     return new Promise((resolve, reject) => {
 
         if (!id && !token && !group) {
@@ -83,16 +83,18 @@ const getWorks = ({ id, token, group, type }) => {
                     { model: Exercises, attributes: [] },
                     { model: Groups, where: { id: group }, attributes: ['id']}
                 ],
+                where: { [Op.or]: [
+                    { id: Sequelize.col('exercises->work_contents.work_id') },
+                    { id: Sequelize.col('trainings->work_trainings.work_id') }
+                ]},
                 attributes: { include: [
                     [Sequelize.fn('COUNT', Sequelize.col('exercises.exercise_id')), 'exercisesCount'],
                     [Sequelize.fn('COUNT', Sequelize.col('trainings.training_id')), 'trainingsCount']
                 ]},
                 group: ['works.work_id'],
-                order: [[Groups, GroupWorks, 'given_at', 'ASC']]
+                order: [[Groups, GroupWorks, 'given_at', 'ASC']],
             })
-                .then(works => resolve(
-                    works.filter(({ dataValues }) => dataValues.exercisesCount || dataValues.trainingsCount))
-                )
+                .then(works => resolve(works))
                 .catch(error => reject(error));
             return;
         }
@@ -102,24 +104,45 @@ const getWorks = ({ id, token, group, type }) => {
             id = decoded.id;
         }
 
-        Works.findAll({
+        const query = {
             include: [
-                { model: Trainings },
+                { model: Trainings/*, attributes: ['id', 'speed', 'training_group_id'], through: { attributes: [] }*/},
                 { model: Exercises },
-                { model: Groups, include: [{
-                    model: Pupils, attributes: [], where: { id: id }
+            ],
+            attributes: { include: [
+                [Sequelize.fn('COUNT', Sequelize.col('exercises.exercise_id')), 'exercisesCount'],
+                [Sequelize.fn('COUNT', Sequelize.col('trainings.training_id')), 'trainingsCount']
+            ]},
+            group: ['works.work_id'],
+        };
+
+        if (!withForeign)
+            query.where = {
+                [Op.or]: [
+                    {id: Sequelize.col('exercises->work_contents.work_id')},
+                    {id: Sequelize.col('trainings->work_trainings.work_id')}
+                ]
+            };
+        else
+            query.include.push(
+                { model: Pupils, as: 'executors', attributes: ['id'], through: { attributes: ['grade'] }, where: { id: id }, required: false }
+            );
+
+        Works.findAll({
+            ...query, include: [
+                ...query.include,
+                { model: Groups, attributes: ['id', 'title'], through: { attributes: ['id', 'work_id'] }, include: [{
+                    model: Pupils, where: { id }, attributes: ['id'], through: { attributes: [] }
                 }], required: true }
             ]
-        })
-            .then(groupWorks => {
+        }).then(groupWorks => {
+
                 Works.findAll({
-                    include: [
-                        { model: Trainings },
-                        { model: Exercises },
-                        { model: Pupils, attributes: [], as: 'pupils', where: { id }}
+                    ...query, include: [
+                        ...query.include,
+                        { model: Pupils, as: 'pupils', where: { id }, attributes: ['id'], through: { attributes: ['work_id'] }}
                     ]
-                })
-                    .then(pupilWorks => resolve([...groupWorks, ...pupilWorks]))
+                }).then(pupilWorks => resolve([...groupWorks, ...pupilWorks]))
             })
             .catch(error => reject(error));
     })
@@ -128,7 +151,7 @@ const getWorks = ({ id, token, group, type }) => {
 const getWork = id => {
     return new Promise((resolve, reject) => {
         Works.findById(id, {
-            include: [Exercises, Trainings, Subjects],
+            include: [Exercises, Trainings, Subjects, Groups],
             order: [[Exercises, WorkContents, 'sort'], [Trainings, WorkTrainings, 'sort']]
         })
             .then(work => resolve(work))
@@ -136,57 +159,58 @@ const getWork = id => {
     })
 };
 
-const getWorkPupils = id => {
+const getWorkPupils = ({ id, group, pupil }) => {
     return new Promise((resolve, reject) => {
-        Works.findById(id)
-            .then(work => resolve(work.getPupils()))
-            .catch(error => reject(error))
-    })
-};
 
-const getGroupPupils = (id, group) => {
-    return new Promise((resolve, reject) => {
+        if (!group && !pupil)
+            Works.findById(id)
+                .then(work => resolve(work.getPupils()))
+                .catch(error => reject(error));
 
         Works.count({ where: { id }, include: [{
-            model: Exercises, where: { start: { [Op.not]: '' }}, required: true
+            model: Exercises, where: { start: { [Op.not]: '' }}
         }]})
             .then(count => {
                 const query = {
                     attributes: ['id', 'fio',
-                        [Sequelize.fn('SUM', Sequelize.col('exercises->work_executions.status')), 'solvedCount']
+                        [Sequelize.fn('COUNT', Sequelize.col('exercises->work_executions.status')), 'solvedCount']
                     ],
                     include: [{
-                        model: Groups,
-                        attributes: [],
-                        where: { group_id: group }
-                    }, {
                         model: Exercises,
-                        attributes: ['id'],
-                        include: [{
-                            model: Works,
-                            attributes: [],
-                            where: { work_id: id }
-                        }]
+                        attributes: [],
+                        through: { where: { status: true }},
+                        include: [{ model: Works, attributes: [], where: { work_id: id }}]
                     }, {
                         model: Trainings,
                         as: 'trainings',
-                        attributes: ['id', 'speed'],
-                        include: [{
-                            model: Works,
-                            attributes: [],
-                            where: { work_id: id }
-                        }]
+                        attributes: ['id', 'speed',
+                            [Sequelize.fn('SUM', Sequelize.literal('case when `trainings->pupil_trainings`.`status`=0 then 1 end')), 'incorrect'],
+                            [Sequelize.fn('SUM', Sequelize.literal('case when `trainings->pupil_trainings`.`status`=1 then 1 end')), 'correct'],
+                            [Sequelize.fn('SUM', Sequelize.literal('case when `trainings->pupil_trainings`.`status`=6 then 1 end')), 'changed'],
+                        ],
+                        through: { attributes: [] },
+                        include: [{ model: Works, attributes: [], where: { work_id: id }}]
                     }],
                     group: ['pupils.pupil_id', 'trainings.training_id'],
                     required: true,
                 };
 
-                if (count != 0)
-                    query.attributes.push([Sequelize.fn('SUM', Sequelize.col('exercises->work_executions.attempt')), 'attemptCount']);
+                if (pupil)
+                    query.where = { id: pupil };
+                else
+                    query.include.push(
+                        { model: Groups, attributes: [], where: { group_id: group }}
+                    );
 
-                Pupils.findAll(query).then(pupils => resolve(pupils))
+                if (count != 0)
+                    query.attributes.push(
+                        [Sequelize.fn('SUM', Sequelize.literal('case when attempt = 1 then 2 when attempt = 2 then 1.5 else 1 end')), 'points']
+                    );
+
+                Pupils.findAll(query)
+                    .then(pupils => resolve(pupils))
                     .catch(error => reject(error))
-            });
+            }).catch(error => reject(error));
     })
 };
 
@@ -284,7 +308,7 @@ const setGroupWorkDates = args => {
     })
 };
 
-export { getWorks, getWork, getWorkPupils, getGroupPupils, addOrEditWork, sortExercises, setGroupWorkDates };
+export { getWorks, getWork, getWorkPupils, addOrEditWork, sortExercises, setGroupWorkDates };
 
 
 

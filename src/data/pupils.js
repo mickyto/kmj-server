@@ -66,6 +66,23 @@ const getPupilsByClientId = id => {
     })
 };
 
+const getTrainingWorkResults = trainings => {
+
+    let solved = 0, levelCount = 0, plusLevel = 0;
+
+    trainings.forEach(({ dataValues : { correct, incorrect, changed, speed }}) => {
+
+        speed = speed || 1;
+        const primaryLavel = Math.floor(1 + speed * ((+correct||0) + (+changed || 0) - 2 * (+incorrect || 0)));
+        const level = primaryLavel < 0 ? 0 : primaryLavel > 20 ? 20 : primaryLavel;
+        plusLevel += level;
+        if (level >= 10) { ++solved; levelCount += 10 }
+        else levelCount += level;
+    });
+
+    return { solved, levelCount, plusLevel };
+};
+
 const addOrEditPupil = args => {
     return new Promise((resolve, reject) => {
 
@@ -116,4 +133,4 @@ const movePupil = ({ id, operation }) => {
     });
 };
 
-export { getPupils, getPupil, addOrEditPupil, movePupil, getPupilGroups, getPupilsByClientId };
+export { getPupils, getPupil, addOrEditPupil, movePupil, getPupilGroups, getPupilsByClientId, getTrainingWorkResults };
