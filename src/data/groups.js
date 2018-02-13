@@ -19,25 +19,14 @@ const getGroup = (id) => {
     })
 };
 
-const getGroupPupils = (id, work, { pupil, token }) => {
+const getGroupPupils = (id, work) => {
     return new Promise((resolve, reject) => {
         Groups.findById(id)
             .then(group => {
-
-                if (work) {
-
-                    let pupilId = pupil;
-                    if (token) {
-                        const decoded = jwt.verify(token, config.secret);
-                        pupilId = decoded.id;
-                    }
-
-                    const query = { include: [{ model: Works, as: 'tasks', where: { id: work.work_id }}]};
-                    if (pupilId)
-                        query.where = { id: pupilId };
-
-                    return resolve(group.getPupils(query));
-                }
+                if (work)
+                    return resolve(group.getPupils({ include: [
+                        { model: Works, as: 'tasks', where: { id: work.work_id }}
+                    ]}));
                 return resolve(group.getPupils())
             })
             .catch(error => reject(error))

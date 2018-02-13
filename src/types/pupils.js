@@ -146,7 +146,7 @@ const PupilType = new GraphQLObjectType({
         },
         grade: {
             type: GraphQLString,
-            resolve: ({ tasks }) => tasks[0].pupil_work_grades.grade
+            resolve: ({ tasks }) => tasks[0] && tasks[0].pupil_work_grades.grade
         },
         status: {
             type: GraphQLString

@@ -148,10 +148,18 @@ const getWorks = ({ id, token, group, type, withForeign }) => {
     })
 };
 
+const getWorkGroups = id => {
+    return new Promise((resolve, reject) => {
+        Works.findById(id)
+            .then(work => resolve(work.getGroups()))
+            .catch(error => reject(error))
+    })
+};
+
 const getWork = id => {
     return new Promise((resolve, reject) => {
         Works.findById(id, {
-            include: [Exercises, Trainings, Subjects, Groups],
+            include: [Exercises, Trainings, Subjects],
             order: [[Exercises, WorkContents, 'sort'], [Trainings, WorkTrainings, 'sort']]
         })
             .then(work => resolve(work))
@@ -159,13 +167,16 @@ const getWork = id => {
     })
 };
 
+
 const getWorkPupils = ({ id, group, pupil }) => {
     return new Promise((resolve, reject) => {
 
-        if (!group && !pupil)
+        if (!group && !pupil) {
             Works.findById(id)
                 .then(work => resolve(work.getPupils()))
                 .catch(error => reject(error));
+            return;
+        }
 
         Works.count({ where: { id }, include: [{
             model: Exercises, where: { start: { [Op.not]: '' }}
@@ -308,7 +319,7 @@ const setGroupWorkDates = args => {
     })
 };
 
-export { getWorks, getWork, getWorkPupils, addOrEditWork, sortExercises, setGroupWorkDates };
+export { getWorks, getWork, getWorkPupils, getWorkGroups, addOrEditWork, sortExercises, setGroupWorkDates };
 
 
 

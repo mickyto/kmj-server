@@ -9,7 +9,7 @@ import {
     GraphQLUnionType
 } from 'graphql';
 import { getItem } from '../data/items';
-import { getWorks, addOrEditWork, getWork, getWorkPupils, sortExercises, setGroupWorkDates } from '../data/works';
+import { getWorks, addOrEditWork, getWork, getWorkPupils, sortExercises, setGroupWorkDates, getWorkGroups } from '../data/works';
 import { OperationType } from './common';
 import { ExerciseType } from './exercises';
 import { TrainingType } from './trainings';
@@ -63,11 +63,12 @@ const WorkType = new GraphQLObjectType({
         },
         pupils: {
             type: new GraphQLList(PupilType),
-            resolve: ({ id, groups, pupils = [] }) =>
-                getWorkPupils({ id, group: groups && groups[0].id, pupil: groups && groups[0].pupils ? groups[0].pupils[0].id : pupils[0] && pupils[0].id })
+            resolve: ({ id, groups = [], pupils = [] }) =>
+                getWorkPupils({ id, group: groups[0] && groups[0].id, pupil: groups[0] && groups[0].pupils ? groups[0].pupils[0].id : pupils[0] && pupils[0].id })
         },
         groups: {
-            type: new GraphQLList(GroupType)
+            type: new GraphQLList(GroupType),
+            resolve: ({ id, groups }) => groups ? groups : getWorkGroups(id)
         },
         grade: {
             type: GraphQLInt,
