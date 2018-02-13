@@ -128,9 +128,57 @@ const movePupil = ({ id, operation }) => {
                 .catch(error => reject(error))
         }
         else {
-            resolve({error: 'Ошибка операции'});
+            resolve({ error: 'Ошибка операции' });
         }
     });
 };
 
-export { getPupils, getPupil, addOrEditPupil, movePupil, getPupilGroups, getPupilsByClientId, getTrainingWorkResults };
+const makeFavorite = ({ id, token, kind }) => {
+    return new Promise((resolve, reject) => {
+
+        const decoded = jwt.verify(token, config.secret);
+
+        Pupils.findById(decoded.id)
+            .then(pupil => {
+                if (kind == 'training')
+                    pupil.hasFavorites(id)
+                        .then(res => {
+                            if (res)
+                                pupil.removeFavorites(id);
+                            else
+                                pupil.addFavorites(id);
+                        });
+                else
+                    pupil.hasFavorite_exercise(id)
+                        .then(res => {
+                            if (res)
+                                pupil.removeFavorite_exercise(id);
+                            else
+                                pupil.addFavorite_exercise(id);
+                        });
+            })
+            .catch(error => reject(error));
+        resolve(1)
+    });
+};
+
+const checkFavorite = ({ id, token, kind }) => {
+    return new Promise((resolve, reject) => {
+
+        if (!token) return resolve();
+
+        const decoded = jwt.verify(token, config.secret);
+
+        Pupils.findById(decoded.id)
+            .then(pupil => {
+                if (kind == 'training')
+                    resolve(pupil.hasFavorites(id));
+                else
+                    resolve(pupil.hasFavorite_exercise(id));
+            })
+            .catch(error => reject(error));
+    })
+};
+
+export { getPupils, getPupil, addOrEditPupil, movePupil, getPupilGroups,
+    getPupilsByClientId, getTrainingWorkResults, makeFavorite, checkFavorite };

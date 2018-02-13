@@ -285,11 +285,13 @@ TrainingGroups.belongsTo(Subjects);
 Groups.belongsToMany(Pupils, { through: 'pupil_groups' });
 Pupils.belongsToMany(Groups, { through: 'pupil_groups' });
 
-Trainings.belongsToMany(Pupils, { through: 'pupil_trainings', as: 'pupils' });
-Pupils.belongsToMany(Trainings, { through: 'pupil_trainings', as: 'trainings' });
 
 Trainings.belongsToMany(Pupils, { through: 'favorite_trainings', as: 'admirer' });
 Pupils.belongsToMany(Trainings, { through: 'favorite_trainings', as: 'favorites' });
+
+Trainings.belongsToMany(Pupils, { through: 'pupil_trainings', as: 'pupils' });
+Pupils.belongsToMany(Trainings, { through: 'pupil_trainings', as: 'trainings' });
+
 
 Exercises.hasMany(Tests);
 Exercises.belongsTo(Themes);
@@ -301,8 +303,11 @@ Exercises.belongsToMany(Works, { through: 'work_contents' });
 Works.belongsToMany(Trainings, { through: 'work_trainings' });
 Trainings.belongsToMany(Works, { through: 'work_trainings' });
 
-Pupils.belongsToMany(Exercises, { through: 'work_executions' });
-Exercises.belongsToMany(Pupils, { through: 'work_executions' });
+Exercises.belongsToMany(Pupils, { through: 'work_executions', as: 'pupils' });
+Pupils.belongsToMany(Exercises, { through: 'work_executions', as: 'exercises' });
+
+Exercises.belongsToMany(Pupils, { through: 'favorite_exercises', as: 'admirer' });
+Pupils.belongsToMany(Exercises, { through: 'favorite_exercises', as: 'favorite_exercise' });
 
 Pupils.belongsToMany(Works, { through: 'pupil_works', as: 'works' });
 Works.belongsToMany(Pupils, { through: 'pupil_works', as: 'pupils' });

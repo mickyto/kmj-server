@@ -2,6 +2,7 @@ import {
     GraphQLObjectType,
     GraphQLString,
     GraphQLInt,
+    GraphQLBoolean,
     GraphQLList,
     GraphQLInputObjectType
 } from 'graphql';
@@ -11,6 +12,7 @@ import { WorkExecutionsType } from './workExecutions';
 import { WorkContentType } from './works';
 import { getExercises, getExercise, getTestsByExerciseId, addOrEditExercise } from '../data/exercises';
 import { getItem } from '../data/items';
+import { checkFavorite } from '../data/pupils';
 import { getPupilExecution } from '../data/workExecutions';
 
 
@@ -92,8 +94,14 @@ const ExerciseType = new GraphQLObjectType({
         work_contents: {
             type: WorkContentType
         },
-        error: {
-            type: GraphQLString,
+        favorite: {
+            type: GraphQLBoolean,
+            args: {
+                token: {
+                    type: GraphQLString
+                }
+            },
+            resolve: ({ id }, { token }) => checkFavorite({ id, token, kind: 'exercise'})
         }
     })
 });

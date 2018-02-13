@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import Sequelize from 'sequelize';
 
 import config from "../../config";
-import { PupilTrainings, FavoriteTrainings, Op } from '../sequelize';
+import { PupilTrainings, Op } from '../sequelize';
 
 const getPupilResults = (id) => {
     return new Promise((resolve, reject) => {
@@ -110,46 +110,4 @@ const resetLevel = args => {
     })
 };
 
-const checkFavorite = (id, token) => {
-    return new Promise((resolve, reject) => {
-
-        if (!token) return resolve();
-
-        const decoded = jwt.verify(token, config.secret);
-
-        FavoriteTrainings.findOne({ where: {
-            pupil_id: decoded.id,
-            training_id: id
-        }}).then(result => resolve(!!result))
-            .catch(error => reject(error));
-    })
-};
-
-const makeFavorite = args => {
-    return new Promise((resolve, reject) => {
-
-        const decoded = jwt.verify(args.token, config.secret);
-
-        FavoriteTrainings.findOne({ where: {
-            pupil_id: decoded.id,
-            training_id: args.trainingId
-        }}).then(result => {
-
-            if (!result)
-                FavoriteTrainings.create({
-                    pupil_id: decoded.id,
-                    training_id: args.trainingId
-                });
-            else
-                FavoriteTrainings.destroy({ where: {
-                    pupil_id: decoded.id,
-                    training_id: args.trainingId
-                }})
-        }).catch(error => reject(error));;
-
-        resolve(1)
-    });
-};
-
-export { getPupilResults, getPupilTrainingResults, addResult,
-    changeStatus, resetLevel, getResultsCount, makeFavorite, checkFavorite };
+export { getPupilResults, getPupilTrainingResults, addResult, changeStatus, resetLevel, getResultsCount };

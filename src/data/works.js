@@ -189,6 +189,7 @@ const getWorkPupils = ({ id, group, pupil }) => {
                     include: [{
                         model: Exercises,
                         attributes: [],
+                        as: 'exercises',
                         through: { where: { status: true }},
                         include: [{ model: Works, attributes: [], where: { work_id: id }}]
                     }, {

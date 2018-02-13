@@ -7,7 +7,8 @@ import {
     GraphQLNonNull,
 } from 'graphql';
 
-import { getPupils, getPupil, addOrEditPupil, movePupil, getPupilGroups, getTrainingWorkResults } from '../data/pupils';
+import { getPupils, getPupil, addOrEditPupil, movePupil, getPupilGroups,
+    getTrainingWorkResults, makeFavorite } from '../data/pupils';
 import { getClient } from '../data/clients';
 import { getPupilTrainingResults, getResultsCount } from '../data/trainingResults';
 import { OperationType } from './common';
@@ -231,4 +232,22 @@ const MutationMovePupil = {
     resolve: (root, args) => movePupil(args)
 };
 
-export { PupilTrainingResultsType, PupilTrainingResultsCountType, QueryPupils, MutationAddOrEditPupil, MutationMovePupil, QueryPupil, PupilType };
+const MutationMakeFavorite = {
+    type: OperationType,
+    description: 'Mark training or exercise as favorite',
+    args: {
+        token: {
+            type: new GraphQLNonNull(GraphQLString)
+        },
+        id: {
+            type: new GraphQLNonNull(GraphQLInt)
+        },
+        kind: {
+            type: new GraphQLNonNull(GraphQLString)
+        }
+    },
+    resolve: (root, args) => makeFavorite(args)
+};
+
+export { PupilTrainingResultsType, PupilTrainingResultsCountType, QueryPupils, MutationMakeFavorite,
+    MutationAddOrEditPupil, MutationMovePupil, QueryPupil, PupilType };
