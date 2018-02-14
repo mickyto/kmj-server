@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import Sequelize from 'sequelize';
 
 import config from "../../config";
-import { Op, Works, Pupils, WorkContents, TrainingGroups, Groups, GroupWorks, Subjects, Trainings, Exercises, WorkTrainings } from '../sequelize';
+import { Op, Works, Pupils, Themes, WorkContents, TrainingGroups, Groups, GroupWorks, Subjects, Trainings, Exercises, WorkTrainings } from '../sequelize';
 
 const getWorks = ({ id, token, group, type, withForeign }) => {
     return new Promise((resolve, reject) => {
@@ -137,13 +137,13 @@ const getWorks = ({ id, token, group, type, withForeign }) => {
             ]
         }).then(groupWorks => {
 
-                Works.findAll({
-                    ...query, include: [
-                        ...query.include,
-                        { model: Pupils, as: 'pupils', where: { id }, attributes: ['id'], through: { attributes: ['work_id'] }}
-                    ]
-                }).then(pupilWorks => resolve([...groupWorks, ...pupilWorks]))
-            })
+            Works.findAll({
+                ...query, include: [
+                    ...query.include,
+                    { model: Pupils, as: 'pupils', where: { id }, attributes: ['id'], through: { attributes: ['work_id'] }}
+                ]
+            }).then(pupilWorks => resolve([...groupWorks, ...pupilWorks]))
+        })
             .catch(error => reject(error));
     })
 };
@@ -156,12 +156,34 @@ const getWorkGroups = id => {
     })
 };
 
-const getWork = id => {
+const getWork = ({ id, token }) => {
     return new Promise((resolve, reject) => {
-        Works.findById(id, {
-            include: [Exercises, Trainings, Subjects],
+
+        const query = {
+            include: [
+                { model: Exercises },
+                { model: Trainings },
+                { model: Subjects }
+            ],
             order: [[Exercises, WorkContents, 'sort'], [Trainings, WorkTrainings, 'sort']]
-        })
+        };
+
+        if (token) {
+            const { id } = jwt.verify(token, config.secret);
+            query.include[0].include = [
+                { model: Themes },
+                {
+                    model: Pupils,
+                    as: 'pupils',
+                    required: false,
+                    where: { id },
+                    attributes: ['id'],
+                    through: { attributes: ['status']}
+                }
+            ]
+        }
+
+        Works.findById(id, query)
             .then(work => resolve(work))
             .catch(error => reject(error))
     })

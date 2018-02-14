@@ -292,7 +292,6 @@ Pupils.belongsToMany(Trainings, { through: 'favorite_trainings', as: 'favorites'
 Trainings.belongsToMany(Pupils, { through: 'pupil_trainings', as: 'pupils' });
 Pupils.belongsToMany(Trainings, { through: 'pupil_trainings', as: 'trainings' });
 
-
 Exercises.hasMany(Tests);
 Exercises.belongsTo(Themes);
 Works.belongsTo(Subjects);

@@ -1,32 +1,50 @@
-import { Exercises, Tests } from '../sequelize';
+import jwt from 'jsonwebtoken';
 
-const getExercises = (theme) => {
+import config from "../../config";
+import { Exercises, Tests, Pupils, Themes } from '../sequelize';
 
-    const query = theme ? { where: { theme_id: theme }} : {};
+const getExercises = () => {
     return new Promise((resolve, reject) => {
-        Exercises.findAll(query)
+        Exercises.findAll({ include: [Themes] })
             .then(exercises => resolve(exercises))
             .catch(error => reject(error))
     })
 };
 
-const getExercise = (id) => {
+const getExercise = ({ id, token }) => {
     return new Promise((resolve, reject) => {
-        Exercises.findById(id)
+
+        const query = { include: [Tests, Themes] };
+
+        if (token) {
+            const { id } = jwt.verify(token, config.secret);
+
+            query.include = [
+                ...query.include,
+                {
+                    model: Pupils,
+                    as: 'admirer',
+                    attributes: ['id'],
+                    through: { attributes: [] }
+                },
+                {
+                    model: Pupils,
+                    as: 'pupils',
+                    where: { id },
+                    required: false,
+                    attributes: ['id'],
+                    through: { attributes: ['status', 'attempt', 'program']}
+                }
+            ];
+        }
+
+        Exercises.findById(id, query)
             .then(exercise => resolve(exercise))
             .catch(error => reject(error))
     })
 };
 
-const getTestsByExerciseId = (id) => {
-    return new Promise((resolve, reject) => {
-        Tests.findAll({ where: { exercise_id: id }})
-            .then(tests => resolve(tests))
-            .catch(error => reject(error))
-    })
-};
-
-const addOrEditExercise = (args) => {
+const addOrEditExercise = args => {
     return new Promise((resolve, reject) => {
 
         if (args.id) {
@@ -56,4 +74,4 @@ const addOrEditExercise = (args) => {
     })
 };
 
-export { getExercises, getExercise, getTestsByExerciseId, addOrEditExercise };
+export { getExercises, getExercise, addOrEditExercise };

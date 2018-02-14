@@ -10,10 +10,7 @@ import {
 import { ItemType } from './items';
 import { WorkExecutionsType } from './workExecutions';
 import { WorkContentType } from './works';
-import { getExercises, getExercise, getTestsByExerciseId, addOrEditExercise } from '../data/exercises';
-import { getItem } from '../data/items';
-import { checkFavorite } from '../data/pupils';
-import { getPupilExecution } from '../data/workExecutions';
+import { getExercises, getExercise, addOrEditExercise } from '../data/exercises';
 
 
 const TestInputType = new GraphQLInputObjectType({
@@ -71,37 +68,21 @@ const ExerciseType = new GraphQLObjectType({
             type: GraphQLString,
         },
         theme: {
-            type: ItemType,
-            resolve: ({ theme_id }) => getItem({ id: theme_id, kind: 'themes' })
+            type: ItemType
         },
         tests: {
             type: new GraphQLList(TestOutputType),
-            resolve: ({ id }) => getTestsByExerciseId(id)
         },
         work_executions: {
             type: WorkExecutionsType,
-            args: {
-                pupil: {
-                    type: GraphQLInt
-                },
-                token: {
-                    type: GraphQLString
-                }
-            },
-            resolve: ({ id, work_executions }, { pupil, token }) =>
-                work_executions ? work_executions : getPupilExecution(id, { pupil, token })
+            resolve: ({ pupils }) => pupils[0] && pupils[0].work_executions
         },
         work_contents: {
             type: WorkContentType
         },
         favorite: {
             type: GraphQLBoolean,
-            args: {
-                token: {
-                    type: GraphQLString
-                }
-            },
-            resolve: ({ id }, { token }) => checkFavorite({ id, token, kind: 'exercise'})
+            resolve: ({ admirer }) => !!admirer[0]
         }
     })
 });
@@ -109,23 +90,21 @@ const ExerciseType = new GraphQLObjectType({
 const QueryExercises = {
     type: new GraphQLList(ExerciseType),
     description: 'Get programming exercises',
-    args: {
-        theme: {
-            type: GraphQLInt
-        }
-    },
-    resolve: (root, { theme }) => getExercises(theme)
+    resolve: () => getExercises()
 };
 
-const QueryExercise= {
+const QueryExercise = {
     type: ExerciseType,
     description: 'Get one programming exercise',
     args: {
         id: {
             type: GraphQLInt
+        },
+        token: {
+            type: GraphQLString
         }
     },
-    resolve: (root, { id }) => getExercise(id)
+    resolve: (root, args) => getExercise(args)
 };
 
 const MutationAddOrEditExercise = {

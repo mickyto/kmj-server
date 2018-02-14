@@ -95,9 +95,12 @@ const QueryWork = {
     args: {
         id: {
             type: GraphQLInt
+        },
+        token: {
+            type: GraphQLString
         }
     },
-    resolve: (root, { id }) => getWork(id)
+    resolve: (root, args) => getWork(args)
 };
 
 const QueryWorks = {
