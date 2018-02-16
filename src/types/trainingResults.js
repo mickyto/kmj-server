@@ -2,10 +2,11 @@ import {
     GraphQLObjectType,
     GraphQLString,
     GraphQLInt,
+    GraphQLBoolean,
     GraphQLList,
     GraphQLNonNull
 } from 'graphql';
-import { getPupilResults, addResult, changeStatus, resetLevel } from '../data/trainingResults';
+import { getPupilResults, addResult, changeStatus, resetLevel, checkChangedResult } from '../data/trainingResults';
 import { getPupil } from '../data/pupils';
 import { getTraining } from '../data/trainings';
 
@@ -17,9 +18,8 @@ import { TrainingType } from './trainings';
 const TrainingResultsType = new GraphQLObjectType({
     name: 'TrainingResults',
     fields: () => ({
-        resultId: {
-            type: GraphQLInt,
-            resolve: ({ id }) => id
+        id: {
+            type: GraphQLInt
         },
         pupil: {
             type: PupilType,
@@ -33,7 +33,7 @@ const TrainingResultsType = new GraphQLObjectType({
             type: GraphQLString,
         },
         isCorrect: {
-            type: GraphQLString,
+            type: GraphQLInt,
             resolve: ({ status }) => status
         },
         pupilAnswer: {
@@ -112,4 +112,19 @@ const MutationResetLevel = {
     resolve: (root, args) => resetLevel(args)
 };
 
-export { TrainingResultsType, QueryPupilResults, MutationAddResult, MutationChangeStatus, MutationResetLevel };
+const MutationCheckChangedResult = {
+    type: TrainingResultsType,
+    description: 'Accept or reject pupil changed result',
+    args: {
+        id: {
+            type: new GraphQLNonNull(GraphQLInt)
+        },
+        isAccepted: {
+            type: new GraphQLNonNull(GraphQLBoolean)
+        }
+    },
+    resolve: (root, args) => checkChangedResult(args)
+};
+
+export { TrainingResultsType, QueryPupilResults, MutationAddResult, MutationCheckChangedResult,
+    MutationChangeStatus, MutationResetLevel };

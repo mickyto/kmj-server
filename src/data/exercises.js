@@ -20,7 +20,8 @@ const getExercise = ({ id, token }) => {
             const { id } = jwt.verify(token, config.secret);
 
             query.include = [
-                ...query.include,
+                Themes,
+                { model: Tests, limit: 1 },
                 {
                     model: Pupils,
                     as: 'admirer',

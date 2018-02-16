@@ -156,7 +156,7 @@ const getWorkGroups = id => {
     })
 };
 
-const getWork = ({ id, token }) => {
+const getWork = ({ id, token, pupil }) => {
     return new Promise((resolve, reject) => {
 
         const query = {
@@ -168,19 +168,24 @@ const getWork = ({ id, token }) => {
             order: [[Exercises, WorkContents, 'sort'], [Trainings, WorkTrainings, 'sort']]
         };
 
-        if (token) {
-            const { id } = jwt.verify(token, config.secret);
+        if (token || pupil) {
+
+            if (token) {
+                const decoded = jwt.verify(token, config.secret);
+                pupil = decoded.id;
+            }
+
             query.include[0].include = [
                 { model: Themes },
                 {
                     model: Pupils,
                     as: 'pupils',
                     required: false,
-                    where: { id },
+                    where: { id: pupil },
                     attributes: ['id'],
-                    through: { attributes: ['status']}
+                    //through: { attributes: ['status']}
                 }
-            ]
+            ];
         }
 
         Works.findById(id, query)

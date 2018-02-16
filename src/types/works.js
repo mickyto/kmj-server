@@ -98,6 +98,9 @@ const QueryWork = {
         },
         token: {
             type: GraphQLString
+        },
+        pupil: {
+            type: GraphQLInt
         }
     },
     resolve: (root, args) => getWork(args)
