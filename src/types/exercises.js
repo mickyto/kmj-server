@@ -90,7 +90,12 @@ const ExerciseType = new GraphQLObjectType({
 const QueryExercises = {
     type: new GraphQLList(ExerciseType),
     description: 'Get programming exercises',
-    resolve: () => getExercises()
+    args: {
+        theme: {
+            type: GraphQLInt
+        }
+    },
+    resolve: (root, { theme }) => getExercises(theme)
 };
 
 const QueryExercise = {

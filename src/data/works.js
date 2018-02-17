@@ -156,43 +156,38 @@ const getWorkGroups = id => {
     })
 };
 
-const getWork = ({ id, token, pupil }) => {
-    return new Promise((resolve, reject) => {
+const getWork = ({ id, token, pupil }) => new Promise((resolve, reject) => {
 
-        const query = {
-            include: [
-                { model: Exercises },
-                { model: Trainings },
-                { model: Subjects }
-            ],
-            order: [[Exercises, WorkContents, 'sort'], [Trainings, WorkTrainings, 'sort']]
-        };
+    const query = {
+        include: [
+            { model: Exercises, include: [{ model: Themes }]},
+            { model: Trainings, include: [{ model: TrainingGroups }]},
+            { model: Subjects }
+        ],
+        order: [[Exercises, WorkContents, 'sort'], [Trainings, WorkTrainings, 'sort']]
+    };
 
-        if (token || pupil) {
+    if (token || pupil) {
 
-            if (token) {
-                const decoded = jwt.verify(token, config.secret);
-                pupil = decoded.id;
-            }
-
-            query.include[0].include = [
-                { model: Themes },
-                {
-                    model: Pupils,
-                    as: 'pupils',
-                    required: false,
-                    where: { id: pupil },
-                    attributes: ['id'],
-                    //through: { attributes: ['status']}
-                }
-            ];
+        if (token) {
+            const decoded = jwt.verify(token, config.secret);
+            pupil = decoded.id;
         }
 
-        Works.findById(id, query)
-            .then(work => resolve(work))
-            .catch(error => reject(error))
-    })
-};
+        query.include[0].include.push({
+            model: Pupils,
+            as: 'pupils',
+            required: false,
+            where: { id: pupil },
+            attributes: ['id'],
+            //through: { attributes: ['status']}
+        });
+    }
+
+    Works.findById(id, query)
+        .then(work => resolve(work))
+        .catch(error => reject(error))
+});
 
 
 const getWorkPupils = ({ id, group, pupil }) => {
