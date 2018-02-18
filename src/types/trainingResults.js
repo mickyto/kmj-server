@@ -6,7 +6,7 @@ import {
     GraphQLList,
     GraphQLNonNull
 } from 'graphql';
-import { getPupilResults, addResult, changeStatus, resetLevel, checkChangedResult } from '../data/trainingResults';
+import { getPupilTrainingResults, addResult, changeStatus, resetLevel, checkChangedResult } from '../data/trainingResults';
 import { getPupil } from '../data/pupils';
 import { getTraining } from '../data/trainings';
 
@@ -53,15 +53,18 @@ const TrainingResultsType = new GraphQLObjectType({
     })
 });
 
-const QueryPupilResults = {
+const QueryChangedResults = {
     type: new GraphQLList(TrainingResultsType),
-    description: 'Get all results for pupil',
+    description: 'Get all changed results',
     args: {
-        id: {
-            type: new GraphQLNonNull(GraphQLInt)
+        offset: {
+            type: GraphQLInt
+        },
+        limit: {
+            type: GraphQLInt
         }
     },
-    resolve: (root, { id }) => getPupilResults(id)
+    resolve: (root, { offset, limit }) => getPupilTrainingResults({ offset, limit })
 };
 
 const MutationAddResult = {
@@ -126,5 +129,5 @@ const MutationCheckChangedResult = {
     resolve: (root, args) => checkChangedResult(args)
 };
 
-export { TrainingResultsType, QueryPupilResults, MutationAddResult, MutationCheckChangedResult,
+export { TrainingResultsType, QueryChangedResults, MutationAddResult, MutationCheckChangedResult,
     MutationChangeStatus, MutationResetLevel };

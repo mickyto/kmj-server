@@ -4,12 +4,6 @@ import Sequelize from 'sequelize';
 import config from "../../config";
 import { PupilTrainings, Op } from '../sequelize';
 
-const getPupilResults = id => new Promise((resolve, reject) => {
-    PupilTrainings.findAll({ where: { pupil_id : id}, })
-        .then(results => resolve(results))
-        .catch(error => reject(error));
-});
-
 const getResultsCount = ({ trainingId, pupilId, token }) => new Promise((resolve, reject) => {
 
     if (!token && !pupilId) return resolve();
@@ -35,27 +29,26 @@ const getResultsCount = ({ trainingId, pupilId, token }) => new Promise((resolve
         .catch(error => reject(error));
 });
 
-const getPupilTrainingResults = ({ trainingId, pupilId, token, offset, limit }) => new Promise((resolve, reject) => {
+const getPupilTrainingResults = ({ trainingId, pupilId, offset, limit }) => new Promise((resolve, reject) => {
 
-    if (token) {
-        const pupilData = jwt.verify(token, config.secret);
-        pupilId = pupilData.id;
-    }
-
-    PupilTrainings.findAndCountAll({
-        where: { pupil_id : pupilId, training_id: trainingId },
+    const query = {
+        where: { status: { [Op.or]: [6, 9] }},
         order: [['date', 'DESC']],
         offset: offset,
         limit: limit
-    })
+    };
+
+    if (trainingId && pupilId)
+        query.where = { pupil_id : pupilId, training_id: trainingId };
+
+    PupilTrainings.findAll(query)
         .then(results => resolve(results))
         .catch(error => reject(error));
 });
 
 const addResult = args => new Promise((resolve, reject) => {
 
-    if (!args.token)
-        return resolve();
+    if (!args.token) return resolve();
 
     const decoded = jwt.verify(args.token, config.secret);
     const data = {
@@ -107,5 +100,5 @@ const checkChangedResult = ({ id, isAccepted }) => new Promise((resolve, reject)
         .catch(error => reject(error));
 });
 
-export { getPupilResults, getPupilTrainingResults, addResult, checkChangedResult,
+export { getPupilTrainingResults, addResult, checkChangedResult,
     changeStatus, resetLevel, getResultsCount };

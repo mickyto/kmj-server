@@ -21,7 +21,7 @@ const getExercise = ({ id, token }) => {
         const query = { include: [Tests, Themes] };
 
         if (token) {
-            const { id } = jwt.verify(token, config.secret);
+            const decoded = jwt.verify(token, config.secret);
 
             query.include = [
                 Themes,
@@ -29,13 +29,15 @@ const getExercise = ({ id, token }) => {
                 {
                     model: Pupils,
                     as: 'admirer',
+                    where: { id: decoded.id },
+                    required: false,
                     attributes: ['id'],
                     through: { attributes: [] }
                 },
                 {
                     model: Pupils,
                     as: 'pupils',
-                    where: { id },
+                    where: { id: decoded.id },
                     required: false,
                     attributes: ['id'],
                     through: { attributes: ['status', 'attempt', 'program']}

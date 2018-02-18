@@ -9,11 +9,11 @@ import {
 } from 'graphql';
 import { getTrainings, getTraining, addOrEditTraining, getTrainingPupils } from '../data/trainings';
 import { getPupilTrainingResults, getResultsCount } from '../data/trainingResults';
-import { checkFavorite } from '../data/pupils';
 import { getItem } from '../data/items';
 import { WorkContentType } from './works';
 import { TrainingGroupType } from './trainingGroups';
-import { PupilType, PupilTrainingResultsType, PupilTrainingResultsCountType } from './pupils';
+import { TrainingResultsType } from './trainingResults';
+import { PupilType, PupilTrainingResultsCountType } from './pupils';
 
 
 const TrainingType = new GraphQLObjectType({
@@ -48,22 +48,19 @@ const TrainingType = new GraphQLObjectType({
         resultsCount: {
             type: PupilTrainingResultsCountType,
             args: {
-                token: {
-                    type: GraphQLString
-                },
                 pupilId: {
                     type: GraphQLInt
+                },
+                token: {
+                    type: GraphQLString
                 }
             },
             resolve: ({ id, pupil_trainings }, { token, pupilId }) =>
                 getResultsCount({ trainingId: id, token, pupilId: pupil_trainings ? pupil_trainings.pupil_id : pupilId })
         },
-        pupilTraining: {
-            type: PupilTrainingResultsType,
+        trainingResults: {
+            type: new GraphQLList(TrainingResultsType),
             args: {
-                token: {
-                    type: GraphQLString
-                },
                 pupilId: {
                     type: GraphQLInt
                 },
@@ -77,9 +74,9 @@ const TrainingType = new GraphQLObjectType({
                     type: GraphQLInt
                 },
             },
-            resolve: ({ id }, { token, pupilId, trainingId, offset, limit }) => {
+            resolve: ({ id }, { pupilId, trainingId, offset, limit }) => {
                 if (trainingId == id)
-                    return getPupilTrainingResults({ trainingId: id, token, pupilId, offset, limit })
+                    return getPupilTrainingResults({ trainingId: id, pupilId, offset, limit })
             }
         },
         isActive: {
@@ -90,12 +87,7 @@ const TrainingType = new GraphQLObjectType({
         },
         favorite: {
             type: GraphQLBoolean,
-            args: {
-                token: {
-                    type: GraphQLString
-                }
-            },
-            resolve: ({ id }, { token }) => checkFavorite({ id, token, kind: 'training'})
+            resolve: ({ admirer }) => !!admirer[0]
         }
     })
 });
@@ -120,9 +112,12 @@ const QueryTraining = {
     args: {
         id: {
             type: GraphQLInt
+        },
+        token: {
+            type: GraphQLString
         }
     },
-    resolve: (root, { id }) => getTraining(id)
+    resolve: (root, args) => getTraining(args)
 };
 
 const MutationAddOrEditTraining = {

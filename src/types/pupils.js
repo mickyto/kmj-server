@@ -16,19 +16,6 @@ import { GroupType } from './groups';
 import { ClientType } from './clients';
 import { TrainingResultsType } from './trainingResults';
 
-
-const PupilTrainingResultsType = new GraphQLObjectType({
-    name: 'PupilTrainingResults',
-    fields: () => ({
-        count: {
-            type: GraphQLInt
-        },
-        rows: {
-            type: new GraphQLList(TrainingResultsType)
-        },
-    })
-});
-
 const PupilTrainingResultsCountType = new GraphQLObjectType({
     name: 'PupilTrainingResultsCount',
     fields: {
@@ -105,7 +92,7 @@ const PupilType = new GraphQLObjectType({
             resolve: ({ id }, { trainingId }) => getResultsCount({ pupilId: id, trainingId })
         },
         trainingResults: {
-            type: PupilTrainingResultsType,
+            type: new GraphQLList(TrainingResultsType),
             args: {
                 trainingId: {
                     type: GraphQLInt
@@ -249,5 +236,5 @@ const MutationMakeFavorite = {
     resolve: (root, args) => makeFavorite(args)
 };
 
-export { PupilTrainingResultsType, PupilTrainingResultsCountType, QueryPupils, MutationMakeFavorite,
+export { PupilTrainingResultsCountType, QueryPupils, MutationMakeFavorite,
     MutationAddOrEditPupil, MutationMovePupil, QueryPupil, PupilType };
