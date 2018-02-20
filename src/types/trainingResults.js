@@ -27,7 +27,7 @@ const TrainingResultsType = new GraphQLObjectType({
         },
         training: {
             type: TrainingType,
-            resolve: ({ training_id }) => getTraining(training_id)
+            resolve: ({ training_id }) => getTraining({ id: training_id })
         },
         tex: {
             type: GraphQLString,

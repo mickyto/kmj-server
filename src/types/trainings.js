@@ -55,8 +55,9 @@ const TrainingType = new GraphQLObjectType({
                     type: GraphQLString
                 }
             },
-            resolve: ({ id, pupil_trainings }, { token, pupilId }) =>
+            resolve: ({ id, pupil_trainings, pupils }, { token, pupilId }) => (pupils && pupils[0]) && pupils[0].dataValues ||
                 getResultsCount({ trainingId: id, token, pupilId: pupil_trainings ? pupil_trainings.pupil_id : pupilId })
+
         },
         trainingResults: {
             type: new GraphQLList(TrainingResultsType),
@@ -87,7 +88,7 @@ const TrainingType = new GraphQLObjectType({
         },
         favorite: {
             type: GraphQLBoolean,
-            resolve: ({ admirer }) => !!admirer[0]
+            resolve: ({ admirer }) => admirer && !!admirer[0]
         }
     })
 });

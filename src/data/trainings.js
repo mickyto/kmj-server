@@ -11,9 +11,8 @@ const getTrainings = ({ token, training_group }) => new Promise((resolve, reject
     }
     if (token) {
         const decoded = jwt.verify(token, config.secret);
-        if (decoded.role) {
-            delete query.where.is_active
-        }
+        if (decoded.role)
+            delete query.where.is_active;
     }
 
     Trainings.findAll(query)
@@ -37,6 +36,23 @@ const getTraining = ({ id, token }) => new Promise((resolve, reject) => {
                 required: false,
                 attributes: ['id'],
                 through: { attributes: [] }
+            },
+            {
+                model: Pupils,
+                as: 'pupils',
+                where: { id: decoded.id },
+                required: false,
+                through: { attributes: []},
+                attributes: [
+                    [Sequelize.fn('SUM', Sequelize.literal('case when `pupils->pupil_trainings`.`status`=0 then 1 end')), 'incorrect'],
+                    [Sequelize.fn('SUM', Sequelize.literal('case when `pupils->pupil_trainings`.`status`=1 then 1 end')), 'correct'],
+                    [Sequelize.fn('SUM', Sequelize.literal('case when `pupils->pupil_trainings`.`status`=2 then 1 end')), 'fixed'],
+                    [Sequelize.fn('SUM', Sequelize.literal('case when `pupils->pupil_trainings`.`status`=3 then 1 end')), 'exIncorrect'],
+                    [Sequelize.fn('SUM', Sequelize.literal('case when `pupils->pupil_trainings`.`status`=4 then 1 end')), 'exCorrect'],
+                    [Sequelize.fn('SUM', Sequelize.literal('case when `pupils->pupil_trainings`.`status`=5 then 1 end')), 'exFixed'],
+                    [Sequelize.fn('SUM', Sequelize.literal('case when `pupils->pupil_trainings`.`status`=6 then 1 end')), 'changed'],
+                    [Sequelize.fn('SUM', Sequelize.literal('case when `pupils->pupil_trainings`.`status`=9 then 1 end')), 'exChanged']
+                ]
             }
         ]}
     }
