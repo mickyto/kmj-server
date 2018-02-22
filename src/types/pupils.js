@@ -7,8 +7,7 @@ import {
     GraphQLNonNull,
 } from 'graphql';
 
-import { getPupils, getPupil, addOrEditPupil, movePupil, getPupilGroups,
-    getTrainingWorkResults, makeFavorite } from '../data/pupils';
+import { getPupils, getPupil, addOrEditPupil, movePupil, getTrainingWorkResults, makeFavorite } from '../data/pupils';
 import { getClient } from '../data/clients';
 import { getPupilTrainingResults, getResultsCount } from '../data/trainingResults';
 import { OperationType } from './common';
@@ -125,8 +124,7 @@ const PupilType = new GraphQLObjectType({
             resolve: ({ dataValues: { points }}) => points
         },
         groups: {
-            type: new GraphQLList(GroupType),
-            resolve: ({ id }) => getPupilGroups(id)
+            type: new GraphQLList(GroupType)
         },
         parent: {
             type: ClientType,
@@ -137,9 +135,6 @@ const PupilType = new GraphQLObjectType({
             resolve: ({ tasks }) => tasks[0] && tasks[0].pupil_work_grades.grade
         },
         status: {
-            type: GraphQLString
-        },
-        error: {
             type: GraphQLString
         }
     })

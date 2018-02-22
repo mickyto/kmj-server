@@ -5,10 +5,8 @@ import { Trainings, Pupils } from '../sequelize';
 
 const getTrainings = ({ token, training_group }) => new Promise((resolve, reject) => {
 
-    const query = { where: { is_active: 1 }, order: [[ 'sort', 'ASC']] };
-    if (training_group) {
-        query.where.training_group_id = training_group
-    }
+    const query = { where: { is_active: 1, training_group_id: training_group }, order: [[ 'sort', 'ASC']] };
+
     if (token) {
         const decoded = jwt.verify(token, config.secret);
         if (decoded.role)

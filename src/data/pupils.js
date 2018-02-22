@@ -19,13 +19,11 @@ const getPupils = (show, group) => new Promise((resolve, reject) => {
         return;
     }
 
-    let query;
+    let query = { include: [{ model: Groups, attributes: ['id', 'title', 'subject_id']}]};
     if (show && show === 'trashed')
-        query = { where: { status : 'trashed' }};
+        query.where = { status : 'trashed' };
     else if (show === 'active')
-        query = { where: { status : null }};
-    else
-        query = {};
+        query.where = { status : null };
 
     Pupils.findAll(query)
         .then(pupils => resolve(pupils))
@@ -41,20 +39,8 @@ const getPupil = (id, token) => new Promise((resolve, reject) => {
         pupilId = decoded.id;
     }
 
-    Pupils.findById(pupilId)
+    Pupils.findById(pupilId, { include: [{ model: Groups, attributes: ['id', 'title', 'subject_id'] }]})
         .then(pupil => resolve(pupil))
-        .catch(error => reject(error));
-});
-
-const getPupilGroups = id => new Promise((resolve, reject) => {
-    Pupils.findById(id)
-        .then(pupil => resolve(pupil.getGroups()))
-        .catch(error => reject(error));
-});
-
-const getPupilsByClientId = id => new Promise((resolve, reject) => {
-    Pupils.findAll({ where: { client_id: id }})
-        .then(pupils => resolve(pupils))
         .catch(error => reject(error));
 });
 
@@ -65,7 +51,7 @@ const getTrainingWorkResults = trainings => {
     trainings.forEach(({ dataValues : { correct, incorrect, changed, speed }}) => {
 
         speed = speed || 1;
-        const primaryLavel = Math.floor(1 + speed * ((+correct||0) + (+changed || 0) - 2 * (+incorrect || 0)));
+        const primaryLavel = Math.floor(1 + speed * ((+correct || 0) + (+changed || 0) - 2 * (+incorrect || 0)));
         const level = primaryLavel < 0 ? 0 : primaryLavel > 20 ? 20 : primaryLavel;
         plusLevel += level;
         if (level >= 10) { ++solved; levelCount += 10 }
@@ -101,24 +87,18 @@ const addOrEditPupil = args => new Promise((resolve, reject) => {
 
 const movePupil = ({ id, operation }) => new Promise((resolve, reject) => {
 
-    if (operation === 'move') {
+    if (operation === 'move')
         Pupils.update({ status: 'trashed' }, { where: { pupil_id: id }})
             .then(result => resolve(result))
             .catch(error => reject(error));
-    }
-    else if (operation === 'recovery') {
+    else if (operation === 'recovery')
         Pupils.update({ status: null }, { where: { pupil_id: id }})
             .then(result => resolve(result))
             .catch(error => reject(error));
-    }
-    else if (operation === 'remove') {
+    else if (operation === 'remove')
         Pupils.destroy({ where: { pupil_id: id }})
             .then(result => resolve(result))
             .catch(error => reject(error))
-    }
-    else {
-        resolve({ error: 'Ошибка операции' });
-    }
 });
 
 const makeFavorite = ({ id, token, kind }) => new Promise((resolve, reject) => {
@@ -148,5 +128,4 @@ const makeFavorite = ({ id, token, kind }) => new Promise((resolve, reject) => {
     resolve(1)
 });
 
-export { getPupils, getPupil, addOrEditPupil, movePupil, getPupilGroups,
-    getPupilsByClientId, getTrainingWorkResults, makeFavorite };
+export { getPupils, getPupil, addOrEditPupil, movePupil, getTrainingWorkResults, makeFavorite };

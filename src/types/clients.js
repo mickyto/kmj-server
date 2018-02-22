@@ -7,8 +7,6 @@ import {
 } from 'graphql';
 
 import { getClients, getClient, addOrEditClient, moveClients } from '../data/clients';
-import { getPupilsByClientId } from '../data/pupils';
-import { getItem } from '../data/items';
 import { OperationType } from './common';
 import { ItemType } from '../types/items';
 import { PupilType } from './pupils';
@@ -30,8 +28,7 @@ const ClientType = new GraphQLObjectType({
             type: GraphQLString,
         },
         channel: {
-            type: ItemType,
-            resolve: ({ channel_id }) => getItem({ id: channel_id, kind: 'channels' })
+            type: ItemType
         },
         location: {
             type: GraphQLString,
@@ -40,13 +37,9 @@ const ClientType = new GraphQLObjectType({
             type: GraphQLString,
         },
         pupils: {
-            type: new GraphQLList(PupilType),
-            resolve: ({ id }) => getPupilsByClientId(id)
+            type: new GraphQLList(PupilType)
         },
         status: {
-            type: GraphQLString,
-        },
-        error: {
             type: GraphQLString,
         }
     })
@@ -114,9 +107,7 @@ const MutationMoveClient = {
             type: new GraphQLNonNull(GraphQLString)
         }
     },
-    resolve: (root, args) => {
-        return moveClients(args)
-    }
+    resolve: (root, args) => moveClients(args)
 };
 
 export { ClientType, QueryClients, QueryClient,  MutationAddOrEditClient, MutationMoveClient }

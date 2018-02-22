@@ -274,6 +274,7 @@ const Exercises = sequelize.define('exercises', {
 });
 
 Pupils.belongsTo(Clients);
+Clients.hasMany(Pupils);
 Clients.belongsTo(Channels);
 Groups.belongsTo(Teachers);
 Groups.belongsTo(Subjects);
