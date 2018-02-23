@@ -93,9 +93,12 @@ const QueryExercises = {
     args: {
         theme: {
             type: GraphQLInt
+        },
+        token: {
+            type: GraphQLString
         }
     },
-    resolve: (root, { theme }) => getExercises(theme)
+    resolve: (root, args) => getExercises(args)
 };
 
 const QueryExercise = {

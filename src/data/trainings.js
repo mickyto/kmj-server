@@ -8,9 +8,32 @@ const getTrainings = ({ token, training_group }) => new Promise((resolve, reject
     const query = { where: { is_active: 1, training_group_id: training_group }, order: [[ 'sort', 'ASC']] };
 
     if (token) {
-        const decoded = jwt.verify(token, config.secret);
-        if (decoded.role)
+        const { id, role} = jwt.verify(token, config.secret);
+
+        if (role)
             delete query.where.is_active;
+
+        if (!training_group) {
+            delete query.where.training_group_id;
+            query.include = [{
+                model: Pupils,
+                as: 'pupils',
+                required: false,
+                where: { id },
+                through: { attributes: []},
+                attributes: { include: [
+                    [Sequelize.fn('SUM', Sequelize.literal('case when `pupils->pupil_trainings`.`status`=0 then 1 end')), 'incorrect'],
+                    [Sequelize.fn('SUM', Sequelize.literal('case when `pupils->pupil_trainings`.`status`=1 then 1 end')), 'correct'],
+                    [Sequelize.fn('SUM', Sequelize.literal('case when `pupils->pupil_trainings`.`status`=6 then 1 end')), 'changed'],
+                ]}
+            }, {
+                model: Pupils,
+                as: 'admirer',
+                where: { id },
+                attributes: ['id'],
+            }];
+            query.group = ['trainings.training_id']
+        }
     }
 
     Trainings.findAll(query)

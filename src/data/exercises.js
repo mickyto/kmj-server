@@ -3,12 +3,30 @@ import jwt from 'jsonwebtoken';
 import config from "../../config";
 import { Exercises, Tests, Pupils, Themes } from '../sequelize';
 
-const getExercises = theme => new Promise((resolve, reject) => {
+const getExercises = ({ theme, token }) => new Promise((resolve, reject) => {
 
     const query = { include: [Themes] };
 
     if (theme)
         query.where = { theme_id: theme };
+
+    if (token) {
+        const { id } = jwt.verify(token, config.secret);
+        query.attributes = ['id', 'text', 'end'];
+        query.include.push({
+            model: Pupils,
+            as: 'pupils',
+            required: false,
+            where: { id },
+            attributes: ['id'],
+            through: { attributes: ['status']}
+        }, {
+            model: Pupils,
+            as: 'admirer',
+            where: { id },
+            attributes: [],
+        });
+    }
 
     Exercises.findAll(query)
         .then(exercises => resolve(exercises))
